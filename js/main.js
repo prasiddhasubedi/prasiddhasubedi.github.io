@@ -4,7 +4,7 @@ console.log('[DEBUG] main.js loaded successfully');
 // Initialize AOS (Animate On Scroll) when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('[DEBUG] DOM Content Loaded');
-    
+
     // Initialize AOS animations if available
     if (typeof AOS !== 'undefined') {
         AOS.init({
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('[DEBUG] AOS library not loaded');
     }
-    
+
     // Add smooth scrolling to all links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -34,24 +34,34 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     console.log('[DEBUG] Smooth scrolling initialized');
+
+    // Auto-collapse navigation menu after clicking on a menu item
+    const navItems = document.querySelectorAll('.menu a');
+    const menu = document.querySelector('.menu');
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            menu.classList.remove('open');
+            console.log('[DEBUG] Collapsed menu after click');
+        });
+    });
 });
 
 // Dynamic content loader for novels and articles
 function loadDynamicContent(sectionId, contentData) {
     console.log('[DEBUG] Loading dynamic content for:', sectionId);
-    
+
     const container = document.getElementById(sectionId);
     if (!container) {
         console.error('[ERROR] Container not found:', sectionId);
         return;
     }
-    
+
     try {
         container.innerHTML = contentData;
         console.log('[DEBUG] Content loaded successfully for:', sectionId);
-        
+
         // Re-initialize AOS for new content
         if (typeof AOS !== 'undefined') {
             AOS.refresh();
