@@ -17,6 +17,32 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('[DEBUG] AOS library not loaded');
     }
 
+    // Mobile menu toggle functionality
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('nav ul');
+
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', function() {
+            console.log('[DEBUG] Menu toggle clicked');
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a navigation link
+        const navLinks = navMenu.querySelectorAll('li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                console.log('[DEBUG] Nav link clicked, closing menu');
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        console.log('[DEBUG] Mobile menu toggle initialized');
+    } else {
+        console.log('[DEBUG] Menu toggle or nav menu not found');
+    }
+
     // Add smooth scrolling to all links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
