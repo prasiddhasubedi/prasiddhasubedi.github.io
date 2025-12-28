@@ -1771,6 +1771,36 @@ footer p {
     font-style: italic;
 }
 
+/* Toast Notification */
+.toast-notification {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--dark);
+    color: var(--white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    z-index: 10000;
+    opacity: 0;
+    transition: all var(--transition-normal);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    max-width: 90vw;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-notification .toast-icon {
+    font-size: 1.2rem;
+}
+
 /* Responsive adjustments for social interactions */
 @media (max-width: 768px) {
     .social-interaction-bar {

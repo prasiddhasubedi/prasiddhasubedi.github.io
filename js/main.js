@@ -585,7 +585,7 @@ function initCommentSection(button, pageId) {
             if (!commentText) return;
             
             const comment = {
-                id: Date.now().toString(),
+                id: Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9),
                 author: 'Anonymous Reader',
                 text: commentText,
                 date: new Date().toISOString()
@@ -659,15 +659,50 @@ function handleShare(platform) {
     if (platform === 'copy') {
         // Copy to clipboard
         navigator.clipboard.writeText(decodeURIComponent(url)).then(() => {
-            alert('Link copied to clipboard!');
+            showToast('✓', 'Link copied to clipboard!');
             console.log('[PREMIUM] Link copied to clipboard');
         }).catch(err => {
+            showToast('⚠', 'Failed to copy link');
             console.error('[PREMIUM] Failed to copy link:', err);
         });
     } else if (shareUrls[platform]) {
         window.open(shareUrls[platform], '_blank', 'width=600,height=400');
         console.log('[PREMIUM] Shared to:', platform);
     }
+}
+
+/**
+ * Show toast notification
+ */
+function showToast(icon, message) {
+    // Remove existing toast if any
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span>${escapeHtml(message)}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
 }
 
 /**
