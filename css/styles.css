@@ -64,6 +64,9 @@
     /* Pattern Variables */
     --pattern-dot-size: 1%;
     --pattern-spacing: 50px;
+    
+    /* Logo Variables */
+    --logo-size: 40px;
 }
 
 /* ==========================================
@@ -142,6 +145,13 @@ body {
 .logo-icon {
     font-size: 1.75rem;
     transition: transform var(--transition-normal);
+}
+
+.logo-icon.logo-image {
+    width: var(--logo-size);
+    height: var(--logo-size);
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .logo:hover .logo-icon {
