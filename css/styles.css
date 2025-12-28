@@ -852,6 +852,51 @@ main {
 }
 
 /* ==========================================
+   PAGE HEADER (For Subpages)
+   ========================================== */
+.page-header {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: 8rem 0 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 70px;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1%, transparent 1%);
+    background-size: 50px 50px;
+    animation: headerPattern 20s linear infinite;
+    opacity: 0.3;
+}
+
+.page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.page-subtitle {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================
    OLD STYLES - Updated for Compatibility
    ========================================== */
 header {
