@@ -469,3 +469,223 @@ if ('IntersectionObserver' in window) {
 
 
 console.log('[PREMIUM] Main script initialization complete');
+
+// ==========================================
+// RECENTLY POSTED CAROUSEL
+// ==========================================
+
+// Recent posts data - This should be updated when new content is added
+const recentPosts = [
+    {
+        id: 1,
+        title: "Beauty Crisis Report",
+        description: "A poem exploring the essence and turmoil around beauty",
+        type: "poetry",
+        category: "Poetry",
+        date: "2025-01-15",
+        url: "poetry/Beauty%20Crisis%20Report/index.html"
+    },
+    {
+        id: 2,
+        title: "Echoes of Tomorrow",
+        description: "A science fiction thriller about a scientist who discovers a way to receive messages from the future",
+        type: "ebook",
+        category: "Ebook",
+        date: "2025-01-10",
+        url: "ebooks/echoes-of-tomorrow.html"
+    },
+    {
+        id: 3,
+        title: "The Art of Storytelling",
+        description: "How traditional narrative techniques adapt to modern platforms and audiences",
+        type: "article",
+        category: "Article",
+        date: "2025-01-05",
+        url: "articles/the-art-of-storytelling.html"
+    }
+];
+
+// Initialize carousel on homepage only
+if (document.getElementById('recentlyPostedCarousel')) {
+    initRecentlyPostedCarousel();
+}
+
+function initRecentlyPostedCarousel() {
+    console.log('[PREMIUM] Initializing Recently Posted Carousel');
+    
+    const carouselTrack = document.getElementById('recentlyPostedCarousel');
+    const dotsContainer = document.getElementById('carouselDots');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    
+    if (!carouselTrack) {
+        console.error('[PREMIUM] Carousel track not found');
+        return;
+    }
+    
+    let currentIndex = 0;
+    let autoPlayInterval;
+    const autoPlayDelay = 5000; // 5 seconds
+    
+    // Icon SVGs for different types
+    const iconSVGs = {
+        poetry: '<path d="M12 2L2 7L12 12L22 7L12 2Z"></path><path d="M2 17L12 22L22 17"></path><path d="M2 12L12 17L22 12"></path>',
+        ebook: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>',
+        article: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>',
+        photography: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>'
+    };
+    
+    // Format date
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+    
+    // Generate carousel items
+    function generateCarouselItems() {
+        carouselTrack.innerHTML = recentPosts.map(post => `
+            <a href="${post.url}" class="carousel-item">
+                <div class="carousel-item-image">
+                    <svg class="carousel-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        ${iconSVGs[post.type] || iconSVGs.article}
+                    </svg>
+                </div>
+                <div class="carousel-item-content">
+                    <span class="carousel-item-badge">${post.category}</span>
+                    <h3 class="carousel-item-title">${post.title}</h3>
+                    <p class="carousel-item-description">${post.description}</p>
+                    <div class="carousel-item-date">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>${formatDate(post.date)}</span>
+                    </div>
+                </div>
+            </a>
+        `).join('');
+    }
+    
+    // Generate dots
+    function generateDots() {
+        const totalSlides = Math.ceil(recentPosts.length / getItemsPerSlide());
+        dotsContainer.innerHTML = Array(totalSlides).fill(0).map((_, i) => 
+            `<div class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`
+        ).join('');
+        
+        // Add click handlers to dots
+        document.querySelectorAll('.carousel-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.getAttribute('data-index'));
+                goToSlide(index);
+            });
+        });
+    }
+    
+    // Get items per slide based on viewport
+    function getItemsPerSlide() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 3;
+    }
+    
+    // Go to specific slide
+    function goToSlide(index) {
+        const itemsPerSlide = getItemsPerSlide();
+        const totalSlides = Math.ceil(recentPosts.length / itemsPerSlide);
+        
+        currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+        
+        const offset = -currentIndex * 100;
+        carouselTrack.style.transform = `translateX(${offset}%)`;
+        
+        // Update dots
+        document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentIndex);
+        });
+        
+        console.log('[PREMIUM] Carousel moved to slide:', currentIndex);
+    }
+    
+    // Next slide
+    function nextSlide() {
+        const itemsPerSlide = getItemsPerSlide();
+        const totalSlides = Math.ceil(recentPosts.length / itemsPerSlide);
+        
+        if (currentIndex < totalSlides - 1) {
+            goToSlide(currentIndex + 1);
+        } else {
+            goToSlide(0); // Loop back to start
+        }
+    }
+    
+    // Previous slide
+    function prevSlide() {
+        const itemsPerSlide = getItemsPerSlide();
+        const totalSlides = Math.ceil(recentPosts.length / itemsPerSlide);
+        
+        if (currentIndex > 0) {
+            goToSlide(currentIndex - 1);
+        } else {
+            goToSlide(totalSlides - 1); // Loop to end
+        }
+    }
+    
+    // Start auto-play
+    function startAutoPlay() {
+        stopAutoPlay(); // Clear any existing interval
+        autoPlayInterval = setInterval(nextSlide, autoPlayDelay);
+        console.log('[PREMIUM] Carousel auto-play started');
+    }
+    
+    // Stop auto-play
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+    
+    // Initialize
+    generateCarouselItems();
+    generateDots();
+    
+    // Event listeners
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopAutoPlay(); // Stop auto-play on manual interaction
+            setTimeout(startAutoPlay, 10000); // Resume after 10 seconds
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopAutoPlay(); // Stop auto-play on manual interaction
+            setTimeout(startAutoPlay, 10000); // Resume after 10 seconds
+        });
+    }
+    
+    // Pause auto-play on hover
+    carouselTrack.addEventListener('mouseenter', stopAutoPlay);
+    carouselTrack.addEventListener('mouseleave', startAutoPlay);
+    
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            generateDots();
+            goToSlide(0); // Reset to first slide on resize
+        }, 250);
+    });
+    
+    // Start auto-play
+    startAutoPlay();
+    
+    console.log('[PREMIUM] Recently Posted Carousel initialized successfully');
+}

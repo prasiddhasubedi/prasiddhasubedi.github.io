@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novel Collection - Literary Portfolio</title>
-    <meta name="description" content="Dive into immersive stories and narratives that transport you to different worlds">
+    <title>Photography Collection - Literary Portfolio</title>
+    <meta name="description" content="Visual stories captured through the lens, exploring life through photographs">
     
     <!-- Google Fonts - Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,8 +36,9 @@
             <ul class="nav-menu">
                 <li><a href="../index.html" class="nav-link">Home</a></li>
                 <li><a href="../poetry/index.html" class="nav-link">Poetry</a></li>
-                <li><a href="index.html" class="nav-link active">Novels</a></li>
+                <li><a href="../ebooks/index.html" class="nav-link">Ebooks</a></li>
                 <li><a href="../articles/index.html" class="nav-link">Articles</a></li>
+                <li><a href="index.html" class="nav-link active">Photography</a></li>
             </ul>
         </div>
     </nav>
@@ -45,47 +46,32 @@
     <!-- Page Header -->
     <header class="page-header">
         <div class="container">
-            <h1 class="page-title" data-aos="fade-down">Novel Collection</h1>
-            <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">Immersive stories that transport you to different worlds</p>
+            <h1 class="page-title" data-aos="fade-down">Photography Collection</h1>
+            <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">Visual stories captured through the lens</p>
         </div>
     </header>
 
     <main>
         <div class="container">
             <div class="works-list" data-aos="fade-up">
-                <h2>Available Novels</h2>
-                <div id="novels-content">
-                    <ul>
-                        <li data-aos="fade-up" data-aos-delay="100">
-                            <a href="echoes-of-tomorrow.html">Echoes of Tomorrow</a>
-                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
-                                A science fiction thriller about a scientist who discovers a way to receive messages from the future
-                            </p>
-                            <span class="work-badge">Sci-Fi</span>
-                        </li>
-                        <li data-aos="fade-up" data-aos-delay="200">
-                            <a href="the-mountain-keeper.html">The Mountain Keeper</a>
-                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
-                                A mystical tale of a guardian who protects an ancient mountain and its secrets
-                            </p>
-                            <span class="work-badge">Fantasy</span>
-                        </li>
-                        <li data-aos="fade-up" data-aos-delay="300">
-                            <a href="beneath-the-surface.html">Beneath the Surface</a>
-                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
-                                A psychological drama exploring the hidden depths of human relationships
-                            </p>
-                            <span class="work-badge">Drama</span>
-                        </li>
-                        <li data-aos="fade-up" data-aos-delay="400">
-                            <a href="#novel4">Whispers in the Library</a>
-                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
-                                A mysterious romance set in an old library where books hold more than just stories
-                            </p>
-                            <span class="work-badge">Mystery</span>
-                        </li>
-                    </ul>
-                </div>
+                <h2>Photo Gallery</h2>
+                <ul>
+                    <li data-aos="fade-up" data-aos-delay="100">
+                        <a href="#photo1">Urban Landscapes</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">Capturing the beauty and chaos of city life</p>
+                        <span class="work-badge">Urban</span>
+                    </li>
+                    <li data-aos="fade-up" data-aos-delay="200">
+                        <a href="#photo2">Nature's Canvas</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">The raw and untouched beauty of the natural world</p>
+                        <span class="work-badge">Nature</span>
+                    </li>
+                    <li data-aos="fade-up" data-aos-delay="300">
+                        <a href="#photo3">Portrait Series</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">Expressions and emotions frozen in time</p>
+                        <span class="work-badge">Portrait</span>
+                    </li>
+                </ul>
             </div>
 
             <div style="margin-top: 30px;" data-aos="fade-up">
@@ -106,8 +92,9 @@
                     <h4 class="footer-subtitle">Quick Links</h4>
                     <ul class="footer-links">
                         <li><a href="../poetry/index.html">Poetry</a></li>
-                        <li><a href="index.html">Novels</a></li>
+                        <li><a href="../ebooks/index.html">Ebooks</a></li>
                         <li><a href="../articles/index.html">Articles</a></li>
+                        <li><a href="index.html">Photography</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -146,21 +133,5 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/main.js"></script>
-    <script>
-        console.log('[DEBUG] Novels page loaded');
-        
-        // Dynamic content loading simulation
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('[DEBUG] Novels page DOM ready');
-            
-            const novelsContent = document.getElementById('novels-content');
-            if (novelsContent) {
-                console.log('[DEBUG] Novels content container found');
-                console.log('[DEBUG] Number of novels displayed:', novelsContent.querySelectorAll('li').length);
-            } else {
-                console.error('[ERROR] Novels content container not found');
-            }
-        });
-    </script>
 </body>
 </html>

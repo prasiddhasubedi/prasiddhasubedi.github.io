@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poetry Collection - Literary Portfolio</title>
-    <meta name="description" content="Explore a curated collection of poems expressing emotions, observations, and reflections on life">
+    <title>Ebook Collection - Literary Portfolio</title>
+    <meta name="description" content="Dive into immersive stories and narratives that transport you to different worlds">
     
     <!-- Google Fonts - Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,8 +35,8 @@
             </button>
             <ul class="nav-menu">
                 <li><a href="../index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html" class="nav-link active">Poetry</a></li>
-                <li><a href="../ebooks/index.html" class="nav-link">Ebooks</a></li>
+                <li><a href="../poetry/index.html" class="nav-link">Poetry</a></li>
+                <li><a href="index.html" class="nav-link active">Ebooks</a></li>
                 <li><a href="../articles/index.html" class="nav-link">Articles</a></li>
                 <li><a href="../photography/index.html" class="nav-link">Photography</a></li>
             </ul>
@@ -46,21 +46,47 @@
     <!-- Page Header -->
     <header class="page-header">
         <div class="container">
-            <h1 class="page-title" data-aos="fade-down">Poetry Collection</h1>
-            <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">Words that paint emotions and capture moments</p>
+            <h1 class="page-title" data-aos="fade-down">Ebook Collection</h1>
+            <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">Immersive stories that transport you to different worlds</p>
         </div>
     </header>
 
     <main>
         <div class="container">
             <div class="works-list" data-aos="fade-up">
-                <h2>Available Poems</h2>
-                <ul>
-                    <li data-aos="fade-up" data-aos-delay="100">
-                        <a href="Beauty%20Crisis%20Report/index.html">Beauty Crisis Report</a>
-                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A poem exploring the essence and turmoil around beauty</p>
-                    </li>
-                </ul>
+                <h2>Available Ebooks</h2>
+                <div id="ebooks-content">
+                    <ul>
+                        <li data-aos="fade-up" data-aos-delay="100">
+                            <a href="echoes-of-tomorrow.html">Echoes of Tomorrow</a>
+                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
+                                A science fiction thriller about a scientist who discovers a way to receive messages from the future
+                            </p>
+                            <span class="work-badge">Sci-Fi</span>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="200">
+                            <a href="the-mountain-keeper.html">The Mountain Keeper</a>
+                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
+                                A mystical tale of a guardian who protects an ancient mountain and its secrets
+                            </p>
+                            <span class="work-badge">Fantasy</span>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="300">
+                            <a href="beneath-the-surface.html">Beneath the Surface</a>
+                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
+                                A psychological drama exploring the hidden depths of human relationships
+                            </p>
+                            <span class="work-badge">Drama</span>
+                        </li>
+                        <li data-aos="fade-up" data-aos-delay="400">
+                            <a href="#novel4">Whispers in the Library</a>
+                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">
+                                A mysterious romance set in an old library where books hold more than just stories
+                            </p>
+                            <span class="work-badge">Mystery</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div style="margin-top: 30px;" data-aos="fade-up">
@@ -80,8 +106,8 @@
                 <div class="footer-section">
                     <h4 class="footer-subtitle">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Poetry</a></li>
-                        <li><a href="../ebooks/index.html">Ebooks</a></li>
+                        <li><a href="../poetry/index.html">Poetry</a></li>
+                        <li><a href="index.html">Ebooks</a></li>
                         <li><a href="../articles/index.html">Articles</a></li>
                         <li><a href="../photography/index.html">Photography</a></li>
                     </ul>
@@ -122,5 +148,21 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        console.log('[DEBUG] Ebooks page loaded');
+        
+        // Dynamic content loading simulation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[DEBUG] Ebooks page DOM ready');
+            
+            const ebooksContent = document.getElementById('ebooks-content');
+            if (ebooksContent) {
+                console.log('[DEBUG] Ebooks content container found');
+                console.log('[DEBUG] Number of ebooks displayed:', ebooksContent.querySelectorAll('li').length);
+            } else {
+                console.error('[ERROR] Ebooks content container not found');
+            }
+        });
+    </script>
 </body>
 </html>
