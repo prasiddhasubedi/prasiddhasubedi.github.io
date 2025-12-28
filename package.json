@@ -1,0 +1,29 @@
+{
+  "name": "byprasiddha-portfolio",
+  "version": "1.0.0",
+  "description": "A personal literary portfolio website showcasing poetry, articles, ebooks, and photography",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prasiddhasubedi/byprasiddha.git"
+  },
+  "keywords": [
+    "portfolio",
+    "literature",
+    "poetry",
+    "articles",
+    "photography"
+  ],
+  "author": "Prasiddha Subedi",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/prasiddhasubedi/byprasiddha/issues"
+  },
+  "homepage": "https://github.com/prasiddhasubedi/byprasiddha#readme",
+  "dependencies": {
+    "framer-motion": "^11.0.0"
+  }
+}
