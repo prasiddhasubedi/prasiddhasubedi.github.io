@@ -1862,27 +1862,42 @@ footer p {
    PHOTOGRAPHY CARD STYLING
    ======================================== */
 .photography-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.photography-card .card-overlay {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
-}
-
-.photography-card:hover .card-overlay {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
-}
-
-.ebooks-card {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.ebooks-card .card-overlay {
+.photography-card .card-overlay {
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.9) 0%, rgba(245, 87, 108, 0.9) 100%);
 }
 
-.ebooks-card:hover .card-overlay {
+.photography-card:hover .card-overlay {
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.95) 0%, rgba(245, 87, 108, 0.95) 100%);
+}
+
+/* ========================================
+   ARTICLES CARD STYLING
+   ======================================== */
+.articles-card {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.articles-card .card-overlay {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.9) 0%, rgba(0, 242, 254, 0.9) 100%);
+}
+
+.articles-card:hover .card-overlay {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.95) 0%, rgba(0, 242, 254, 0.95) 100%);
+}
+
+.ebooks-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.ebooks-card .card-overlay {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+}
+
+.ebooks-card:hover .card-overlay {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
 }
 
 /* ========================================
@@ -1992,7 +2007,7 @@ footer p {
 
 .carousel-item-image {
     width: 100%;
-    height: 240px;
+    height: 180px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     display: flex;
     align-items: center;
@@ -2019,8 +2034,8 @@ footer p {
 }
 
 .carousel-item-icon {
-    width: 90px;
-    height: 90px;
+    width: 70px;
+    height: 70px;
     color: var(--white);
     z-index: 1;
     filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
@@ -2044,7 +2059,7 @@ footer p {
 }
 
 .carousel-item-content {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-lg);
     position: relative;
 }
 
@@ -2070,7 +2085,7 @@ footer p {
 
 .carousel-item-title {
     font-family: var(--font-display);
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--dark);
     margin-bottom: var(--spacing-sm);
@@ -2084,8 +2099,8 @@ footer p {
 
 .carousel-item-description {
     color: var(--medium-gray);
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.875rem;
+    line-height: 1.6;
     margin-bottom: var(--spacing-md);
 }
 
@@ -2230,12 +2245,12 @@ footer p {
     }
     
     .carousel-item-image {
-        height: 180px;
+        height: 150px;
     }
     
     .carousel-item-icon {
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
     }
 }
 
