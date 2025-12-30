@@ -588,30 +588,12 @@ if (document.readyState === 'loading') {
 const recentPosts = [
     {
         id: 1,
-        title: "Beauty Crisis Report",
-        description: "A poem exploring the essence and turmoil around beauty",
+        title: "Serene Beauty",
+        description: "A contemplative poem celebrating the timeless beauty of nature's gentle hills",
         type: "poetry",
         category: "Poetry",
         date: "2025-01-15",
-        url: "poetry/Beauty%20Crisis%20Report/index.html"
-    },
-    {
-        id: 2,
-        title: "Echoes of Tomorrow",
-        description: "A science fiction thriller about a scientist who discovers a way to receive messages from the future",
-        type: "ebook",
-        category: "Ebook",
-        date: "2025-01-10",
-        url: "ebooks/echoes-of-tomorrow.html"
-    },
-    {
-        id: 3,
-        title: "The Art of Storytelling",
-        description: "How traditional narrative techniques adapt to modern platforms and audiences",
-        type: "article",
-        category: "Article",
-        date: "2025-01-05",
-        url: "articles/the-art-of-storytelling.html"
+        url: "poetry/Serene%20Beauty/index.html"
     }
 ];
 
