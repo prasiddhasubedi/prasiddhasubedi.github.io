@@ -2267,3 +2267,384 @@ footer p {
     }
 }
 
+/* ==========================================
+   NEW YEAR 2026 TEMPORARY FEATURES
+   Auto-removes after January 3, 2026
+   ========================================== */
+
+/* New Year Trigger Button */
+.new-year-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-left: 1rem;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6B6B 100%);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-xl);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+    animation: newYearPulse 2s ease-in-out infinite;
+    font-family: var(--font-display);
+    letter-spacing: 0.5px;
+}
+
+.new-year-trigger:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.6);
+    animation: none;
+}
+
+.new-year-trigger:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+@keyframes newYearPulse {
+    0%, 100% {
+        box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 6px 24px rgba(255, 215, 0, 0.7);
+        transform: scale(1.05);
+    }
+}
+
+/* New Year Overlay */
+.new-year-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    overflow: hidden;
+}
+
+.new-year-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.new-year-animation {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Fireworks Animation */
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.firework {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: fireworkExplosion 2s ease-out infinite;
+}
+
+.firework:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+    background: radial-gradient(circle, #FFD700, transparent);
+}
+
+.firework:nth-child(2) {
+    top: 30%;
+    right: 20%;
+    animation-delay: 0.4s;
+    background: radial-gradient(circle, #FF6B6B, transparent);
+}
+
+.firework:nth-child(3) {
+    bottom: 30%;
+    left: 30%;
+    animation-delay: 0.8s;
+    background: radial-gradient(circle, #4ECDC4, transparent);
+}
+
+.firework:nth-child(4) {
+    top: 40%;
+    right: 30%;
+    animation-delay: 1.2s;
+    background: radial-gradient(circle, #95E1D3, transparent);
+}
+
+.firework:nth-child(5) {
+    bottom: 20%;
+    right: 25%;
+    animation-delay: 1.6s;
+    background: radial-gradient(circle, #FFA500, transparent);
+}
+
+@keyframes fireworkExplosion {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+        box-shadow: 
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor,
+            0 0 0 0 currentColor;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(50);
+        opacity: 0;
+        box-shadow: 
+            0 -150px 0 0 currentColor,
+            106px -106px 0 0 currentColor,
+            150px 0 0 0 currentColor,
+            106px 106px 0 0 currentColor,
+            0 150px 0 0 currentColor,
+            -106px 106px 0 0 currentColor,
+            -150px 0 0 0 currentColor,
+            -106px -106px 0 0 currentColor;
+    }
+}
+
+/* Confetti Animation */
+.confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotateZ(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotateZ(720deg);
+        opacity: 0;
+    }
+}
+
+/* New Year Content */
+.new-year-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: var(--spacing-xl);
+    animation: newYearContentFadeIn 1s ease-out;
+}
+
+@keyframes newYearContentFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.new-year-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 10vw, 6rem);
+    font-weight: 800;
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.2;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.new-year-line,
+.new-year-year {
+    display: block;
+    background: linear-gradient(135deg, 
+        #FFD700 0%, 
+        #FFA500 12.5%, 
+        #FF6B6B 25%, 
+        #FF1493 37.5%, 
+        #9370DB 50%, 
+        #4169E1 62.5%, 
+        #00CED1 75%, 
+        #FFD700 87.5%, 
+        #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 400% 400%;
+    animation: newYearGradientShift 4s ease-in-out infinite;
+}
+
+.new-year-year {
+    font-size: clamp(3rem, 12vw, 8rem);
+    margin-top: var(--spacing-md);
+    animation: newYearYearBounce 1s ease-out 0.5s both, newYearGradientShift 4s ease-in-out infinite;
+}
+
+@keyframes newYearGradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 25%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 50% 75%;
+    }
+}
+
+@keyframes newYearYearBounce {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.new-year-message {
+    font-family: var(--font-elegant);
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: var(--white);
+    margin-bottom: var(--spacing-xl);
+    font-style: italic;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    animation: newYearMessageFadeIn 1s ease-out 1s both;
+}
+
+@keyframes newYearMessageFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.new-year-close {
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: var(--dark);
+    border: none;
+    border-radius: var(--radius-xl);
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.5);
+    animation: newYearButtonFadeIn 1s ease-out 1.5s both;
+}
+
+@keyframes newYearButtonFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.new-year-close:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 40px rgba(255, 215, 0, 0.7);
+    background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+}
+
+.new-year-close:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Responsive adjustments for New Year features */
+@media (max-width: 768px) {
+    .new-year-trigger {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+    }
+    
+    .new-year-content {
+        padding: var(--spacing-md);
+    }
+    
+    .new-year-close {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-year-trigger {
+        position: fixed;
+        bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
+        left: 50%;
+        transform: translateX(-50%);
+        margin-left: 0;
+        z-index: 998;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .logo-container {
+        position: relative;
+    }
+}
+
+/* Hide New Year features after January 3, 2026 */
+.new-year-expired .new-year-trigger,
+.new-year-expired .new-year-overlay {
+    display: none !important;
+}
+
+

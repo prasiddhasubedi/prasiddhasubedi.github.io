@@ -27,6 +27,7 @@
                     <img src="css/logo" alt="Prasiddha Subedi Logo" class="logo-icon logo-image">
                     <span class="logo-text">Prasiddha Subedi</span>
                 </a>
+                <button class="new-year-trigger" id="newYearTrigger" aria-label="Celebrate New Year 2026">2026 🎉</button>
             </div>
             <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                 <span></span>
@@ -74,6 +75,29 @@
 
     <main id="explore">
         <div class="container">
+            <!-- Recently Posted Section - Moved to top for prominence -->
+            <section class="recently-posted-section" data-aos="fade-up" id="recentlyPostedTop">
+                <h2 class="section-title">Recently Posted</h2>
+                <p class="section-subtitle">Latest additions to the collection</p>
+                
+                <div class="carousel-container">
+                    <div class="carousel-track" id="recentlyPostedCarousel">
+                        <!-- Carousel items will be dynamically generated -->
+                    </div>
+                    <button class="carousel-btn carousel-prev" aria-label="Previous">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-btn carousel-next" aria-label="Next">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                </div>
+            </section>
+
             <!-- Section Header -->
             <div class="section-header" data-aos="fade-up">
                 <h2 class="section-title">Explore My Literary Universe</h2>
@@ -211,29 +235,6 @@
                 </div>
             </div>
 
-            <!-- Recently Posted Section -->
-            <section class="recently-posted-section" data-aos="fade-up">
-                <h2 class="section-title">Recently Posted</h2>
-                <p class="section-subtitle">Latest additions to the collection</p>
-                
-                <div class="carousel-container">
-                    <div class="carousel-track" id="recentlyPostedCarousel">
-                        <!-- Carousel items will be dynamically generated -->
-                    </div>
-                    <button class="carousel-btn carousel-prev" aria-label="Previous">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M15 18l-6-6 6-6"/>
-                        </svg>
-                    </button>
-                    <button class="carousel-btn carousel-next" aria-label="Next">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 18l6-6-6-6"/>
-                        </svg>
-                    </button>
-                    <div class="carousel-dots" id="carouselDots"></div>
-                </div>
-            </section>
-
             <!-- About Section -->
             <section id="about" class="about-section" data-aos="fade-up">
                 <div class="about-content">
@@ -319,6 +320,30 @@
             <path d="M12 19V5M5 12l7-7 7 7"/>
         </svg>
     </button>
+
+    <!-- New Year 2026 Animation Overlay -->
+    <div class="new-year-overlay" id="newYearOverlay">
+        <div class="new-year-animation">
+            <div class="fireworks-container">
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+            </div>
+            <div class="new-year-content">
+                <h1 class="new-year-title">
+                    <span class="new-year-line">Happy New Year</span>
+                    <span class="new-year-year">2026</span>
+                </h1>
+                <p class="new-year-message">Wishing you a year filled with stories, creativity, and endless possibilities!</p>
+                <button class="new-year-close" id="newYearClose" aria-label="Close animation">
+                    Continue
+                </button>
+            </div>
+            <div class="confetti-container" id="confettiContainer"></div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/main.js"></script>

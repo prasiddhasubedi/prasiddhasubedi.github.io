@@ -471,6 +471,116 @@ if ('IntersectionObserver' in window) {
 console.log('[PREMIUM] Main script initialization complete');
 
 // ==========================================
+// NEW YEAR 2026 FEATURES (Temporary until Jan 3, 2026)
+// ==========================================
+
+// Check if New Year features should be active
+function isNewYearActive() {
+    const now = new Date();
+    const endDate = new Date('2026-01-04T00:00:00Z'); // Jan 4, 2026 midnight UTC (day after Jan 3)
+    return now < endDate;
+}
+
+// Initialize New Year features if within date range
+function initNewYearFeatures() {
+    if (!isNewYearActive()) {
+        console.log('[NEW YEAR] Features disabled - past January 3, 2026');
+        document.body.classList.add('new-year-expired');
+        return;
+    }
+    
+    console.log('[NEW YEAR] Initializing New Year 2026 features');
+    
+    const overlay = document.getElementById('newYearOverlay');
+    const trigger = document.getElementById('newYearTrigger');
+    const closeBtn = document.getElementById('newYearClose');
+    const confettiContainer = document.getElementById('confettiContainer');
+    
+    if (!overlay || !trigger || !closeBtn || !confettiContainer) {
+        console.error('[NEW YEAR] Required elements not found');
+        return;
+    }
+    
+    let animationShown = false;
+    
+    // Generate confetti
+    function createConfetti() {
+        confettiContainer.innerHTML = ''; // Clear existing confetti
+        
+        const colors = ['#FFD700', '#FFA500', '#FF6B6B', '#4ECDC4', '#95E1D3', '#FF1493', '#9370DB'];
+        const confettiCount = 100;
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            confetti.style.animationDelay = (Math.random() * 2) + 's';
+            confettiContainer.appendChild(confetti);
+        }
+    }
+    
+    // Show New Year animation
+    function showNewYearAnimation() {
+        createConfetti();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        console.log('[NEW YEAR] Animation displayed');
+    }
+    
+    // Hide New Year animation
+    function hideNewYearAnimation() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        console.log('[NEW YEAR] Animation hidden');
+    }
+    
+    // Show animation on page load (only once per session)
+    if (!sessionStorage.getItem('newYearShown')) {
+        setTimeout(() => {
+            showNewYearAnimation();
+            sessionStorage.setItem('newYearShown', 'true');
+            animationShown = true;
+        }, 1000); // Delay 1 second after page load
+    }
+    
+    // Trigger button click handler
+    trigger.addEventListener('click', () => {
+        showNewYearAnimation();
+        console.log('[NEW YEAR] Animation triggered by button click');
+    });
+    
+    // Close button handler
+    closeBtn.addEventListener('click', () => {
+        hideNewYearAnimation();
+    });
+    
+    // Close on overlay click (outside content)
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            hideNewYearAnimation();
+        }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            hideNewYearAnimation();
+        }
+    });
+    
+    console.log('[NEW YEAR] Features initialized successfully');
+}
+
+// Initialize New Year features when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNewYearFeatures);
+} else {
+    initNewYearFeatures();
+}
+
+// ==========================================
 // RECENTLY POSTED CAROUSEL
 // ==========================================
 
