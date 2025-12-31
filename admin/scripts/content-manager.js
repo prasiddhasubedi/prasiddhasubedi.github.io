@@ -74,12 +74,14 @@ class ContentManager {
     }
 
     addPoetry(poetry) {
-        const sanitized = this.sanitizeObject(poetry, ['title', 'content', 'author', 'tags']);
+        const sanitized = this.sanitizeObject(poetry, ['title', 'content', 'author', 'tags', 'description', 'postedDate']);
         const newPoetry = {
             id: this.generateId(),
             ...sanitized,
+            mediaUrl: poetry.mediaUrl || '', // Media URL is not sanitized as it's expected to be base64 or valid URL
             dateCreated: new Date().toISOString(),
-            dateModified: new Date().toISOString()
+            dateModified: new Date().toISOString(),
+            postedDate: poetry.postedDate || new Date().toISOString()
         };
         
         this.data.poetry.unshift(newPoetry);
@@ -91,12 +93,19 @@ class ContentManager {
         const index = this.data.poetry.findIndex(p => p.id === id);
         if (index === -1) return null;
         
-        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'tags']);
+        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'tags', 'description', 'postedDate']);
         this.data.poetry[index] = {
             ...this.data.poetry[index],
             ...sanitized,
             dateModified: new Date().toISOString()
         };
+        
+        if (updates.mediaUrl !== undefined) {
+            this.data.poetry[index].mediaUrl = updates.mediaUrl;
+        }
+        if (updates.postedDate) {
+            this.data.poetry[index].postedDate = updates.postedDate;
+        }
         
         this.saveData();
         return this.data.poetry[index];
@@ -124,12 +133,14 @@ class ContentManager {
     }
 
     addArticle(article) {
-        const sanitized = this.sanitizeObject(article, ['title', 'content', 'author', 'excerpt', 'tags']);
+        const sanitized = this.sanitizeObject(article, ['title', 'content', 'author', 'excerpt', 'tags', 'postedDate']);
         const newArticle = {
             id: this.generateId(),
             ...sanitized,
+            mediaUrl: article.mediaUrl || '', // Media URL is not sanitized as it's expected to be base64 or valid URL
             dateCreated: new Date().toISOString(),
-            dateModified: new Date().toISOString()
+            dateModified: new Date().toISOString(),
+            postedDate: article.postedDate || new Date().toISOString()
         };
         
         this.data.articles.unshift(newArticle);
@@ -141,12 +152,19 @@ class ContentManager {
         const index = this.data.articles.findIndex(a => a.id === id);
         if (index === -1) return null;
         
-        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'excerpt', 'tags']);
+        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'excerpt', 'tags', 'postedDate']);
         this.data.articles[index] = {
             ...this.data.articles[index],
             ...sanitized,
             dateModified: new Date().toISOString()
         };
+        
+        if (updates.mediaUrl !== undefined) {
+            this.data.articles[index].mediaUrl = updates.mediaUrl;
+        }
+        if (updates.postedDate) {
+            this.data.articles[index].postedDate = updates.postedDate;
+        }
         
         this.saveData();
         return this.data.articles[index];
@@ -174,12 +192,14 @@ class ContentManager {
     }
 
     addEbook(ebook) {
-        const sanitized = this.sanitizeObject(ebook, ['title', 'description', 'author', 'genre', 'tags']);
+        const sanitized = this.sanitizeObject(ebook, ['title', 'description', 'author', 'genre', 'tags', 'postedDate']);
         const newEbook = {
             id: this.generateId(),
             ...sanitized,
+            coverImageUrl: ebook.coverImageUrl || '', // Cover image URL is not sanitized
             dateCreated: new Date().toISOString(),
-            dateModified: new Date().toISOString()
+            dateModified: new Date().toISOString(),
+            postedDate: ebook.postedDate || new Date().toISOString()
         };
         
         this.data.ebooks.unshift(newEbook);
@@ -191,12 +211,19 @@ class ContentManager {
         const index = this.data.ebooks.findIndex(e => e.id === id);
         if (index === -1) return null;
         
-        const sanitized = this.sanitizeObject(updates, ['title', 'description', 'author', 'genre', 'tags']);
+        const sanitized = this.sanitizeObject(updates, ['title', 'description', 'author', 'genre', 'tags', 'postedDate']);
         this.data.ebooks[index] = {
             ...this.data.ebooks[index],
             ...sanitized,
             dateModified: new Date().toISOString()
         };
+        
+        if (updates.coverImageUrl !== undefined) {
+            this.data.ebooks[index].coverImageUrl = updates.coverImageUrl;
+        }
+        if (updates.postedDate) {
+            this.data.ebooks[index].postedDate = updates.postedDate;
+        }
         
         this.saveData();
         return this.data.ebooks[index];

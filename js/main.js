@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initBackToTop();
     initSmoothScrolling();
     initCardAnimations();
+    updateContentCounts();
     
     console.log('[PREMIUM] All features initialized successfully');
 });
@@ -584,18 +585,95 @@ if (document.readyState === 'loading') {
 // RECENTLY POSTED CAROUSEL
 // ==========================================
 
-// Recent posts data - This should be updated when new content is added
-const recentPosts = [
-    {
-        id: 1,
-        title: "Serene Beauty",
-        description: "A contemplative poem celebrating the timeless beauty of nature's gentle hills",
-        type: "poetry",
-        category: "Poetry",
-        date: "2025-12-30",
-        url: "poetry/Serene%20Beauty/index.html"
+// Function to load recent posts from localStorage
+function loadRecentPosts() {
+    try {
+        const contentData = localStorage.getItem('admin_content_data');
+        if (!contentData) {
+            console.log('[PREMIUM] No content data found, using default posts');
+            return [
+                {
+                    id: 1,
+                    title: "Serene Beauty",
+                    description: "A contemplative poem celebrating the timeless beauty of nature's gentle hills",
+                    type: "poetry",
+                    category: "Poetry",
+                    date: "2025-12-30",
+                    url: "poetry/Serene%20Beauty/index.html"
+                }
+            ];
+        }
+        
+        const data = JSON.parse(contentData);
+        const allContent = [];
+        
+        // Add poetry items
+        if (data.poetry && data.poetry.length > 0) {
+            data.poetry.forEach(poem => {
+                allContent.push({
+                    id: poem.id,
+                    title: poem.title,
+                    description: poem.description || poem.content.substring(0, 100) + '...',
+                    type: 'poetry',
+                    category: 'Poetry',
+                    date: poem.postedDate || poem.dateCreated,
+                    url: `poetry/${encodeURIComponent(poem.title)}/index.html`
+                });
+            });
+        }
+        
+        // Add article items
+        if (data.articles && data.articles.length > 0) {
+            data.articles.forEach(article => {
+                allContent.push({
+                    id: article.id,
+                    title: article.title,
+                    description: article.excerpt || article.content.substring(0, 100) + '...',
+                    type: 'article',
+                    category: 'Article',
+                    date: article.postedDate || article.dateCreated,
+                    url: `articles/${encodeURIComponent(article.title)}/index.html`
+                });
+            });
+        }
+        
+        // Add ebook items
+        if (data.ebooks && data.ebooks.length > 0) {
+            data.ebooks.forEach(ebook => {
+                allContent.push({
+                    id: ebook.id,
+                    title: ebook.title,
+                    description: ebook.description.substring(0, 100) + '...',
+                    type: 'ebook',
+                    category: 'eBook',
+                    date: ebook.postedDate || ebook.dateCreated,
+                    url: `ebooks/${encodeURIComponent(ebook.title)}/index.html`
+                });
+            });
+        }
+        
+        // Sort by date (most recent first) and return top 10
+        allContent.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return allContent.slice(0, 10);
+        
+    } catch (error) {
+        console.error('[PREMIUM] Error loading recent posts:', error);
+        return [
+            {
+                id: 1,
+                title: "Serene Beauty",
+                description: "A contemplative poem celebrating the timeless beauty of nature's gentle hills",
+                type: "poetry",
+                category: "Poetry",
+                date: "2025-12-30",
+                url: "poetry/Serene%20Beauty/index.html"
+            }
+        ];
     }
-];
+}
+
+// Recent posts data - This should be updated when new content is added
+const recentPosts = loadRecentPosts();
 
 // Initialize carousel on homepage only
 if (document.getElementById('recentlyPostedCarousel')) {
@@ -780,4 +858,45 @@ function initRecentlyPostedCarousel() {
     startAutoPlay();
     
     console.log('[PREMIUM] Recently Posted Carousel initialized successfully');
+}
+
+// ==========================================
+// UPDATE CONTENT COUNTS FROM LOCALSTORAGE
+// ==========================================
+function updateContentCounts() {
+    try {
+        // Get content data from localStorage
+        const contentData = localStorage.getItem('admin_content_data');
+        if (!contentData) {
+            console.log('[PREMIUM] No content data found in localStorage');
+            return;
+        }
+        
+        const data = JSON.parse(contentData);
+        
+        // Update poetry count
+        const poetryCountElement = document.querySelector('.poetry-card .stat-number');
+        if (poetryCountElement && data.poetry) {
+            poetryCountElement.textContent = data.poetry.length;
+            console.log('[PREMIUM] Updated poetry count:', data.poetry.length);
+        }
+        
+        // Update articles count
+        const articlesCountElement = document.querySelector('.articles-card .stat-number');
+        if (articlesCountElement && data.articles) {
+            articlesCountElement.textContent = data.articles.length;
+            console.log('[PREMIUM] Updated articles count:', data.articles.length);
+        }
+        
+        // Update ebooks count
+        const ebooksCountElement = document.querySelector('.ebooks-card .stat-number');
+        if (ebooksCountElement && data.ebooks) {
+            ebooksCountElement.textContent = data.ebooks.length;
+            console.log('[PREMIUM] Updated ebooks count:', data.ebooks.length);
+        }
+        
+        console.log('[PREMIUM] Content counts updated successfully');
+    } catch (error) {
+        console.error('[PREMIUM] Error updating content counts:', error);
+    }
 }

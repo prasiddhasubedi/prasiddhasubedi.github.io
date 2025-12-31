@@ -229,6 +229,7 @@
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
+    position: relative;
 }
 
 .preview-label {
@@ -241,6 +242,25 @@
 .preview-image {
     max-width: 100%;
     border-radius: 0.5rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.btn-remove-preview {
+    padding: 0.5rem 1rem;
+    background: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-remove-preview:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
 }
 
 /* Button Styles */

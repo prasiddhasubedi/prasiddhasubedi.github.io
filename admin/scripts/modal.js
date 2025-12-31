@@ -68,6 +68,7 @@ class ModalManager {
 
     // Create Poetry Modal
     createPoetryModal(data, isEdit) {
+        const currentDate = data?.postedDate ? new Date(data.postedDate).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16);
         return `
             <div class="modal">
                 <div class="modal-header">
@@ -111,6 +112,47 @@ class ModalManager {
                             >
                         </div>
 
+                        <div class="form-group">
+                            <label for="poetryDescription">Description</label>
+                            <textarea 
+                                id="poetryDescription" 
+                                name="description" 
+                                placeholder="Brief description of the poem..."
+                                rows="2"
+                            >${data ? this.escapeHTML(data.description || '') : ''}</textarea>
+                            <span class="form-hint">A short description that will appear in listings</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="poetryPostedDate">Posted Date</label>
+                            <input 
+                                type="datetime-local" 
+                                id="poetryPostedDate" 
+                                name="postedDate" 
+                                value="${currentDate}"
+                            >
+                            <span class="form-hint">When this poem was/will be published</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="poetryMedia">Featured Image (Optional)</label>
+                            <div class="file-upload-area" id="poetryFileUploadArea">
+                                <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <div class="file-upload-text">Click to upload or drag and drop</div>
+                                <div class="file-upload-hint">PNG, JPG up to 5MB</div>
+                                <input type="file" id="poetryMediaInput" class="file-upload-input" accept="image/*">
+                            </div>
+                            <div id="poetryPreviewContainer" class="preview-container" style="display: ${data?.mediaUrl ? 'block' : 'none'};">
+                                <span class="preview-label">Preview:</span>
+                                <img id="poetryMediaPreview" class="preview-image" src="${data?.mediaUrl || ''}" alt="Preview">
+                                <button type="button" class="btn-remove-preview" onclick="modalManager.removePoetryMedia()">Remove</button>
+                            </div>
+                        </div>
+
                         <div class="form-group large">
                             <label for="poetryContent">Content<span class="required">*</span></label>
                             <textarea 
@@ -152,6 +194,7 @@ class ModalManager {
 
     // Create Article Modal
     createArticleModal(data, isEdit) {
+        const currentDate = data?.postedDate ? new Date(data.postedDate).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16);
         return `
             <div class="modal">
                 <div class="modal-header">
@@ -204,6 +247,36 @@ class ModalManager {
                             <span class="form-hint">A short summary that will appear in article listings</span>
                         </div>
 
+                        <div class="form-group">
+                            <label for="articlePostedDate">Posted Date</label>
+                            <input 
+                                type="datetime-local" 
+                                id="articlePostedDate" 
+                                name="postedDate" 
+                                value="${currentDate}"
+                            >
+                            <span class="form-hint">When this article was/will be published</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="articleMedia">Featured Image (Optional)</label>
+                            <div class="file-upload-area" id="articleFileUploadArea">
+                                <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <div class="file-upload-text">Click to upload or drag and drop</div>
+                                <div class="file-upload-hint">PNG, JPG up to 5MB</div>
+                                <input type="file" id="articleMediaInput" class="file-upload-input" accept="image/*">
+                            </div>
+                            <div id="articlePreviewContainer" class="preview-container" style="display: ${data?.mediaUrl ? 'block' : 'none'};">
+                                <span class="preview-label">Preview:</span>
+                                <img id="articleMediaPreview" class="preview-image" src="${data?.mediaUrl || ''}" alt="Preview">
+                                <button type="button" class="btn-remove-preview" onclick="modalManager.removeArticleMedia()">Remove</button>
+                            </div>
+                        </div>
+
                         <div class="form-group large">
                             <label for="articleContent">Content<span class="required">*</span></label>
                             <textarea 
@@ -243,6 +316,7 @@ class ModalManager {
 
     // Create eBook Modal
     createEbookModal(data, isEdit) {
+        const currentDate = data?.postedDate ? new Date(data.postedDate).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16);
         return `
             <div class="modal">
                 <div class="modal-header">
@@ -294,6 +368,36 @@ class ModalManager {
                                 placeholder="Fiction, Non-fiction, Poetry, etc."
                                 value="${data ? this.escapeHTML(data.genre || '') : ''}"
                             >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ebookPostedDate">Posted Date</label>
+                            <input 
+                                type="datetime-local" 
+                                id="ebookPostedDate" 
+                                name="postedDate" 
+                                value="${currentDate}"
+                            >
+                            <span class="form-hint">When this eBook was/will be published</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ebookCover">Cover Image (Optional)</label>
+                            <div class="file-upload-area" id="ebookFileUploadArea">
+                                <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <div class="file-upload-text">Click to upload or drag and drop</div>
+                                <div class="file-upload-hint">PNG, JPG up to 5MB</div>
+                                <input type="file" id="ebookCoverInput" class="file-upload-input" accept="image/*">
+                            </div>
+                            <div id="ebookPreviewContainer" class="preview-container" style="display: ${data?.coverImageUrl ? 'block' : 'none'};">
+                                <span class="preview-label">Preview:</span>
+                                <img id="ebookCoverPreview" class="preview-image" src="${data?.coverImageUrl || ''}" alt="Preview">
+                                <button type="button" class="btn-remove-preview" onclick="modalManager.removeEbookCover()">Remove</button>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -449,6 +553,15 @@ class ModalManager {
 
         // Handle photo upload
         this.attachPhotoUploadListeners();
+        
+        // Handle poetry media upload
+        this.attachPoetryMediaListeners();
+        
+        // Handle article media upload
+        this.attachArticleMediaListeners();
+        
+        // Handle ebook cover upload
+        this.attachEbookCoverListeners();
 
         // ESC key to close
         document.addEventListener('keydown', this.handleEscape.bind(this));
@@ -516,11 +629,155 @@ class ModalManager {
         reader.readAsDataURL(file);
     }
 
+    // Handle poetry media upload listeners
+    attachPoetryMediaListeners() {
+        const uploadArea = document.getElementById('poetryFileUploadArea');
+        const fileInput = document.getElementById('poetryMediaInput');
+        
+        if (!uploadArea || !fileInput) return;
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                this.handleMediaFile(file, 'poetryMediaPreview', 'poetryPreviewContainer');
+            }
+        });
+        
+        this.attachDragAndDrop(uploadArea, (file) => {
+            this.handleMediaFile(file, 'poetryMediaPreview', 'poetryPreviewContainer');
+        });
+    }
+
+    // Handle article media upload listeners
+    attachArticleMediaListeners() {
+        const uploadArea = document.getElementById('articleFileUploadArea');
+        const fileInput = document.getElementById('articleMediaInput');
+        
+        if (!uploadArea || !fileInput) return;
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                this.handleMediaFile(file, 'articleMediaPreview', 'articlePreviewContainer');
+            }
+        });
+        
+        this.attachDragAndDrop(uploadArea, (file) => {
+            this.handleMediaFile(file, 'articleMediaPreview', 'articlePreviewContainer');
+        });
+    }
+
+    // Handle ebook cover upload listeners
+    attachEbookCoverListeners() {
+        const uploadArea = document.getElementById('ebookFileUploadArea');
+        const fileInput = document.getElementById('ebookCoverInput');
+        
+        if (!uploadArea || !fileInput) return;
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                this.handleMediaFile(file, 'ebookCoverPreview', 'ebookPreviewContainer');
+            }
+        });
+        
+        this.attachDragAndDrop(uploadArea, (file) => {
+            this.handleMediaFile(file, 'ebookCoverPreview', 'ebookPreviewContainer');
+        });
+    }
+
+    // Generic drag and drop handler
+    attachDragAndDrop(uploadArea, onFileDrop) {
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                onFileDrop(file);
+            }
+        });
+    }
+
+    // Handle media file upload
+    handleMediaFile(file, previewId, containerId) {
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('File size must be less than 5MB', 'error');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const preview = document.getElementById(previewId);
+            const container = document.getElementById(containerId);
+            
+            if (preview && container) {
+                preview.src = e.target.result;
+                container.style.display = 'block';
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Remove poetry media
+    removePoetryMedia() {
+        const preview = document.getElementById('poetryMediaPreview');
+        const container = document.getElementById('poetryPreviewContainer');
+        const input = document.getElementById('poetryMediaInput');
+        
+        if (preview) preview.src = '';
+        if (container) container.style.display = 'none';
+        if (input) input.value = '';
+    }
+
+    // Remove article media
+    removeArticleMedia() {
+        const preview = document.getElementById('articleMediaPreview');
+        const container = document.getElementById('articlePreviewContainer');
+        const input = document.getElementById('articleMediaInput');
+        
+        if (preview) preview.src = '';
+        if (container) container.style.display = 'none';
+        if (input) input.value = '';
+    }
+
+    // Remove ebook cover
+    removeEbookCover() {
+        const preview = document.getElementById('ebookCoverPreview');
+        const container = document.getElementById('ebookPreviewContainer');
+        const input = document.getElementById('ebookCoverInput');
+        
+        if (preview) preview.src = '';
+        if (container) container.style.display = 'none';
+        if (input) input.value = '';
+    }
+
     // Handle Poetry Submit
     handlePoetrySubmit() {
         const form = document.getElementById('poetryForm');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
+        
+        // Get media URL from preview
+        const mediaPreview = document.getElementById('poetryMediaPreview');
+        if (mediaPreview && mediaPreview.src && !mediaPreview.src.includes('undefined')) {
+            data.mediaUrl = mediaPreview.src;
+        }
 
         const submitBtn = document.querySelector('.modal-footer .btn-primary');
         if (submitBtn) {
@@ -557,6 +814,12 @@ class ModalManager {
         const form = document.getElementById('articleForm');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
+        
+        // Get media URL from preview
+        const mediaPreview = document.getElementById('articleMediaPreview');
+        if (mediaPreview && mediaPreview.src && !mediaPreview.src.includes('undefined')) {
+            data.mediaUrl = mediaPreview.src;
+        }
 
         const submitBtn = document.querySelector('.modal-footer .btn-primary');
         if (submitBtn) {
@@ -591,6 +854,12 @@ class ModalManager {
         const form = document.getElementById('ebookForm');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
+        
+        // Get cover image URL from preview
+        const coverPreview = document.getElementById('ebookCoverPreview');
+        if (coverPreview && coverPreview.src && !coverPreview.src.includes('undefined')) {
+            data.coverImageUrl = coverPreview.src;
+        }
 
         const submitBtn = document.querySelector('.modal-footer .btn-primary');
         if (submitBtn) {
