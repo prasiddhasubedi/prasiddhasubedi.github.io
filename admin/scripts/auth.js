@@ -27,7 +27,7 @@ async function simpleHash(str) {
 const ADMIN_CREDENTIALS = {
     username: 'admin',
     // Password: admin123 (pre-hashed)
-    passwordHash: 'ee11cbb19052e40b07aac0ca060c23ee'
+    passwordHash: '00000000000000000000000039c43b7d'
 };
 
 class Auth {

@@ -79,35 +79,35 @@ function initializeActionButtons() {
     const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
 
     if (addPoetryBtn) {
-        addPoetryBtn.addEventListener('click', () => showContentModal('poetry'));
+        addPoetryBtn.addEventListener('click', () => window.modalManager.show('poetry'));
     }
 
     if (addArticleBtn) {
-        addArticleBtn.addEventListener('click', () => showContentModal('article'));
+        addArticleBtn.addEventListener('click', () => window.modalManager.show('article'));
     }
 
     if (addEbookBtn) {
-        addEbookBtn.addEventListener('click', () => showContentModal('ebook'));
+        addEbookBtn.addEventListener('click', () => window.modalManager.show('ebook'));
     }
 
     if (uploadPhotoBtn) {
-        uploadPhotoBtn.addEventListener('click', () => showPhotoUploadModal());
+        uploadPhotoBtn.addEventListener('click', () => window.modalManager.show('photo'));
     }
 }
 
 function handleQuickAction(action) {
     switch(action) {
         case 'add-poetry':
-            showContentModal('poetry');
+            window.modalManager.show('poetry');
             break;
         case 'add-article':
-            showContentModal('article');
+            window.modalManager.show('article');
             break;
         case 'upload-photo':
-            showPhotoUploadModal();
+            window.modalManager.show('photo');
             break;
         case 'add-ebook':
-            showContentModal('ebook');
+            window.modalManager.show('ebook');
             break;
     }
 }
@@ -401,7 +401,7 @@ function loadPhotoGallery() {
 window.editPoetry = function(id) {
     const poetry = window.contentManager.getPoetryById(id);
     if (poetry) {
-        showContentModal('poetry', poetry);
+        window.modalManager.show('poetry', poetry);
     }
 };
 
@@ -417,7 +417,7 @@ window.deletePoetry = function(id) {
 window.editArticle = function(id) {
     const article = window.contentManager.getArticleById(id);
     if (article) {
-        showContentModal('article', article);
+        window.modalManager.show('article', article);
     }
 };
 
@@ -433,7 +433,7 @@ window.deleteArticle = function(id) {
 window.editEbook = function(id) {
     const ebook = window.contentManager.getEbookById(id);
     if (ebook) {
-        showContentModal('ebook', ebook);
+        window.modalManager.show('ebook', ebook);
     }
 };
 
@@ -459,15 +459,7 @@ window.deletePhoto = function(id) {
 // MODAL FUNCTIONS (Simplified implementation)
 // ==========================================
 
-function showContentModal(type, data = null) {
-    showToast(`${type} modal will be implemented with full CRUD functionality`, 'info');
-    // Modal implementation would go here
-}
-
-function showPhotoUploadModal() {
-    showToast('Photo upload modal will be implemented with file upload functionality', 'info');
-    // Photo upload modal implementation would go here
-}
+// Modal implementation is handled by modalManager
 
 // ==========================================
 // UTILITY FUNCTIONS
