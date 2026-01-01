@@ -81,7 +81,7 @@
         <div class="container">
             <div class="works-list" data-aos="fade-up">
                 <h2>Available Poems</h2>
-                <ul>
+                <ul id="poetry-list">
                     <li data-aos="fade-up" data-aos-delay="100">
                         <a href="Serene%20Beauty/index.html">Serene Beauty</a>
                         <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A contemplative poem celebrating the timeless beauty of nature's gentle hills</p>
@@ -148,5 +148,73 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        console.log('[DEBUG] Poetry page loaded');
+        
+        // Function to load poems from localStorage
+        function loadPoems() {
+            try {
+                const contentData = localStorage.getItem('admin_content_data');
+                const poetryList = document.getElementById('poetry-list');
+                
+                if (!poetryList) {
+                    console.error('[ERROR] Poetry list container not found');
+                    return;
+                }
+                
+                if (!contentData) {
+                    console.log('[DEBUG] No content data found, keeping default poems');
+                    return; // Keep default poem
+                }
+                
+                const data = JSON.parse(contentData);
+                
+                if (!data.poetry || data.poetry.length === 0) {
+                    console.log('[DEBUG] No poems found in localStorage, keeping default');
+                    return; // Keep default poem
+                }
+                
+                // Sort poems by posted date (most recent first)
+                const poems = [...data.poetry].sort((a, b) => 
+                    new Date(b.postedDate || b.dateCreated) - new Date(a.postedDate || a.dateCreated)
+                );
+                
+                // Generate poem list HTML - append to existing default poem
+                const poemsHTML = poems.map(poem => {
+                    const description = poem.description || (poem.content ? poem.content.substring(0, 100) + '...' : 'No description available');
+                    const date = new Date(poem.postedDate || poem.dateCreated);
+                    const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    return `
+                        <li data-aos="fade-up" data-aos-delay="100" style="margin-bottom: 1rem;">
+                            <a href="${encodeURIComponent(poem.title)}/index.html">${escapeHTML(poem.title)}</a>
+                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">${escapeHTML(description)}</p>
+                            <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 ${formattedDate}</p>
+                        </li>
+                    `;
+                }).join('');
+                
+                // Append new poems after the default one
+                poetryList.innerHTML += poemsHTML;
+                console.log('[DEBUG] Loaded', poems.length, 'additional poems');
+                
+            } catch (error) {
+                console.error('[ERROR] Failed to load poems:', error);
+            }
+        }
+        
+        // Helper function to escape HTML
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[DEBUG] Poetry page DOM ready');
+            loadPoems();
+        });
+    </script>
 </body>
 </html>

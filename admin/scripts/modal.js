@@ -794,6 +794,11 @@ class ModalManager {
                 // Create new
                 window.contentManager.addPoetry(data);
                 showToast('Poem added successfully', 'success');
+                
+                // Show instructions for creating the content page
+                setTimeout(() => {
+                    showContentPageInstructions('poetry', data.title);
+                }, 2000);
             }
 
             loadPoetryList();
@@ -834,6 +839,11 @@ class ModalManager {
             } else {
                 window.contentManager.addArticle(data);
                 showToast('Article added successfully', 'success');
+                
+                // Show instructions for creating the content page
+                setTimeout(() => {
+                    showContentPageInstructions('articles', data.title);
+                }, 2000);
             }
 
             loadArticlesList();
@@ -874,6 +884,11 @@ class ModalManager {
             } else {
                 window.contentManager.addEbook(data);
                 showToast('eBook added successfully', 'success');
+                
+                // Show instructions for creating the content page
+                setTimeout(() => {
+                    showContentPageInstructions('ebooks', data.title);
+                }, 2000);
             }
 
             loadEbooksList();
@@ -956,3 +971,88 @@ class ModalManager {
 
 // Create global instance
 window.modalManager = new ModalManager();
+
+// ==========================================
+// CONTENT PAGE INSTRUCTIONS
+// Helper to show instructions for creating content pages
+// ==========================================
+function showContentPageInstructions(type, title) {
+    const instructions = {
+        poetry: {
+            folder: 'poetry',
+            template: 'poetry/Serene Beauty',
+            color: '#667eea'
+        },
+        articles: {
+            folder: 'articles',
+            template: 'articles/_template',
+            color: '#764ba2'
+        },
+        ebooks: {
+            folder: 'ebooks',
+            template: 'ebooks/_template',
+            color: '#667eea'
+        }
+    };
+
+    const config = instructions[type];
+    if (!config) return;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+    
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 15px; padding: 2rem; max-width: 600px; margin: 2rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="margin: 0; color: ${config.color};">✓ Content Saved!</h2>
+                <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;">&times;</button>
+            </div>
+            
+            <p style="margin-bottom: 1rem; color: #666;">
+                <strong>"${title}"</strong> has been saved to localStorage and will appear in the recently posted section and ${config.folder} index.
+            </p>
+            
+            <div style="background: #f8f9fa; border-left: 4px solid ${config.color}; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <h3 style="margin: 0 0 0.5rem 0; font-size: 1rem; color: ${config.color};">📝 Next Step: Create Content Page</h3>
+                <p style="margin: 0 0 1rem 0; color: #666; font-size: 0.9rem;">
+                    To make this content accessible at its own URL, create a folder with template files:
+                </p>
+                
+                <div style="background: #2d3748; color: #fff; padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; margin-bottom: 1rem;">
+                    <div># Create folder</div>
+                    <div>mkdir -p "${config.folder}/${title}"</div>
+                    <div style="margin-top: 0.5rem;"># Copy template files</div>
+                    <div>cp ${config.template}/{index.html,style.css,script.js} \\</div>
+                    <div>&nbsp;&nbsp;"${config.folder}/${title}/"</div>
+                </div>
+                
+                <p style="margin: 0; color: #666; font-size: 0.85rem;">
+                    <strong>Note:</strong> The folder name must exactly match the title: "${title}"
+                </p>
+            </div>
+            
+            <div style="margin-top: 1rem; padding: 1rem; background: #e3f2fd; border-radius: 8px;">
+                <p style="margin: 0; font-size: 0.9rem; color: #1976d2;">
+                    💡 <strong>Tip:</strong> The content will load automatically from localStorage when someone visits the page. See <a href="./CONTENT_UPLOAD_GUIDE.md" target="_blank" style="color: ${config.color};">CONTENT_UPLOAD_GUIDE.md</a> for more details.
+                </p>
+            </div>
+            
+            <div style="margin-top: 1.5rem; text-align: right;">
+                <button onclick="this.closest('.modal-overlay').remove()" style="background: ${config.color}; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    Got it!
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close on overlay click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+

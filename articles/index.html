@@ -155,16 +155,74 @@
     <script>
         console.log('[DEBUG] Articles page loaded');
         
+        // Function to load articles from localStorage
+        function loadArticles() {
+            try {
+                const contentData = localStorage.getItem('admin_content_data');
+                const articlesContent = document.getElementById('articles-content');
+                
+                if (!articlesContent) {
+                    console.error('[ERROR] Articles content container not found');
+                    return;
+                }
+                
+                if (!contentData) {
+                    console.log('[DEBUG] No content data found, showing default message');
+                    return; // Keep default "On the way" message
+                }
+                
+                const data = JSON.parse(contentData);
+                
+                if (!data.articles || data.articles.length === 0) {
+                    console.log('[DEBUG] No articles found, showing default message');
+                    return; // Keep default "On the way" message
+                }
+                
+                // Sort articles by posted date (most recent first)
+                const articles = [...data.articles].sort((a, b) => 
+                    new Date(b.postedDate || b.dateCreated) - new Date(a.postedDate || a.dateCreated)
+                );
+                
+                // Generate article list HTML
+                const articlesHTML = articles.map(article => {
+                    const excerpt = article.excerpt || (article.content ? article.content.substring(0, 150) + '...' : 'No excerpt available');
+                    const date = new Date(article.postedDate || article.dateCreated);
+                    const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    return `
+                        <li data-aos="fade-up" data-aos-delay="100" style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-radius: 10px; border-left: 4px solid #764ba2;">
+                            <a href="${encodeURIComponent(article.title)}/index.html" style="text-decoration: none; color: inherit;">
+                                <h3 style="color: #764ba2; margin-bottom: 0.5rem; font-size: 1.5rem;">${escapeHTML(article.title)}</h3>
+                                <p style="color: #666; margin: 0.5rem 0; font-size: 0.95rem;">${escapeHTML(excerpt)}</p>
+                                <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem; font-size: 0.85rem; color: #999;">
+                                    <span>📅 ${formattedDate}</span>
+                                    ${article.author ? `<span>✍️ ${escapeHTML(article.author)}</span>` : ''}
+                                    ${article.tags ? `<span>🏷️ ${escapeHTML(article.tags)}</span>` : ''}
+                                </div>
+                            </a>
+                        </li>
+                    `;
+                }).join('');
+                
+                articlesContent.innerHTML = `<ul style="list-style: none; padding: 0;">${articlesHTML}</ul>`;
+                console.log('[DEBUG] Loaded', articles.length, 'articles');
+                
+            } catch (error) {
+                console.error('[ERROR] Failed to load articles:', error);
+            }
+        }
+        
+        // Helper function to escape HTML
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('[DEBUG] Articles page DOM ready');
-            
-            const articlesContent = document.getElementById('articles-content');
-            if (articlesContent) {
-                console.log('[DEBUG] Articles content container found');
-                console.log('[DEBUG] Number of articles displayed:', articlesContent.querySelectorAll('li').length);
-            } else {
-                console.error('[ERROR] Articles content container not found');
-            }
+            loadArticles();
         });
     </script>
 </body>

@@ -155,17 +155,74 @@
     <script>
         console.log('[DEBUG] Ebooks page loaded');
         
-        // Dynamic content loading simulation
+        // Function to load ebooks from localStorage
+        function loadEbooks() {
+            try {
+                const contentData = localStorage.getItem('admin_content_data');
+                const ebooksContent = document.getElementById('ebooks-content');
+                
+                if (!ebooksContent) {
+                    console.error('[ERROR] Ebooks content container not found');
+                    return;
+                }
+                
+                if (!contentData) {
+                    console.log('[DEBUG] No content data found, showing default message');
+                    return; // Keep default "On the way" message
+                }
+                
+                const data = JSON.parse(contentData);
+                
+                if (!data.ebooks || data.ebooks.length === 0) {
+                    console.log('[DEBUG] No ebooks found, showing default message');
+                    return; // Keep default "On the way" message
+                }
+                
+                // Sort ebooks by posted date (most recent first)
+                const ebooks = [...data.ebooks].sort((a, b) => 
+                    new Date(b.postedDate || b.dateCreated) - new Date(a.postedDate || a.dateCreated)
+                );
+                
+                // Generate ebook list HTML
+                const ebooksHTML = ebooks.map(ebook => {
+                    const description = ebook.description ? ebook.description.substring(0, 150) + '...' : 'No description available';
+                    const date = new Date(ebook.postedDate || ebook.dateCreated);
+                    const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    return `
+                        <li data-aos="fade-up" data-aos-delay="100" style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-radius: 10px; border-left: 4px solid #667eea;">
+                            <a href="${encodeURIComponent(ebook.title)}/index.html" style="text-decoration: none; color: inherit;">
+                                <h3 style="color: #667eea; margin-bottom: 0.5rem; font-size: 1.5rem;">${escapeHTML(ebook.title)}</h3>
+                                ${description ? `<p style="color: #666; margin: 0.5rem 0; font-size: 0.95rem;">${escapeHTML(description)}</p>` : ''}
+                                <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem; font-size: 0.85rem; color: #999;">
+                                    <span>📅 ${formattedDate}</span>
+                                    ${ebook.author ? `<span>✍️ ${escapeHTML(ebook.author)}</span>` : ''}
+                                    ${ebook.genre ? `<span>📚 ${escapeHTML(ebook.genre)}</span>` : ''}
+                                </div>
+                            </a>
+                        </li>
+                    `;
+                }).join('');
+                
+                ebooksContent.innerHTML = `<ul style="list-style: none; padding: 0;">${ebooksHTML}</ul>`;
+                console.log('[DEBUG] Loaded', ebooks.length, 'ebooks');
+                
+            } catch (error) {
+                console.error('[ERROR] Failed to load ebooks:', error);
+            }
+        }
+        
+        // Helper function to escape HTML
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('[DEBUG] Ebooks page DOM ready');
-            
-            const ebooksContent = document.getElementById('ebooks-content');
-            if (ebooksContent) {
-                console.log('[DEBUG] Ebooks content container found');
-                console.log('[DEBUG] Number of ebooks displayed:', ebooksContent.querySelectorAll('li').length);
-            } else {
-                console.error('[ERROR] Ebooks content container not found');
-            }
+            loadEbooks();
         });
     </script>
 </body>
