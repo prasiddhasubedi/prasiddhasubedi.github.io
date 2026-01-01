@@ -3,6 +3,9 @@
 // Dynamically generates individual content pages
 // ==========================================
 
+// Constants
+const DESCRIPTION_MAX_LENGTH = 150;
+
 class ContentPageGenerator {
     constructor() {
         this.baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');

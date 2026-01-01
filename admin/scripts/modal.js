@@ -1034,7 +1034,7 @@ function showContentPageInstructions(type, title) {
             
             <div style="margin-top: 1rem; padding: 1rem; background: #e3f2fd; border-radius: 8px;">
                 <p style="margin: 0; font-size: 0.9rem; color: #1976d2;">
-                    💡 <strong>Tip:</strong> The content will load automatically from localStorage when someone visits the page. See <a href="CONTENT_UPLOAD_GUIDE.md" target="_blank" style="color: ${config.color};">CONTENT_UPLOAD_GUIDE.md</a> for more details.
+                    💡 <strong>Tip:</strong> The content will load automatically from localStorage when someone visits the page. See <a href="./CONTENT_UPLOAD_GUIDE.md" target="_blank" style="color: ${config.color};">CONTENT_UPLOAD_GUIDE.md</a> for more details.
                 </p>
             </div>
             

@@ -94,7 +94,7 @@ class ContentViewer {
     updateMetaTags() {
         const description = this.content.description || 
                           this.content.excerpt || 
-                          (this.content.content ? this.content.content.substring(0, 150) + '...' : '');
+                          (this.content.content ? this.content.content.substring(0, 150) + '...' : 'Content by Prasiddha Subedi');
 
         // Update description meta
         let metaDesc = document.querySelector('meta[name="description"]');

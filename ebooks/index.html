@@ -185,7 +185,7 @@
                 
                 // Generate ebook list HTML
                 const ebooksHTML = ebooks.map(ebook => {
-                    const description = ebook.description ? ebook.description.substring(0, 150) + '...' : '';
+                    const description = ebook.description ? ebook.description.substring(0, 150) + '...' : 'No description available';
                     const date = new Date(ebook.postedDate || ebook.dateCreated);
                     const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                     
