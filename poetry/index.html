@@ -83,8 +83,29 @@
                 <h2>Available Poems</h2>
                 <ul id="poetry-list">
                     <li data-aos="fade-up" data-aos-delay="100">
-                        <a href="Serene%20Beauty/index.html">Serene Beauty</a>
-                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A contemplative poem celebrating the timeless beauty of nature's gentle hills</p>
+                        <a href="THE%20SKY%20BENEATH%20MY%20FEET/index.html">THE SKY BENEATH MY FEET</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A surreal journey of perspective where the impossible becomes possible</p>
+                        <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 January 2, 2026</p>
+                    </li>
+                    <li data-aos="fade-up" data-aos-delay="150">
+                        <a href="IF%20STARS%20HAD%20WINDOWS/index.html">IF STARS HAD WINDOWS</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A whimsical exploration of cosmic perspective and universal mysteries</p>
+                        <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 December 28, 2025</p>
+                    </li>
+                    <li data-aos="fade-up" data-aos-delay="200">
+                        <a href="MAYBE%20SOMEDAY/index.html">MAYBE SOMEDAY</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A hopeful reflection on healing and the promise of better tomorrows</p>
+                        <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 December 20, 2025</p>
+                    </li>
+                    <li data-aos="fade-up" data-aos-delay="250">
+                        <a href="SHE%2C%20LIKE%20EVERYTHING%20BEAUTIFUL/index.html">SHE, LIKE EVERYTHING BEAUTIFUL</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">An ode to fleeting beauty and the courage to embrace it despite its impermanence</p>
+                        <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 December 15, 2025</p>
+                    </li>
+                    <li data-aos="fade-up" data-aos-delay="300">
+                        <a href="IF%20I%20COULD%20TELL%20THE%20MOON/index.html">IF I COULD TELL THE MOON</a>
+                        <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A heartfelt conversation with the moon about secrets and silent yearnings</p>
+                        <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 December 10, 2025</p>
                     </li>
                 </ul>
             </div>
@@ -147,75 +168,14 @@
     </button>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../admin/scripts/content-manager.js"></script>
-    <script src="../js/init-default-content.js"></script>
     <script src="../js/main.js"></script>
     <script>
         console.log('[DEBUG] Poetry page loaded');
         
-        // Function to load poems from localStorage
-        function loadPoems() {
-            try {
-                const contentData = localStorage.getItem('admin_content_data');
-                const poetryList = document.getElementById('poetry-list');
-                
-                if (!poetryList) {
-                    console.error('[ERROR] Poetry list container not found');
-                    return;
-                }
-                
-                if (!contentData) {
-                    console.log('[DEBUG] No content data found, keeping default poems');
-                    return; // Keep default poem
-                }
-                
-                const data = JSON.parse(contentData);
-                
-                if (!data.poetry || data.poetry.length === 0) {
-                    console.log('[DEBUG] No poems found in localStorage, keeping default');
-                    return; // Keep default poem
-                }
-                
-                // Sort poems by posted date (most recent first)
-                const poems = [...data.poetry].sort((a, b) => 
-                    new Date(b.postedDate || b.dateCreated) - new Date(a.postedDate || a.dateCreated)
-                );
-                
-                // Generate poem list HTML - append to existing default poem
-                const poemsHTML = poems.map(poem => {
-                    const description = poem.description || (poem.content ? poem.content.substring(0, 100) + '...' : 'No description available');
-                    const date = new Date(poem.postedDate || poem.dateCreated);
-                    const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                    
-                    return `
-                        <li data-aos="fade-up" data-aos-delay="100" style="margin-bottom: 1rem;">
-                            <a href="${encodeURIComponent(poem.title)}/index.html">${escapeHTML(poem.title)}</a>
-                            <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">${escapeHTML(description)}</p>
-                            <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📅 ${formattedDate}</p>
-                        </li>
-                    `;
-                }).join('');
-                
-                // Append new poems after the default one
-                poetryList.innerHTML += poemsHTML;
-                console.log('[DEBUG] Loaded', poems.length, 'additional poems');
-                
-            } catch (error) {
-                console.error('[ERROR] Failed to load poems:', error);
-            }
-        }
-        
-        // Helper function to escape HTML
-        function escapeHTML(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('[DEBUG] Poetry page DOM ready');
-            loadPoems();
+            // Poetry list is now statically defined in HTML
+            // No need to load from localStorage
         });
     </script>
 </body>
