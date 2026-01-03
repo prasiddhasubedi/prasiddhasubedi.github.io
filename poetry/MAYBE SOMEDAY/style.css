@@ -1,0 +1,306 @@
+/* ================================================
+   MAYBE SOMEDAY - HOPEFUL SUNSET THEME
+   ================================================ */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6f61 50%, #de6161 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Sun Rays Animation */
+.sun-rays {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+  transform-origin: top center;
+  animation: rotate 20s linear infinite;
+}
+
+.ray:nth-child(1) { transform: rotate(0deg); }
+.ray:nth-child(2) { transform: rotate(60deg); }
+.ray:nth-child(3) { transform: rotate(120deg); }
+.ray:nth-child(4) { transform: rotate(180deg); }
+.ray:nth-child(5) { transform: rotate(240deg); }
+.ray:nth-child(6) { transform: rotate(300deg); }
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: rgba(222, 97, 97, 0.85);
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.3),
+    0 0 100px rgba(255, 154, 86, 0.2) inset;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInScale 1s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Title Section */
+.title-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 1s ease-out 0.2s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #ffe8d6;
+  text-shadow: 
+    3px 3px 6px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 154, 86, 0.4);
+  letter-spacing: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.author-signature {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #ffe8d6;
+  letter-spacing: 3px;
+  opacity: 0.9;
+}
+
+/* Poetry Content */
+.poetry-content {
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.poem-text {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: rgba(255, 111, 97, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.stanza {
+  margin-bottom: 2.5rem;
+  padding: 1.2rem 0;
+  border-left: 4px solid rgba(255, 232, 214, 0.4);
+  padding-left: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.stanza:hover {
+  border-left-color: #ffe8d6;
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.verse {
+  font-size: 1.35rem;
+  line-height: 2.2;
+  color: #fff5eb;
+  margin: 0.5rem 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.final-stanza {
+  border-left-color: #ffe8d6;
+  border-left-width: 5px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.final-stanza .verse {
+  font-weight: 600;
+  color: #ffe8d6;
+}
+
+/* Back Link */
+.back-link-container {
+  text-align: center;
+  margin-top: 3rem;
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6f61 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(255, 154, 86, 0.4);
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.back-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 154, 86, 0.6);
+  background: linear-gradient(135deg, #ffaa66 0%, #ff7f71 100%);
+}
+
+.back-link:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .main-title {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+
+  .author-signature {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .poem-text {
+    padding: 1.5rem;
+  }
+
+  .verse {
+    font-size: 1.1rem;
+    line-height: 1.9;
+  }
+
+  .stanza {
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.8rem;
+  }
+
+  .verse {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .poem-text {
+    padding: 1rem;
+  }
+
+  .back-link {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .container {
+    box-shadow: none;
+    background: white;
+  }
+
+  .sun-rays {
+    display: none;
+  }
+
+  .back-link-container {
+    display: none;
+  }
+
+  .verse {
+    color: black;
+  }
+}

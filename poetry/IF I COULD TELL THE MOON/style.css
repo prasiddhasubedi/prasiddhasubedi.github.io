@@ -1,0 +1,343 @@
+/* ================================================
+   IF I COULD TELL THE MOON - DARK STARRY THEME
+   ================================================ */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  background: #0a0e27;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #e8e8e8;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Stars Animation */
+.stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.8);
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+.star:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+.star:nth-child(2) { top: 40%; left: 80%; animation-delay: 0.5s; }
+.star:nth-child(3) { top: 60%; left: 25%; animation-delay: 1s; }
+.star:nth-child(4) { top: 80%; left: 70%; animation-delay: 1.5s; }
+.star:nth-child(5) { top: 10%; left: 50%; animation-delay: 2s; }
+.star:nth-child(6) { top: 30%; left: 35%; animation-delay: 2.5s; }
+.star:nth-child(7) { top: 70%; left: 90%; animation-delay: 0.3s; }
+.star:nth-child(8) { top: 50%; left: 10%; animation-delay: 0.8s; }
+.star:nth-child(9) { top: 15%; left: 75%; animation-delay: 1.3s; }
+.star:nth-child(10) { top: 85%; left: 45%; animation-delay: 1.8s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Moon */
+.moon-container {
+  position: fixed;
+  top: 10%;
+  right: 10%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.moon {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at 30% 30%, #fff9e6, #f0e68c);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 40px 10px rgba(255, 255, 200, 0.5),
+    inset -10px -10px 20px rgba(0, 0, 0, 0.2);
+  animation: moonGlow 4s infinite ease-in-out;
+}
+
+@keyframes moonGlow {
+  0%, 100% { box-shadow: 0 0 40px 10px rgba(255, 255, 200, 0.5), inset -10px -10px 20px rgba(0, 0, 0, 0.2); }
+  50% { box-shadow: 0 0 60px 20px rgba(255, 255, 200, 0.7), inset -10px -10px 20px rgba(0, 0, 0, 0.2); }
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: rgba(15, 20, 45, 0.85);
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 0 100px rgba(100, 120, 255, 0.1) inset;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeInScale 1s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Title Section */
+.title-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 1s ease-out 0.2s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f0e68c;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(240, 230, 140, 0.3);
+  letter-spacing: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.author-signature {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #a8b8d8;
+  letter-spacing: 3px;
+  opacity: 0.9;
+}
+
+/* Poetry Content */
+.poetry-content {
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.poem-text {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(20, 25, 50, 0.6);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stanza {
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  border-left: 3px solid rgba(240, 230, 140, 0.3);
+  padding-left: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.stanza:hover {
+  border-left-color: #f0e68c;
+  transform: translateX(5px);
+}
+
+.verse {
+  font-size: 1.3rem;
+  line-height: 2;
+  color: #d8e0f0;
+  margin: 0.5rem 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.final-stanza {
+  border-left-color: #f0e68c;
+  border-left-width: 4px;
+}
+
+.final-stanza .verse {
+  font-weight: 500;
+  color: #f0e68c;
+}
+
+/* Back Link */
+.back-link-container {
+  text-align: center;
+  margin-top: 3rem;
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #4a5a8a 0%, #6a7aaa 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(74, 90, 138, 0.3);
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(74, 90, 138, 0.5);
+  background: linear-gradient(135deg, #5a6a9a 0%, #7a8aba 100%);
+}
+
+.back-link:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .moon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .container {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .main-title {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+
+  .author-signature {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .poem-text {
+    padding: 1.5rem;
+  }
+
+  .verse {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .stanza {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .verse {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .poem-text {
+    padding: 1rem;
+  }
+
+  .back-link {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .moon {
+    width: 60px;
+    height: 60px;
+    top: 5%;
+    right: 5%;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .container {
+    box-shadow: none;
+    background: white;
+  }
+
+  .stars-container,
+  .moon-container {
+    display: none;
+  }
+
+  .back-link-container {
+    display: none;
+  }
+
+  .verse {
+    color: black;
+  }
+}

@@ -1,0 +1,385 @@
+/* ================================================
+   IF STARS HAD WINDOWS - COSMIC WINDOW THEME
+   ================================================ */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1e 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #e8eaf6;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Cosmic Windows */
+.cosmic-windows {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.window {
+  position: absolute;
+  width: 80px;
+  height: 100px;
+  border: 3px solid rgba(144, 202, 249, 0.4);
+  border-radius: 10px;
+  background: radial-gradient(circle at 30% 30%, rgba(144, 202, 249, 0.2), transparent);
+  box-shadow: 
+    0 0 20px rgba(144, 202, 249, 0.3),
+    inset 0 0 20px rgba(144, 202, 249, 0.1);
+  animation: float-window 15s infinite ease-in-out;
+}
+
+.window::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(144, 202, 249, 0.4);
+}
+
+.window::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background: rgba(144, 202, 249, 0.4);
+}
+
+.window:nth-child(1) {
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.window:nth-child(2) {
+  top: 60%;
+  right: 15%;
+  animation-delay: 3s;
+}
+
+.window:nth-child(3) {
+  top: 40%;
+  left: 75%;
+  animation-delay: 6s;
+}
+
+.window:nth-child(4) {
+  top: 75%;
+  left: 30%;
+  animation-delay: 9s;
+}
+
+@keyframes float-window {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translateY(-20px) rotate(5deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(10px) rotate(-5deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateY(-10px) rotate(3deg);
+    opacity: 0.7;
+  }
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: rgba(26, 26, 46, 0.9);
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 0 100px rgba(144, 202, 249, 0.1) inset;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(144, 202, 249, 0.2);
+  animation: fadeInScale 1s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Title Section */
+.title-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 1s ease-out 0.2s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: #90caf9;
+  text-shadow: 
+    3px 3px 6px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(144, 202, 249, 0.4);
+  letter-spacing: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.author-signature {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #b3d9ff;
+  letter-spacing: 3px;
+  opacity: 0.9;
+}
+
+/* Poetry Content */
+.poetry-content {
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.poem-text {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: rgba(30, 30, 56, 0.6);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(144, 202, 249, 0.15);
+}
+
+.stanza {
+  margin-bottom: 2.5rem;
+  padding: 1.2rem 0;
+  border-left: 4px solid rgba(144, 202, 249, 0.4);
+  padding-left: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.stanza:hover {
+  border-left-color: #90caf9;
+  transform: translateX(8px);
+  background: rgba(144, 202, 249, 0.05);
+}
+
+.stanza::before {
+  content: '⬥';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(144, 202, 249, 0.6);
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stanza:hover::before {
+  opacity: 1;
+}
+
+.verse {
+  font-size: 1.35rem;
+  line-height: 2.2;
+  color: #e1f5fe;
+  margin: 0.5rem 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.final-stanza {
+  border-left-color: #90caf9;
+  border-left-width: 5px;
+  background: rgba(144, 202, 249, 0.08);
+}
+
+.final-stanza .verse {
+  font-weight: 600;
+  color: #90caf9;
+}
+
+/* Back Link */
+.back-link-container {
+  text-align: center;
+  margin-top: 3rem;
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(66, 165, 245, 0.4);
+  letter-spacing: 1px;
+  border: 1px solid rgba(144, 202, 249, 0.3);
+}
+
+.back-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(66, 165, 245, 0.6);
+  background: linear-gradient(135deg, #52b5ff 0%, #2986e2 100%);
+}
+
+.back-link:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .main-title {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .author-signature {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .poem-text {
+    padding: 1.5rem;
+  }
+
+  .verse {
+    font-size: 1.1rem;
+    line-height: 1.9;
+  }
+
+  .stanza {
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .window {
+    width: 60px;
+    height: 75px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.7rem;
+  }
+
+  .verse {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .poem-text {
+    padding: 1rem;
+  }
+
+  .back-link {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .window {
+    width: 50px;
+    height: 60px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .container {
+    box-shadow: none;
+    background: white;
+  }
+
+  .cosmic-windows {
+    display: none;
+  }
+
+  .back-link-container {
+    display: none;
+  }
+
+  .verse {
+    color: black;
+  }
+}

@@ -415,12 +415,52 @@ class ContentManager {
 
         const defaultPoems = [
             {
+                title: "IF I COULD TELL THE MOON",
+                content: `If I could tell the moon my secrets deep,\nWould she keep them safe while mortals sleep?\nWould she understand the weight I bear,\nOr simply glow, indifferent to my prayer?\n\nI'd whisper hopes that never saw the day,\nAnd dreams that time has slowly worn away;\nI'd share the love I couldn't speak aloud,\nHidden beneath my silent, fearful shroud.\n\nThe moon has seen a thousand years unfold,\nShe's witnessed stories new and stories old;\nPerhaps she knows that pain and joy entwine,\nThat broken hearts eventually align.\n\nIf I could tell the moon, would she reply?\nOr would she just drift gently through the sky?\nMaybe silence is her wisest art—\nA listening ear, a sympathetic heart.`,
+                author: "prasiddha",
+                description: "A heartfelt conversation with the moon about secrets and silent yearnings",
+                tags: "moon, secrets, longing, night",
+                postedDate: new Date('2026-01-03T00:00:00Z').toISOString()
+            },
+            {
+                title: "SHE, LIKE EVERYTHING BEAUTIFUL",
+                content: `She, like everything beautiful,\nComes with thorns and gentle rain;\nA rose that blooms in morning light,\nYet fades when touched by evening's pain.\n\nShe, like everything beautiful,\nIs fleeting, fragile, and sublime;\nA sunset painted in the sky,\nThat vanishes with passing time.\n\nShe, like everything beautiful,\nDemands attention, care, and grace;\nA melody that haunts the soul,\nA memory time cannot erase.\n\nShe, like everything beautiful,\nIs worth the risk, the fear, the fall;\nFor beauty, though it may not last,\nIs the most precious gift of all.`,
+                author: "prasiddha",
+                description: "An ode to fleeting beauty and the courage to embrace it despite its impermanence",
+                tags: "beauty, love, transience, courage",
+                postedDate: new Date('2026-01-02T00:00:00Z').toISOString()
+            },
+            {
+                title: "MAYBE SOMEDAY",
+                content: `Maybe someday the sun will rise\nWithout the weight of yesterday's goodbyes;\nMaybe someday the rain will fall\nWithout echoing your distant call.\n\nMaybe someday I'll walk alone\nWithout your shadow, fully grown;\nMaybe someday these wounds will heal,\nAnd I'll remember how to feel.\n\nMaybe someday the stars will shine\nWithout reminding me you were mine;\nMaybe someday this aching heart\nWill learn to live, to make a start.\n\nMaybe someday is all I have,\nA fragile hope, a gentle salve;\nBut hope is all we need, they say,\nTo make it through another day.`,
+                author: "prasiddha",
+                description: "A hopeful reflection on healing and the promise of better tomorrows",
+                tags: "hope, healing, future, resilience",
+                postedDate: new Date('2026-01-01T00:00:00Z').toISOString()
+            },
+            {
+                title: "IF STARS HAD WINDOWS",
+                content: `If stars had windows, what would they see?\nThe dreams of lovers beneath their tree?\nThe lonely wanderer's silent plea?\nThe child who wishes to be free?\n\nIf stars had windows, would they watch\nAs lives unfold, as hearts unlatch?\nWould they witness joy and sorrow blend,\nOr turn away when stories end?\n\nIf stars had windows, could they tell\nOf futures bright or dark as well?\nWould they share their ancient sight,\nOr keep their secrets in the night?\n\nIf stars had windows, I would climb\nBeyond the boundaries of time;\nI'd peer inside and finally know\nWhat makes the universe aglow.`,
+                author: "prasiddha",
+                description: "A whimsical exploration of cosmic perspective and universal mysteries",
+                tags: "stars, wonder, universe, imagination",
+                postedDate: new Date('2025-12-31T00:00:00Z').toISOString()
+            },
+            {
+                title: "THE SKY BENEATH MY FEET",
+                content: `I walked upon the sky today,\nBeneath my feet, the clouds did sway;\nThe world inverted, upside down,\nI wore the heavens as my crown.\n\nThe earth above looked strange and small,\nI felt no fear that I might fall;\nFor gravity had lost its hold,\nAnd I was free, unbridled, bold.\n\nI danced on air, I touched the blue,\nI saw the world from angles new;\nPerspective shifts when up is down,\nWhen sky becomes the solid ground.\n\nMaybe we're all walking blind,\nToo rigid in our earthly mind;\nMaybe truth is upside down,\nMaybe freedom wears no crown.`,
+                author: "prasiddha",
+                description: "A surreal journey of perspective where the impossible becomes possible",
+                tags: "surreal, perspective, freedom, imagination",
+                postedDate: new Date('2025-12-30T00:00:00Z').toISOString()
+            },
+            {
                 title: "Whispers of Dawn",
                 content: `Morning breaks with gentle grace,\nA canvas painted, sky embraced;\nSoft light dances through the trees,\nCarried softly by the breeze.\n\nDew drops glisten, pearls of light,\nTransforming darkness into bright;\nThe world awakens, fresh and new,\nIn shades of gold and morning dew.\n\nBirds compose their morning song,\nA melody that all belong;\nIn this moment, pure and true,\nNature's beauty shines right through.\n\nWhispers of dawn, so soft, so clear,\nBringing hope with every year;\nA promise kept, a day begun,\nUntil the setting of the sun.`,
                 author: "prasiddha",
                 description: "A celebration of the peaceful beauty found in early morning moments",
                 tags: "nature, morning, dawn, beauty",
-                postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+                postedDate: new Date('2025-12-25T00:00:00Z').toISOString()
             },
             {
                 title: "Silent Mountains",
@@ -428,7 +468,7 @@ class ContentManager {
                 author: "prasiddha",
                 description: "An ode to the timeless strength and wisdom of mountain ranges",
                 tags: "mountains, nature, strength, wisdom",
-                postedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
+                postedDate: new Date('2025-12-20T00:00:00Z').toISOString()
             },
             {
                 title: "Ocean's Embrace",
@@ -436,7 +476,7 @@ class ContentManager {
                 author: "prasiddha",
                 description: "A poetic journey into the depths and mysteries of the sea",
                 tags: "ocean, sea, nature, peace",
-                postedDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString() // 15 days ago
+                postedDate: new Date('2025-12-15T00:00:00Z').toISOString()
             },
             {
                 title: "Autumn's Farewell",
@@ -444,7 +484,7 @@ class ContentManager {
                 author: "prasiddha",
                 description: "A reflection on the beautiful transformation that autumn brings",
                 tags: "autumn, fall, seasons, change",
-                postedDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString() // 20 days ago
+                postedDate: new Date('2025-12-10T00:00:00Z').toISOString()
             },
             {
                 title: "Starlight Dreams",
@@ -452,7 +492,7 @@ class ContentManager {
                 author: "prasiddha",
                 description: "A contemplation of our place in the vast universe under starlit skies",
                 tags: "stars, night, dreams, universe",
-                postedDate: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString() // 25 days ago
+                postedDate: new Date('2025-12-05T00:00:00Z').toISOString()
             }
         ];
 
