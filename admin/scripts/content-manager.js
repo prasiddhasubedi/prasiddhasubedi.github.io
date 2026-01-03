@@ -399,6 +399,71 @@ class ContentManager {
         this.saveData();
         return true;
     }
+
+    // ==========================================
+    // INITIALIZE DEFAULT POEMS
+    // ==========================================
+
+    initializeDefaultPoems() {
+        // Only initialize if poetry array is empty
+        if (this.data.poetry && this.data.poetry.length > 0) {
+            console.log('[ContentManager] Poetry already exists, skipping initialization');
+            return false;
+        }
+
+        console.log('[ContentManager] Initializing default poems');
+
+        const defaultPoems = [
+            {
+                title: "Whispers of Dawn",
+                content: `Morning breaks with gentle grace,\nA canvas painted, sky embraced;\nSoft light dances through the trees,\nCarried softly by the breeze.\n\nDew drops glisten, pearls of light,\nTransforming darkness into bright;\nThe world awakens, fresh and new,\nIn shades of gold and morning dew.\n\nBirds compose their morning song,\nA melody that all belong;\nIn this moment, pure and true,\nNature's beauty shines right through.\n\nWhispers of dawn, so soft, so clear,\nBringing hope with every year;\nA promise kept, a day begun,\nUntil the setting of the sun.`,
+                author: "prasiddha",
+                description: "A celebration of the peaceful beauty found in early morning moments",
+                tags: "nature, morning, dawn, beauty",
+                postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+            },
+            {
+                title: "Silent Mountains",
+                content: `Ancient peaks that touch the sky,\nWatching centuries pass by;\nStanding tall through storm and snow,\nGuardians of the world below.\n\nTheir silence speaks of endless time,\nOf nature's rhythm, nature's rhyme;\nIn their presence, small we feel,\nYet their strength helps us to heal.\n\nClouds may gather at their crown,\nSnows may fall and then come down;\nBut these sentinels remain,\nThrough sunshine, wind, and rain.\n\nMountains teach us to be strong,\nTo stand for right against the wrong;\nIn silence, wisdom finds its way,\nAs night surrenders to the day.`,
+                author: "prasiddha",
+                description: "An ode to the timeless strength and wisdom of mountain ranges",
+                tags: "mountains, nature, strength, wisdom",
+                postedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
+            },
+            {
+                title: "Ocean's Embrace",
+                content: `Waves that crash upon the shore,\nTelling tales of ancient lore;\nEndless blue meets endless sky,\nWhere seabirds soar and dolphins fly.\n\nThe ocean's heart beats strong and deep,\nHolding secrets it will keep;\nIn its depths, a world unknown,\nWhere mysteries have always grown.\n\nTides that rise and tides that fall,\nThe ocean answers nature's call;\nPowerful yet calm it stays,\nThrough moonlit nights and sunny days.\n\nIn its embrace we find our peace,\nFrom worldly troubles, sweet release;\nThe ocean sings its endless song,\nA melody where we belong.`,
+                author: "prasiddha",
+                description: "A poetic journey into the depths and mysteries of the sea",
+                tags: "ocean, sea, nature, peace",
+                postedDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString() // 15 days ago
+            },
+            {
+                title: "Autumn's Farewell",
+                content: `Leaves of amber, red, and gold,\nTelling stories yet untold;\nFloating gently to the ground,\nWithout a whisper, without sound.\n\nAutumn paints with nature's brush,\nIn the evening's fading hush;\nTrees stand bare against the sky,\nAs summer bids its last goodbye.\n\nCrisp air carries scent of change,\nAs seasons once again arrange;\nHarvest moon shines bright above,\nA season's end we've come to love.\n\nIn this time of transformation,\nNature shows its celebration;\nThough leaves may fall and flowers fade,\nBeauty's mark will not evade.`,
+                author: "prasiddha",
+                description: "A reflection on the beautiful transformation that autumn brings",
+                tags: "autumn, fall, seasons, change",
+                postedDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString() // 20 days ago
+            },
+            {
+                title: "Starlight Dreams",
+                content: `When darkness falls and day retreats,\nThe night sky shows its starry beats;\nA million lights shine from afar,\nEach one a distant, ancient star.\n\nIn this vast and cosmic sea,\nWe wonder what we're meant to be;\nSo small beneath the endless night,\nYet filled with hope and inner light.\n\nConstellations tell their tales,\nOf heroes, myths, and cosmic sails;\nThe universe in all its glory,\nWrites its never-ending story.\n\nDreams take flight on starlit beams,\nNothing's quite as it first seems;\nIn the darkness, we find light,\nGuided by the stars so bright.`,
+                author: "prasiddha",
+                description: "A contemplation of our place in the vast universe under starlit skies",
+                tags: "stars, night, dreams, universe",
+                postedDate: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString() // 25 days ago
+            }
+        ];
+
+        // Add each default poem
+        defaultPoems.forEach(poem => {
+            this.addPoetry(poem);
+        });
+
+        console.log('[ContentManager] Added', defaultPoems.length, 'default poems');
+        return true;
+    }
 }
 
 // Create global instance
