@@ -1,0 +1,492 @@
+/* ==========================================
+   FIREBASE ENGAGEMENT FEATURES - STYLES
+   Views, likes, comments, and sharing UI
+   ========================================== */
+
+/* ==========================================
+   ENGAGEMENT CONTAINER
+   ========================================== */
+.engagement-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================
+   ENGAGEMENT STATS BAR
+   ========================================== */
+.engagement-stats {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    stroke-width: 2;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ==========================================
+   LIKE BUTTON
+   ========================================== */
+.like-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+#like-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+#like-button:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+#like-button:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+}
+
+#like-button.liked {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    cursor: default;
+}
+
+#like-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#like-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+#like-count {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* ==========================================
+   COMMENT SECTION
+   ========================================== */
+.comment-section {
+    margin-top: 3rem;
+}
+
+.comment-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#comment-count {
+    display: inline-block;
+    background: rgba(102, 126, 234, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+/* Comment Form */
+#comment-form {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+#comment-form button[type="submit"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#comment-form button[type="submit"]:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+#comment-form button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Comments List */
+#comments-list {
+    margin-top: 2rem;
+}
+
+.no-comments {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+.comment-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 3px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 1rem;
+}
+
+.comment-date {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.comment-text {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+/* ==========================================
+   SHARE SECTION
+   ========================================== */
+.share-section {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.share-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.share-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.share-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.share-button.twitter {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
+}
+
+.share-button.facebook {
+    background: linear-gradient(135deg, #1877f2 0%, #0d65d9 100%);
+}
+
+.share-button.whatsapp {
+    background: linear-gradient(135deg, #25d366 0%, #20ba5a 100%);
+}
+
+/* ==========================================
+   NOTIFICATION TOASTS
+   ========================================== */
+.engagement-notification {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    text-align: center;
+}
+
+.engagement-notification.show {
+    bottom: 2rem;
+}
+
+.engagement-notification.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.engagement-notification.error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.engagement-notification.info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+@media (max-width: 768px) {
+    .engagement-container {
+        padding: 1.5rem;
+        margin: 2rem auto;
+    }
+    
+    .engagement-stats {
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .stat-item {
+        padding: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+    
+    #like-button {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .comment-section h3 {
+        font-size: 1.5rem;
+    }
+    
+    .share-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .share-button {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .engagement-container {
+        padding: 1rem;
+        margin: 1.5rem auto;
+    }
+    
+    .engagement-stats {
+        flex-direction: column;
+    }
+    
+    #comment-form {
+        padding: 1rem;
+    }
+    
+    .comment-item {
+        padding: 1rem;
+    }
+    
+    .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}
+
+/* ==========================================
+   LOADING STATES
+   ========================================== */
+.engagement-loading {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.engagement-loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.engagement-container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* ==========================================
+   ACCESSIBILITY
+   ========================================== */
+.engagement-container *:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Skip links for screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
