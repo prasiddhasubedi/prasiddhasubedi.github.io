@@ -185,8 +185,12 @@ function loadDashboardData() {
     // Update stat cards
     document.getElementById('poetryCount').textContent = stats.poetry;
     document.getElementById('articlesCount').textContent = stats.articles;
-    document.getElementById('ebooksCount').textContent = stats.ebooks;
-    document.getElementById('photosCount').textContent = stats.photos;
+    
+    // Load Firebase insights
+    loadFirebaseInsights();
+    
+    // Load recent notifications
+    loadNotifications();
 }
 
 function loadSectionData(section) {
@@ -491,4 +495,178 @@ function showToast(message, type = 'success') {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
+}
+
+// ==========================================
+// FIREBASE INSIGHTS & NOTIFICATIONS
+// ==========================================
+
+/**
+ * Load Firebase insights (views, likes, comments)
+ */
+async function loadFirebaseInsights() {
+    try {
+        if (typeof firebase === 'undefined' || !firebase.firestore) {
+            console.warn('[DASHBOARD] Firebase not initialized, skipping insights');
+            document.getElementById('totalViews').textContent = '-';
+            document.getElementById('totalLikes').textContent = '-';
+            return;
+        }
+        
+        const db = firebase.firestore();
+        
+        // Get all engagement documents
+        const snapshot = await db.collection('engagement').get();
+        
+        let totalViews = 0;
+        let totalLikes = 0;
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            totalViews += data.views || 0;
+            totalLikes += data.likes || 0;
+        });
+        
+        document.getElementById('totalViews').textContent = totalViews.toLocaleString();
+        document.getElementById('totalLikes').textContent = totalLikes.toLocaleString();
+        
+    } catch (error) {
+        console.error('[DASHBOARD] Error loading insights:', error);
+        document.getElementById('totalViews').textContent = '-';
+        document.getElementById('totalLikes').textContent = '-';
+    }
+}
+
+/**
+ * Load recent notifications (likes and comments)
+ */
+async function loadNotifications() {
+    const container = document.getElementById('notificationsList');
+    
+    if (!container) return;
+    
+    try {
+        if (typeof firebase === 'undefined' || !firebase.firestore) {
+            console.warn('[DASHBOARD] Firebase not initialized, skipping notifications');
+            container.innerHTML = '<p class="empty-text">Firebase not configured</p>';
+            return;
+        }
+        
+        const db = firebase.firestore();
+        const notifications = [];
+        
+        // Get recent comments from all pages
+        const engagementSnapshot = await db.collection('engagement').get();
+        
+        for (const doc of engagementSnapshot.docs) {
+            const pageId = doc.id;
+            const pageData = doc.data();
+            
+            // Get comments subcollection
+            const commentsSnapshot = await db.collection('engagement')
+                .doc(pageId)
+                .collection('comments')
+                .orderBy('timestamp', 'desc')
+                .limit(10)
+                .get();
+            
+            commentsSnapshot.forEach(commentDoc => {
+                const comment = commentDoc.data();
+                notifications.push({
+                    type: 'comment',
+                    pageId: pageId,
+                    author: comment.name || 'Anonymous',
+                    text: comment.text,
+                    timestamp: comment.timestamp?.toDate() || new Date()
+                });
+            });
+        }
+        
+        // Sort by timestamp
+        notifications.sort((a, b) => b.timestamp - a.timestamp);
+        
+        // Keep only last 15 notifications
+        const recentNotifications = notifications.slice(0, 15);
+        
+        if (recentNotifications.length === 0) {
+            container.innerHTML = '<p class="empty-text">No recent activity</p>';
+            return;
+        }
+        
+        // Display notifications
+        container.innerHTML = recentNotifications.map(notif => {
+            const timeAgo = getTimeAgo(notif.timestamp);
+            const pageTitle = formatPageTitle(notif.pageId);
+            
+            if (notif.type === 'comment') {
+                return `
+                    <div class="notification-item">
+                        <div class="notification-icon comment">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-text">
+                                <strong>${escapeHTML(notif.author)}</strong> commented on <em>${pageTitle}</em>
+                            </div>
+                            <div class="notification-preview">"${escapeHTML(notif.text.substring(0, 80))}${notif.text.length > 80 ? '...' : ''}"</div>
+                            <div class="notification-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return '';
+        }).join('');
+        
+    } catch (error) {
+        console.error('[DASHBOARD] Error loading notifications:', error);
+        container.innerHTML = '<p class="empty-text">Error loading notifications</p>';
+    }
+}
+
+/**
+ * Format page ID to readable title
+ */
+function formatPageTitle(pageId) {
+    // Remove 'poetry/' prefix and decode URI
+    let title = pageId.replace(/^poetry\/|^articles\/|^ebooks\//i, '');
+    title = decodeURIComponent(title);
+    
+    // Convert from slug format to title case
+    title = title
+        .split(/[-_\/]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    
+    return title;
+}
+
+/**
+ * Get relative time string
+ */
+function getTimeAgo(date) {
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} day${days !== 1 ? 's' : ''} ago`;
+    
+    const weeks = Math.floor(days / 7);
+    if (weeks < 4) return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+    
+    const months = Math.floor(days / 30);
+    if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
+    
+    const years = Math.floor(days / 365);
+    return `${years} year${years !== 1 ? 's' : ''} ago`;
 }
