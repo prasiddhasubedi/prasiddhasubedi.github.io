@@ -106,11 +106,17 @@ function sanitizeInput(input) {
 /**
  * Extract numeric timestamp value from various timestamp formats
  * @param {*} timestamp - Can be a Firestore Timestamp object or numeric timestamp
- * @returns {number} Timestamp in milliseconds
+ * @returns {number} Timestamp in milliseconds, or 0 if timestamp is null/undefined/invalid
  */
 function getTimestampValue(timestamp) {
     if (!timestamp) return 0;
-    return timestamp.toMillis ? timestamp.toMillis() : timestamp;
+    if (timestamp.toMillis) {
+        // Firestore Timestamp object
+        return timestamp.toMillis();
+    }
+    // Numeric timestamp - validate it's a number
+    const numericValue = typeof timestamp === 'number' ? timestamp : Number(timestamp);
+    return isNaN(numericValue) ? 0 : numericValue;
 }
 
 /**
