@@ -58,6 +58,33 @@ This implementation adds real, persistent engagement features to the static poet
 
 Set up security rules in Firestore:
 
+#### For Testing (Recommended for Initial Setup)
+Use these more permissive rules first to ensure everything works:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /pages/{pageId} {
+      allow read: if true;
+      
+      // Allow create with basic structure check
+      allow create: if request.resource.data.slug is string
+                    && request.resource.data.views is number
+                    && request.resource.data.likes is number
+                    && request.resource.data.comments is list;
+      
+      // Allow update to specific fields only
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                      .hasOnly(['views', 'likes', 'comments', 'lastViewed']);
+    }
+  }
+}
+```
+
+#### For Production (After Testing)
+Once you've verified everything works, upgrade to stricter rules:
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -87,6 +114,8 @@ These rules:
 - Allow creating new page documents with correct structure
 - Allow updating only views (increment by 1), likes (increment by 1), or comments (add one)
 - Prevent malicious updates or deletions
+
+**Note:** If you have trouble with the strict production rules, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for debugging help.
 
 ### Step 5: Enable Analytics
 
@@ -200,17 +229,36 @@ Each document represents a page/poem with structure:
 3. Ensure Firestore rules are properly set
 4. Check that Firebase SDKs are loading (Network tab)
 
+**For detailed troubleshooting, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md)**
+
 ### No Data in Firestore
 
 1. Verify Firestore is enabled in Firebase Console
 2. Check that security rules allow writes
 3. Look for JavaScript errors in console
+4. **Try temporary permissive rules for testing** (see TROUBLESHOOTING.md)
+
+**Common Issue:** The strict security rules might block writes during testing. See TROUBLESHOOTING.md for testing-friendly rules.
 
 ### Analytics Not Tracking
 
 1. Ensure Analytics is enabled in Firebase Console
 2. Check that measurementId is in config
 3. Wait 24-48 hours for data to appear in Analytics dashboard
+4. **Use DebugView** for real-time testing (add `?debug_mode=true` to URL)
+
+### Debugging Console Logs
+
+The engagement script provides detailed console logging. Open browser console (F12) to see:
+- `[FIREBASE] Starting initialization...` - Firebase is loading
+- `[FIREBASE] ✓ App initialized successfully` - Firebase connected
+- `[FIREBASE] Tracking page view for slug: ...` - View tracking active
+- `[FIREBASE] ✓ New page document created successfully` - Document created in Firestore
+- `[FIREBASE] ✓✓✓ All engagement features initialized successfully ✓✓✓` - Everything working
+
+**Error messages** will show with ✗ and include detailed error information.
+
+For comprehensive debugging help, see **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**
 
 ## Cost Considerations
 
