@@ -24,6 +24,8 @@ async function simpleHash(str) {
 
 // Default admin credentials (hashed)
 // In production, these should be stored securely on the server
+// NOTE: This is a simplified client-side hash for demonstration.
+// For production, use proper server-side authentication with bcrypt, scrypt, or Argon2
 const ADMIN_CREDENTIALS = {
     username: 'admin',
     // Password: SecureP@ss2026! (pre-hashed)
