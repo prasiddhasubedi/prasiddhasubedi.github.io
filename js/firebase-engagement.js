@@ -104,13 +104,38 @@ function sanitizeInput(input) {
 }
 
 /**
+ * Extract numeric timestamp value from various timestamp formats
+ * @param {*} timestamp - Can be a Firestore Timestamp object or numeric timestamp
+ * @returns {number} Timestamp in milliseconds, or 0 if timestamp is null/undefined/invalid
+ */
+function getTimestampValue(timestamp) {
+    if (!timestamp) return 0;
+    if (timestamp.toMillis) {
+        // Firestore Timestamp object
+        return timestamp.toMillis();
+    }
+    // Numeric timestamp - validate it's a number
+    const numericValue = typeof timestamp === 'number' ? timestamp : Number(timestamp);
+    return isNaN(numericValue) ? 0 : numericValue;
+}
+
+/**
  * Format timestamp to readable date
+ * Handles both Firestore Timestamp objects and numeric timestamps from Date.now()
  */
 function formatDate(timestamp) {
     if (!timestamp) return 'Unknown date';
     
     try {
-        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        let date;
+        if (timestamp.toDate) {
+            // Firestore Timestamp object
+            date = timestamp.toDate();
+        } else {
+            // Numeric timestamp from Date.now() or other numeric format
+            date = new Date(timestamp);
+        }
+        
         const options = { 
             year: 'numeric', 
             month: 'short', 
@@ -438,9 +463,10 @@ async function loadComments() {
         }
         
         // Sort comments by timestamp (oldest first)
+        // Handles both Firestore Timestamp objects and numeric timestamps
         comments.sort((a, b) => {
-            const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
-            const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+            const timeA = getTimestampValue(a.timestamp);
+            const timeB = getTimestampValue(b.timestamp);
             return timeA - timeB;
         });
         
@@ -517,7 +543,7 @@ async function addComment(name, text) {
         const newComment = {
             name: name,
             text: text,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            timestamp: Date.now()
         };
         
         console.log('[FIREBASE] Saving comment to Firestore...');
