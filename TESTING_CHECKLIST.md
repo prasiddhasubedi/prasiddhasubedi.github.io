@@ -17,16 +17,22 @@ This document provides step-by-step instructions for testing all engagement feat
 Recommended: Start with testing rules, then upgrade to production rules after verifying functionality.
 
 **Testing Rules (Use First):**
+
+ℹ️ **Note:** Read access is public (`if true`) by design - this is a public website that needs to display engagement stats to all visitors. Write operations are restricted and validated.
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /pages/{pageId} {
+      // Public read access (required for displaying stats on public website)
       allow read: if true;
+      // Create only with valid structure
       allow create: if request.resource.data.slug is string
                     && request.resource.data.views is number
                     && request.resource.data.likes is number
                     && request.resource.data.comments is list;
+      // Update only allowed fields
       allow update: if request.resource.data.diff(resource.data).affectedKeys()
                       .hasOnly(['views', 'likes', 'comments', 'lastViewed']);
     }

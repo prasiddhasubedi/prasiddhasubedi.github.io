@@ -72,6 +72,13 @@ async function initializeFirebase() {
 }
 
 // ==========================================
+// CONSTANTS
+// ==========================================
+
+const SEPARATOR_LINE = '='.repeat(60);
+const COMMENT_RELOAD_DELAY = 500; // ms - delay before reloading comments after submission
+
+// ==========================================
 // UTILITY FUNCTIONS
 // ==========================================
 
@@ -487,7 +494,7 @@ async function addComment(name, text) {
         setTimeout(() => {
             console.log('[FIREBASE] Reloading comments...');
             loadComments();
-        }, 500);
+        }, COMMENT_RELOAD_DELAY);
         
         // Log analytics event
         if (analytics) {
@@ -623,11 +630,11 @@ function initializeShareButtons() {
  * Initialize all engagement features
  */
 async function initializeEngagementFeatures() {
-    console.log('='.repeat(60));
+    console.log(SEPARATOR_LINE);
     console.log('[FIREBASE] Starting engagement features initialization...');
     console.log('[FIREBASE] Page URL:', window.location.href);
     console.log('[FIREBASE] Page slug:', getPageSlug());
-    console.log('='.repeat(60));
+    console.log(SEPARATOR_LINE);
     
     const initialized = await initializeFirebase();
     
@@ -667,7 +674,7 @@ async function initializeEngagementFeatures() {
     console.log('[FIREBASE] [5/5] Initializing share buttons...');
     initializeShareButtons();
     
-    console.log('='.repeat(60));
+    console.log(SEPARATOR_LINE);
     console.log('[FIREBASE] ✓✓✓ All engagement features initialized successfully ✓✓✓');
     console.log('[FIREBASE] Features active:');
     console.log('[FIREBASE] • Views counter');
@@ -675,7 +682,7 @@ async function initializeEngagementFeatures() {
     console.log('[FIREBASE] • Comment system');
     console.log('[FIREBASE] • Social sharing');
     console.log('[FIREBASE] • Analytics tracking');
-    console.log('='.repeat(60));
+    console.log(SEPARATOR_LINE);
 }
 
 // Auto-initialize when DOM is ready

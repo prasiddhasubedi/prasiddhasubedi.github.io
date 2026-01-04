@@ -26,15 +26,19 @@
    ```
 3. If you see errors instead, check your Firebase configuration
 
-#### Step 2: Test with Permissive Rules (Temporary)
-For debugging, temporarily use these more permissive Firestore rules:
+#### Step 2: Test with Permissive Rules (Temporary Testing Only)
+
+⚠️ **SECURITY WARNING - FOR TESTING ONLY** ⚠️
+
+For debugging, **temporarily** use these more permissive Firestore rules:
 
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /pages/{pageId} {
-      // Temporarily allow all reads and writes for testing
+      // ⚠️ TEMPORARY: Allow all reads and writes for testing
+      // 🚫 NEVER USE IN PRODUCTION
       allow read: if true;
       allow write: if true;
     }
@@ -42,7 +46,12 @@ service cloud.firestore {
 }
 ```
 
-**⚠️ WARNING:** These rules allow anyone to read/write. Only use for testing!
+**⚠️ CRITICAL WARNINGS:**
+- These rules allow ANYONE to read/write ALL data
+- Use ONLY for initial testing (< 1 hour)
+- Replace with production rules immediately after testing
+- Monitor Firebase Console while these rules are active
+- See step 4 for production-ready rules
 
 #### Step 3: Check Console Logs
 Look for detailed Firebase operation logs:
@@ -69,11 +78,14 @@ If you see errors like "permission-denied", your Firestore rules are blocking wr
 
 **Recommended Testing Rules:**
 
+⚠️ **SECURITY NOTE:** Read access is intentionally public (`if true`) because this is a public website that displays engagement stats to all visitors. Write operations are restricted by structure validation and field restrictions.
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /pages/{pageId} {
+      // Allow public read access (required for public website displaying stats)
       allow read: if true;
       
       // Allow create with basic structure check
