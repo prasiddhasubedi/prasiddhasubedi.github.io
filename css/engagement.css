@@ -325,6 +325,14 @@
     background: linear-gradient(135deg, #25d366 0%, #20ba5a 100%);
 }
 
+.share-button.instagram {
+    background: linear-gradient(135deg, #e1306c 0%, #c13584 50%, #833ab4 100%);
+}
+
+.share-button.copylink {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
 /* ==========================================
    NOTIFICATION TOASTS
    ========================================== */

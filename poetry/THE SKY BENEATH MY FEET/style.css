@@ -390,3 +390,122 @@ body {
     transform: none;
   }
 }
+
+/* ================================================
+   ENGAGEMENT FEATURES - CUSTOM STYLING
+   Override default engagement styles for better visibility
+   ================================================ */
+
+/* Engagement Container - Add darker background for contrast */
+.engagement-container {
+  background: rgba(21, 101, 192, 0.1) !important;
+  border: 1px solid rgba(21, 101, 192, 0.3) !important;
+}
+
+/* Stats Bar */
+.engagement-stats {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(21, 101, 192, 0.2);
+}
+
+.stat-icon {
+  stroke: #1565c0 !important;
+}
+
+.stat-value {
+  color: #0d47a1 !important;
+}
+
+.stat-label {
+  color: #1976d2 !important;
+}
+
+/* Like Button - Make it stand out */
+#like-button {
+  background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%) !important;
+  color: white !important;
+}
+
+#like-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%) !important;
+}
+
+#like-button.liked {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+}
+
+/* Share Section */
+.share-section h3 {
+  color: #0d47a1 !important;
+}
+
+/* Comment Section */
+.comment-section h3 {
+  color: #0d47a1 !important;
+}
+
+#comment-form {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(21, 101, 192, 0.3) !important;
+}
+
+.form-group label {
+  color: #0d47a1 !important;
+}
+
+.form-group input,
+.form-group textarea {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(21, 101, 192, 0.3) !important;
+  color: #0d47a1 !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #1976d2 !important;
+  opacity: 0.6;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #1565c0 !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.form-group small {
+  color: #1976d2 !important;
+}
+
+#comment-form button[type="submit"] {
+  background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%) !important;
+}
+
+#comment-form button[type="submit"]:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%) !important;
+}
+
+/* Comments List */
+.no-comments {
+  color: #1976d2 !important;
+}
+
+.comment-item {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-left: 3px solid #1565c0 !important;
+}
+
+.comment-author {
+  color: #1565c0 !important;
+}
+
+.comment-date {
+  color: #1976d2 !important;
+}
+
+.comment-text {
+  color: #0d47a1 !important;
+}
+
+.engagement-loading {
+  color: #1976d2 !important;
+}

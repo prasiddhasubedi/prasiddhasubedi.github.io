@@ -648,7 +648,9 @@ function getShareUrl(platform) {
     const urls = {
         twitter: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-        whatsapp: `https://api.whatsapp.com/send?text=${title}%20${url}`
+        whatsapp: `https://api.whatsapp.com/send?text=${title}%20${url}`,
+        instagram: null, // Instagram doesn't support direct URL sharing
+        copylink: null // Special handling for copy link
     };
     
     return urls[platform] || '';
@@ -659,6 +661,53 @@ function getShareUrl(platform) {
  */
 function handleShare(platform) {
     console.log('[FIREBASE] Share button clicked for platform:', platform);
+    
+    // Handle copy link specially
+    if (platform === 'copylink') {
+        const url = window.location.href;
+        
+        // Try to use the Clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url)
+                .then(() => {
+                    showNotification('Link copied to clipboard!', 'success');
+                    console.log('[FIREBASE] ✓ Link copied to clipboard');
+                })
+                .catch((err) => {
+                    console.error('[FIREBASE] Failed to copy link:', err);
+                    // Fallback to older method
+                    fallbackCopyToClipboard(url);
+                });
+        } else {
+            // Fallback for older browsers
+            fallbackCopyToClipboard(url);
+        }
+        
+        // Log analytics event
+        if (analytics) {
+            analytics.logEvent('share', {
+                method: 'copy_link',
+                content_type: 'page',
+                item_id: getPageSlug()
+            });
+        }
+        return;
+    }
+    
+    // Handle Instagram (open notification since direct sharing isn't supported)
+    if (platform === 'instagram') {
+        showNotification('Instagram doesn\'t support direct link sharing. Please copy the link and share it in your Instagram story or bio!', 'info');
+        
+        // Log analytics event
+        if (analytics) {
+            analytics.logEvent('share', {
+                method: 'instagram',
+                content_type: 'page',
+                item_id: getPageSlug()
+            });
+        }
+        return;
+    }
     
     const shareUrl = getShareUrl(platform);
     
@@ -684,6 +733,36 @@ function handleShare(platform) {
     
     showNotification(`Sharing via ${platform}`, 'info');
     console.log('[FIREBASE] ✓ Share action completed for', platform);
+}
+
+/**
+ * Fallback method to copy text to clipboard for older browsers
+ */
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showNotification('Link copied to clipboard!', 'success');
+            console.log('[FIREBASE] ✓ Link copied using fallback method');
+        } else {
+            showNotification('Failed to copy link. Please copy manually.', 'error');
+            console.error('[FIREBASE] Failed to copy using fallback method');
+        }
+    } catch (err) {
+        showNotification('Failed to copy link. Please copy manually.', 'error');
+        console.error('[FIREBASE] Error in fallback copy:', err);
+    }
+    
+    document.body.removeChild(textArea);
 }
 
 /**

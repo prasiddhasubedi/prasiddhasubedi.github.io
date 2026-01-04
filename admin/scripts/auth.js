@@ -26,8 +26,8 @@ async function simpleHash(str) {
 // In production, these should be stored securely on the server
 const ADMIN_CREDENTIALS = {
     username: 'admin',
-    // Password: admin123 (pre-hashed)
-    passwordHash: '00000000000000000000000039c43b7d'
+    // Password: SecureP@ss2026! (pre-hashed)
+    passwordHash: '000000000000000000000000797faca8'
 };
 
 class Auth {
