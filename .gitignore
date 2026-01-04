@@ -1,6 +1,9 @@
 # Admin data (local storage simulation)
 admin/data/*.json
 
+# Firebase configuration (contains sensitive API keys)
+js/firebase-config.js
+
 # Logs
 *.log
 npm-debug.log*
