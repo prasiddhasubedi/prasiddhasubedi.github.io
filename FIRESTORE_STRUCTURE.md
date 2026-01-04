@@ -65,7 +65,7 @@ Each document in the `pages` collection has the following structure:
 {
   name: string,           // Commenter's name or "Anonymous"
   text: string,           // The comment text (3-500 characters)
-  timestamp: timestamp    // When the comment was posted
+  timestamp: number       // Unix timestamp (ms) from Date.now() when comment was posted
 }
 ```
 

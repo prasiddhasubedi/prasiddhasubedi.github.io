@@ -105,12 +105,24 @@ function sanitizeInput(input) {
 
 /**
  * Format timestamp to readable date
+ * Handles both Firestore Timestamp objects and numeric timestamps from Date.now()
  */
 function formatDate(timestamp) {
     if (!timestamp) return 'Unknown date';
     
     try {
-        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        let date;
+        if (timestamp.toDate) {
+            // Firestore Timestamp object
+            date = timestamp.toDate();
+        } else if (typeof timestamp === 'number') {
+            // Numeric timestamp from Date.now()
+            date = new Date(timestamp);
+        } else {
+            // Fallback for other formats
+            date = new Date(timestamp);
+        }
+        
         const options = { 
             year: 'numeric', 
             month: 'short', 
@@ -438,9 +450,10 @@ async function loadComments() {
         }
         
         // Sort comments by timestamp (oldest first)
+        // Handles both Firestore Timestamp objects and numeric timestamps
         comments.sort((a, b) => {
-            const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
-            const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+            const timeA = a.timestamp ? (a.timestamp.toMillis ? a.timestamp.toMillis() : a.timestamp) : 0;
+            const timeB = b.timestamp ? (b.timestamp.toMillis ? b.timestamp.toMillis() : b.timestamp) : 0;
             return timeA - timeB;
         });
         
@@ -517,7 +530,7 @@ async function addComment(name, text) {
         const newComment = {
             name: name,
             text: text,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            timestamp: Date.now()
         };
         
         console.log('[FIREBASE] Saving comment to Firestore...');

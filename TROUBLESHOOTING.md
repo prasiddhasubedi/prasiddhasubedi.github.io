@@ -134,7 +134,7 @@ If you see errors like "permission-denied", your Firestore rules are blocking wr
 
 **Issues with Current Rules:**
 1. The update rule checks for exact increment by 1, which can fail with concurrent requests
-2. serverTimestamp() fields might not validate correctly
+2. Comment timestamps use Date.now() (numeric) instead of serverTimestamp()
 3. arrayUnion for comments might not match the size check
 
 **Recommended Testing Rules:**
