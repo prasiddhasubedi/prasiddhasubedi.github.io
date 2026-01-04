@@ -39,21 +39,34 @@ async function initializeFirebase() {
             return false;
         }
 
+        console.log('[FIREBASE] Starting initialization...');
+        console.log('[FIREBASE] Config:', {
+            projectId: firebaseConfig.projectId,
+            authDomain: firebaseConfig.authDomain,
+            hasApiKey: !!firebaseConfig.apiKey
+        });
+
         // Initialize Firebase App
         app = firebase.initializeApp(firebaseConfig);
-        console.log('[FIREBASE] App initialized');
+        console.log('[FIREBASE] ✓ App initialized successfully');
 
         // Initialize Firestore
         db = firebase.firestore();
-        console.log('[FIREBASE] Firestore initialized');
+        console.log('[FIREBASE] ✓ Firestore initialized successfully');
+        console.log('[FIREBASE] Firestore instance:', db ? 'Created' : 'Failed');
 
         // Initialize Analytics
         analytics = firebase.analytics();
-        console.log('[FIREBASE] Analytics initialized');
+        console.log('[FIREBASE] ✓ Analytics initialized successfully');
 
         return true;
     } catch (error) {
-        console.error('[FIREBASE] Initialization error:', error);
+        console.error('[FIREBASE] ✗ Initialization error:', error);
+        console.error('[FIREBASE] Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code
+        });
         return false;
     }
 }
@@ -135,39 +148,56 @@ function showNotification(message, type = 'info') {
  * Creates document if it doesn't exist
  */
 async function trackPageView() {
-    if (!db) return;
+    if (!db) {
+        console.error('[FIREBASE] trackPageView called but db is not initialized');
+        return;
+    }
     
     try {
         const slug = getPageSlug();
+        console.log('[FIREBASE] Tracking page view for slug:', slug);
+        
         const pageRef = db.collection('pages').doc(slug);
+        console.log('[FIREBASE] Page reference created:', pageRef.path);
         
         // Get the document
+        console.log('[FIREBASE] Fetching document from Firestore...');
         const doc = await pageRef.get();
+        console.log('[FIREBASE] Document exists:', doc.exists);
         
         if (!doc.exists) {
-            // Create new document with initial values
-            await pageRef.set({
+            console.log('[FIREBASE] Creating new page document...');
+            const newDocData = {
                 slug: slug,
                 views: 1,
                 likes: 0,
                 comments: [],
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 lastViewed: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            console.log('[FIREBASE] New page document created');
+            };
+            console.log('[FIREBASE] New document data:', newDocData);
+            
+            await pageRef.set(newDocData);
+            console.log('[FIREBASE] ✓ New page document created successfully');
         } else {
+            console.log('[FIREBASE] Document exists, incrementing view count...');
             // Increment view count atomically
             await pageRef.update({
                 views: firebase.firestore.FieldValue.increment(1),
                 lastViewed: firebase.firestore.FieldValue.serverTimestamp()
             });
+            console.log('[FIREBASE] ✓ View count incremented successfully');
         }
         
         // Fetch updated count and display
+        console.log('[FIREBASE] Fetching updated document...');
         const updatedDoc = await pageRef.get();
         if (updatedDoc.exists) {
             const views = updatedDoc.data().views || 0;
+            console.log('[FIREBASE] Current view count:', views);
             updateViewCount(views);
+        } else {
+            console.warn('[FIREBASE] Document does not exist after creation/update');
         }
         
         // Log analytics event
@@ -176,11 +206,18 @@ async function trackPageView() {
                 page_path: window.location.pathname,
                 page_title: document.title
             });
+            console.log('[FIREBASE] ✓ Analytics event logged: page_view');
         }
         
-        console.log('[FIREBASE] Page view tracked');
+        console.log('[FIREBASE] ✓ Page view tracking completed successfully');
     } catch (error) {
-        console.error('[FIREBASE] Error tracking page view:', error);
+        console.error('[FIREBASE] ✗ Error tracking page view:', error);
+        console.error('[FIREBASE] Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code,
+            stack: error.stack
+        });
     }
 }
 
@@ -204,29 +241,35 @@ function updateViewCount(count) {
  */
 async function handleLike() {
     if (!db) {
+        console.error('[FIREBASE] handleLike called but db is not initialized');
         showNotification('Like feature temporarily unavailable', 'error');
         return;
     }
     
     const slug = getPageSlug();
     const likeKey = `liked_${slug}`;
+    console.log('[FIREBASE] Like button clicked for slug:', slug);
     
     // Check if already liked
     if (localStorage.getItem(likeKey)) {
+        console.log('[FIREBASE] User has already liked this page');
         showNotification('You already liked this page!', 'info');
         return;
     }
     
     try {
         const pageRef = db.collection('pages').doc(slug);
+        console.log('[FIREBASE] Incrementing like count...');
         
         // Increment like count atomically
         await pageRef.update({
             likes: firebase.firestore.FieldValue.increment(1)
         });
+        console.log('[FIREBASE] ✓ Like count incremented successfully');
         
         // Mark as liked in localStorage
         localStorage.setItem(likeKey, 'true');
+        console.log('[FIREBASE] Marked as liked in localStorage');
         
         // Update UI
         const likeBtn = document.getElementById('like-button');
@@ -242,9 +285,11 @@ async function handleLike() {
         }
         
         // Fetch updated count
+        console.log('[FIREBASE] Fetching updated like count...');
         const doc = await pageRef.get();
         if (doc.exists) {
             const likes = doc.data().likes || 0;
+            console.log('[FIREBASE] Current like count:', likes);
             updateLikeCount(likes);
         }
         
@@ -255,11 +300,17 @@ async function handleLike() {
             analytics.logEvent('like', {
                 page_path: window.location.pathname
             });
+            console.log('[FIREBASE] ✓ Analytics event logged: like');
         }
         
-        console.log('[FIREBASE] Page liked');
+        console.log('[FIREBASE] ✓ Like action completed successfully');
     } catch (error) {
-        console.error('[FIREBASE] Error liking page:', error);
+        console.error('[FIREBASE] ✗ Error liking page:', error);
+        console.error('[FIREBASE] Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code
+        });
         showNotification('Failed to like page', 'error');
     }
 }
@@ -317,19 +368,32 @@ async function initializeLikeButton() {
  * Load and display comments
  */
 async function loadComments() {
-    if (!db) return;
+    if (!db) {
+        console.error('[FIREBASE] loadComments called but db is not initialized');
+        return;
+    }
     
     try {
         const slug = getPageSlug();
+        console.log('[FIREBASE] Loading comments for slug:', slug);
+        
         const pageRef = db.collection('pages').doc(slug);
         const doc = await pageRef.get();
         
-        if (!doc.exists) return;
+        if (!doc.exists) {
+            console.log('[FIREBASE] Document does not exist yet, no comments to load');
+            return;
+        }
         
         const comments = doc.data().comments || [];
+        console.log('[FIREBASE] Loaded', comments.length, 'comments');
+        
         const commentsList = document.getElementById('comments-list');
         
-        if (!commentsList) return;
+        if (!commentsList) {
+            console.warn('[FIREBASE] Comments list element not found');
+            return;
+        }
         
         if (comments.length === 0) {
             commentsList.innerHTML = '<p class="no-comments">No comments yet. Be the first to share your thoughts!</p>';
@@ -360,9 +424,14 @@ async function loadComments() {
             countElement.textContent = comments.length;
         }
         
-        console.log('[FIREBASE] Comments loaded:', comments.length);
+        console.log('[FIREBASE] ✓ Comments loaded and rendered successfully');
     } catch (error) {
-        console.error('[FIREBASE] Error loading comments:', error);
+        console.error('[FIREBASE] ✗ Error loading comments:', error);
+        console.error('[FIREBASE] Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code
+        });
     }
 }
 
@@ -371,6 +440,7 @@ async function loadComments() {
  */
 async function addComment(name, text) {
     if (!db) {
+        console.error('[FIREBASE] addComment called but db is not initialized');
         showNotification('Comments temporarily unavailable', 'error');
         return false;
     }
@@ -379,12 +449,16 @@ async function addComment(name, text) {
     text = sanitizeInput(text);
     name = sanitizeInput(name) || 'Anonymous';
     
+    console.log('[FIREBASE] Adding comment:', { name, textLength: text.length });
+    
     if (!text || text.length < 3) {
+        console.warn('[FIREBASE] Comment too short:', text.length, 'characters');
         showNotification('Comment must be at least 3 characters', 'error');
         return false;
     }
     
     if (text.length > 500) {
+        console.warn('[FIREBASE] Comment too long:', text.length, 'characters');
         showNotification('Comment is too long (max 500 characters)', 'error');
         return false;
     }
@@ -399,27 +473,39 @@ async function addComment(name, text) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
         
+        console.log('[FIREBASE] Saving comment to Firestore...');
+        
         // Add comment to array
         await pageRef.update({
             comments: firebase.firestore.FieldValue.arrayUnion(newComment)
         });
         
+        console.log('[FIREBASE] ✓ Comment saved successfully');
         showNotification('Comment added successfully!', 'success');
         
         // Reload comments
-        setTimeout(loadComments, 500);
+        setTimeout(() => {
+            console.log('[FIREBASE] Reloading comments...');
+            loadComments();
+        }, 500);
         
         // Log analytics event
         if (analytics) {
             analytics.logEvent('comment', {
                 page_path: window.location.pathname
             });
+            console.log('[FIREBASE] ✓ Analytics event logged: comment');
         }
         
-        console.log('[FIREBASE] Comment added');
+        console.log('[FIREBASE] ✓ Comment action completed successfully');
         return true;
     } catch (error) {
-        console.error('[FIREBASE] Error adding comment:', error);
+        console.error('[FIREBASE] ✗ Error adding comment:', error);
+        console.error('[FIREBASE] Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code
+        });
         showNotification('Failed to add comment', 'error');
         return false;
     }
@@ -486,9 +572,16 @@ function getShareUrl(platform) {
  * Handle social share
  */
 function handleShare(platform) {
+    console.log('[FIREBASE] Share button clicked for platform:', platform);
+    
     const shareUrl = getShareUrl(platform);
     
-    if (!shareUrl) return;
+    if (!shareUrl) {
+        console.error('[FIREBASE] Invalid platform:', platform);
+        return;
+    }
+    
+    console.log('[FIREBASE] Share URL generated:', shareUrl);
     
     // Open share window
     window.open(shareUrl, '_blank', 'width=600,height=400');
@@ -500,10 +593,11 @@ function handleShare(platform) {
             content_type: 'page',
             item_id: getPageSlug()
         });
+        console.log('[FIREBASE] ✓ Analytics event logged: share -', platform);
     }
     
     showNotification(`Sharing via ${platform}`, 'info');
-    console.log('[FIREBASE] Shared via', platform);
+    console.log('[FIREBASE] ✓ Share action completed for', platform);
 }
 
 /**
@@ -529,33 +623,59 @@ function initializeShareButtons() {
  * Initialize all engagement features
  */
 async function initializeEngagementFeatures() {
-    console.log('[FIREBASE] Initializing engagement features...');
+    console.log('='.repeat(60));
+    console.log('[FIREBASE] Starting engagement features initialization...');
+    console.log('[FIREBASE] Page URL:', window.location.href);
+    console.log('[FIREBASE] Page slug:', getPageSlug());
+    console.log('='.repeat(60));
     
     const initialized = await initializeFirebase();
     
     if (!initialized) {
         console.warn('[FIREBASE] Engagement features disabled - Firebase not available');
+        console.warn('[FIREBASE] Check that:');
+        console.warn('[FIREBASE] 1. Firebase SDK scripts are loaded');
+        console.warn('[FIREBASE] 2. Firebase configuration is correct');
+        console.warn('[FIREBASE] 3. Internet connection is available');
         return;
     }
     
+    console.log('[FIREBASE] Firebase initialized successfully, setting up features...');
+    
     // Track page view
+    console.log('[FIREBASE] [1/5] Tracking page view...');
     await trackPageView();
     
     // Initialize like button
+    console.log('[FIREBASE] [2/5] Initializing like button...');
     await initializeLikeButton();
     const likeBtn = document.getElementById('like-button');
     if (likeBtn) {
         likeBtn.addEventListener('click', handleLike);
+        console.log('[FIREBASE] ✓ Like button event listener attached');
+    } else {
+        console.warn('[FIREBASE] Like button element not found');
     }
     
     // Initialize comments
+    console.log('[FIREBASE] [3/5] Loading comments...');
     await loadComments();
+    console.log('[FIREBASE] [4/5] Initializing comment form...');
     initializeCommentForm();
     
     // Initialize share buttons
+    console.log('[FIREBASE] [5/5] Initializing share buttons...');
     initializeShareButtons();
     
-    console.log('[FIREBASE] All engagement features initialized');
+    console.log('='.repeat(60));
+    console.log('[FIREBASE] ✓✓✓ All engagement features initialized successfully ✓✓✓');
+    console.log('[FIREBASE] Features active:');
+    console.log('[FIREBASE] • Views counter');
+    console.log('[FIREBASE] • Like button');
+    console.log('[FIREBASE] • Comment system');
+    console.log('[FIREBASE] • Social sharing');
+    console.log('[FIREBASE] • Analytics tracking');
+    console.log('='.repeat(60));
 }
 
 // Auto-initialize when DOM is ready
