@@ -1,0 +1,481 @@
+/* ================================================
+   NEEDS, A HUMAN DOES - ESSENTIAL HUMANITY THEME
+   ================================================ */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 50%, #e3f2fd 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: #4a148c;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Floating Hearts */
+.floating-hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  animation: float 15s infinite ease-in-out;
+  opacity: 0.4;
+}
+
+.heart::before,
+.heart::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 32px;
+  background: #ba68c8;
+  border-radius: 50px 50px 0 0;
+}
+
+.heart::before {
+  left: -10px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.heart::after {
+  left: 10px;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+.heart:nth-child(1) {
+  left: 10%;
+  top: 20%;
+  animation-duration: 18s;
+  animation-delay: 0s;
+}
+
+.heart:nth-child(2) {
+  left: 60%;
+  top: 40%;
+  animation-duration: 22s;
+  animation-delay: 3s;
+}
+
+.heart:nth-child(3) {
+  left: 85%;
+  top: 60%;
+  animation-duration: 20s;
+  animation-delay: 6s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  box-shadow: 
+    0 20px 60px rgba(74, 20, 140, 0.15),
+    0 0 100px rgba(186, 104, 200, 0.1) inset;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(186, 104, 200, 0.3);
+  animation: fadeInScale 1s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Title Section */
+.title-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 1s ease-out 0.2s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #6a1b9a;
+  text-shadow: 
+    2px 2px 4px rgba(186, 104, 200, 0.3),
+    0 0 30px rgba(106, 27, 154, 0.2);
+  letter-spacing: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.author-signature {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #8e24aa;
+  letter-spacing: 3px;
+  opacity: 0.9;
+}
+
+.poem-date {
+  font-size: 0.9rem;
+  color: #9c27b0;
+  font-style: italic;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+/* Poetry Content */
+.poetry-content {
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.poem-text {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: rgba(243, 231, 233, 0.5);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(74, 20, 140, 0.1);
+  border: 1px solid rgba(186, 104, 200, 0.3);
+}
+
+.stanza {
+  margin-bottom: 2.5rem;
+  padding: 1.2rem 0;
+  border-left: 4px solid rgba(106, 27, 154, 0.3);
+  padding-left: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.stanza:hover {
+  border-left-color: #6a1b9a;
+  transform: translateX(5px);
+  background: rgba(186, 104, 200, 0.05);
+}
+
+.verse {
+  font-size: 1.35rem;
+  line-height: 2.2;
+  color: #4a148c;
+  margin: 0.5rem 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(186, 104, 200, 0.2);
+}
+
+.final-stanza {
+  border-left-color: #6a1b9a;
+  border-left-width: 5px;
+  background: rgba(106, 27, 154, 0.08);
+}
+
+.final-stanza .verse {
+  font-weight: 600;
+  color: #6a1b9a;
+}
+
+/* Back Link */
+.back-link-container {
+  text-align: center;
+  margin-top: 3rem;
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #ba68c8 0%, #9c27b0 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(186, 104, 200, 0.3);
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.back-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(186, 104, 200, 0.5);
+  background: linear-gradient(135deg, #ca78d8 0%, #ac37c0 100%);
+}
+
+.back-link:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .main-title {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .author-signature {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .poem-text {
+    padding: 1.5rem;
+  }
+
+  .verse {
+    font-size: 1.1rem;
+    line-height: 1.9;
+  }
+
+  .stanza {
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .heart {
+    opacity: 0.3;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.7rem;
+  }
+
+  .verse {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .poem-text {
+    padding: 1rem;
+  }
+
+  .back-link {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .heart {
+    opacity: 0.2;
+    transform: scale(0.7);
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .container {
+    box-shadow: none;
+    background: white;
+  }
+
+  .floating-hearts {
+    display: none;
+  }
+
+  .back-link-container {
+    display: none;
+  }
+
+  .verse {
+    color: black;
+  }
+}
+
+/* ================================================
+   ENGAGEMENT FEATURES - CUSTOM STYLING
+   Override default engagement styles for better visibility
+   ================================================ */
+
+/* Engagement Container */
+.engagement-container {
+  background: rgba(106, 27, 154, 0.05) !important;
+  border: 1px solid rgba(106, 27, 154, 0.2) !important;
+}
+
+/* Stats Bar */
+.engagement-stats {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(106, 27, 154, 0.2);
+}
+
+.stat-icon {
+  stroke: #6a1b9a !important;
+}
+
+.stat-value {
+  color: #4a148c !important;
+}
+
+.stat-label {
+  color: #8e24aa !important;
+}
+
+/* Like Button */
+#like-button {
+  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%) !important;
+  color: white !important;
+}
+
+#like-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%) !important;
+}
+
+#like-button.liked {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%) !important;
+}
+
+/* Share Section */
+.share-section h3 {
+  color: #4a148c !important;
+}
+
+/* Comment Section */
+.comment-section h3 {
+  color: #4a148c !important;
+}
+
+#comment-form {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(106, 27, 154, 0.3) !important;
+}
+
+.form-group label {
+  color: #4a148c !important;
+}
+
+.form-group input,
+.form-group textarea {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(106, 27, 154, 0.3) !important;
+  color: #4a148c !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #8e24aa !important;
+  opacity: 0.6;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #6a1b9a !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.form-group small {
+  color: #8e24aa !important;
+}
+
+#comment-form button[type="submit"] {
+  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%) !important;
+}
+
+#comment-form button[type="submit"]:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%) !important;
+}
+
+/* Comments List */
+.no-comments {
+  color: #8e24aa !important;
+}
+
+.comment-item {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-left: 3px solid #6a1b9a !important;
+}
+
+.comment-author {
+  color: #6a1b9a !important;
+}
+
+.comment-date {
+  color: #8e24aa !important;
+}
+
+.comment-text {
+  color: #4a148c !important;
+}
+
+.engagement-loading {
+  color: #8e24aa !important;
+}

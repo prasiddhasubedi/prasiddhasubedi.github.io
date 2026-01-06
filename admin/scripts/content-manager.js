@@ -415,6 +415,14 @@ class ContentManager {
 
         const defaultPoems = [
             {
+                title: "NEEDS, A HUMAN DOES",
+                content: `A human needs to be held close,\nTo feel a heartbeat, not a ghost;\nTo know that someone understands,\nThe weight we carry in our hands.\n\nA human needs a place to rest,\nWhere fears subside and we're our best;\nA shelter built not just of stone,\nBut love that makes a house a home.\n\nA human needs to dream and hope,\nTo climb the mountains, find the rope;\nTo see beyond the present pain,\nAnd trust that sun will come with rain.\n\nA human needs to give and take,\nTo love, to lose, to bend, to break;\nFor in our needs, we're most alive—\nConnected, human, born to thrive.`,
+                author: "prasiddha",
+                description: "A profound reflection on the fundamental needs that define our humanity",
+                tags: "humanity, needs, connection, love",
+                postedDate: new Date('2026-01-06T00:00:00Z').toISOString()
+            },
+            {
                 title: "IF I COULD TELL THE MOON",
                 content: `If I could tell the moon my secrets deep,\nWould she keep them safe while mortals sleep?\nWould she understand the weight I bear,\nOr simply glow, indifferent to my prayer?\n\nI'd whisper hopes that never saw the day,\nAnd dreams that time has slowly worn away;\nI'd share the love I couldn't speak aloud,\nHidden beneath my silent, fearful shroud.\n\nThe moon has seen a thousand years unfold,\nShe's witnessed stories new and stories old;\nPerhaps she knows that pain and joy entwine,\nThat broken hearts eventually align.\n\nIf I could tell the moon, would she reply?\nOr would she just drift gently through the sky?\nMaybe silence is her wisest art—\nA listening ear, a sympathetic heart.`,
                 author: "prasiddha",
