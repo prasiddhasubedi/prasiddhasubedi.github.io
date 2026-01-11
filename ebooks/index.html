@@ -189,7 +189,7 @@
                 description: "This ebook is made by collecting real stories of real people. Their words, their silences, their almosts and afters.",
                 url: "We Were Fine Until We Weren't/index.html",
                 genre: "Short Stories",
-                date: "2025",
+                date: "January 2025",
                 readingTime: "~4 hours",
                 emoji: "💔"
             }
@@ -221,9 +221,11 @@
                 // Generate ebook list HTML
                 const ebooksHTML = ebooksData.map((ebook, index) => {
                     const delay = (index + 1) * 100;
+                    // Encode URL properly - use encodeURI for full paths to preserve slashes
+                    const encodedUrl = ebook.url.includes('/') ? encodeURI(ebook.url) : encodeURIComponent(ebook.url);
                     return `
                         <li data-aos="fade-up" data-aos-delay="${delay}" style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border-radius: 10px; border-left: 4px solid #667eea; transition: transform 0.3s ease, box-shadow 0.3s ease;">
-                            <a href="${encodeURIComponent(ebook.url)}" style="text-decoration: none; color: inherit; display: block;">
+                            <a href="${encodedUrl}" style="text-decoration: none; color: inherit; display: block;">
                                 <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
                                     <div style="font-size: 3rem; line-height: 1; flex-shrink: 0;">${ebook.emoji}</div>
                                     <div style="flex: 1;">
