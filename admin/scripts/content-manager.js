@@ -192,11 +192,11 @@ class ContentManager {
     }
 
     addEbook(ebook) {
-        const sanitized = this.sanitizeObject(ebook, ['title', 'description', 'author', 'genre', 'tags', 'postedDate', 'url', 'emoji', 'readingTime']);
+        const sanitized = this.sanitizeObject(ebook, ['title', 'description', 'author', 'genre', 'tags', 'postedDate']);
         const newEbook = {
             id: this.generateId(),
             ...sanitized,
-            coverImageUrl: ebook.coverImageUrl || '', // Cover image URL is not sanitized
+            coverImageUrl: ebook.coverImageUrl || '',
             url: ebook.url || '',
             emoji: ebook.emoji || '📖',
             readingTime: ebook.readingTime || 'Quick read',

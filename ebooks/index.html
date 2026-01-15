@@ -167,10 +167,16 @@
         
         // Helper function to format date
         function formatDate(dateString) {
-            const date = new Date(dateString);
-            const month = date.toLocaleDateString('en-US', { month: 'long' });
-            const year = date.getFullYear();
-            return `${month} ${year}`;
+            if (!dateString) return 'Recent';
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return 'Recent';
+                const month = date.toLocaleDateString('en-US', { month: 'long' });
+                const year = date.getFullYear();
+                return `${month} ${year}`;
+            } catch (error) {
+                return 'Recent';
+            }
         }
         
         // Function to load and display ebooks
