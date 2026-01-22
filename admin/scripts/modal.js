@@ -59,10 +59,17 @@ class ModalManager {
         this.currentModal = { type, data };
         this.attachEventListeners();
         
-        // Focus first input
+        // Initialize Quill editors for content fields
         setTimeout(() => {
-            const firstInput = this.modalContainer.querySelector('input, textarea');
-            if (firstInput) firstInput.focus();
+            if (type === 'poetry' && typeof window.initializeQuillEditor === 'function') {
+                window.initializeQuillEditor('poetryContent', 'Write your poem here...');
+            } else if (type === 'article' && typeof window.initializeQuillEditor === 'function') {
+                window.initializeQuillEditor('articleContent', 'Write your article here...');
+            }
+            
+            // Focus first input
+            const firstInput = this.modalContainer.querySelector('input:not([type="file"]), textarea');
+            if (firstInput && firstInput.style.display !== 'none') firstInput.focus();
         }, 100);
     }
 
@@ -770,6 +777,16 @@ class ModalManager {
     // Handle Poetry Submit
     handlePoetrySubmit() {
         const form = document.getElementById('poetryForm');
+        const isEdit = !!this.currentModal.data;
+        const originalData = this.currentModal.data;
+        
+        // Use enhanced submit handler if available
+        if (typeof window.enhancedPoetrySubmit === 'function') {
+            window.enhancedPoetrySubmit(form, isEdit, originalData);
+            return;
+        }
+        
+        // Fallback to basic handler
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
         
@@ -794,11 +811,6 @@ class ModalManager {
                 // Create new
                 window.contentManager.addPoetry(data);
                 showToast('Poem added successfully', 'success');
-                
-                // Show instructions for creating the content page
-                setTimeout(() => {
-                    showContentPageInstructions('poetry', data.title);
-                }, 2000);
             }
 
             loadPoetryList();
@@ -817,6 +829,16 @@ class ModalManager {
     // Handle Article Submit
     handleArticleSubmit() {
         const form = document.getElementById('articleForm');
+        const isEdit = !!this.currentModal.data;
+        const originalData = this.currentModal.data;
+        
+        // Use enhanced submit handler if available
+        if (typeof window.enhancedArticleSubmit === 'function') {
+            window.enhancedArticleSubmit(form, isEdit, originalData);
+            return;
+        }
+        
+        // Fallback to basic handler
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
         
@@ -839,11 +861,6 @@ class ModalManager {
             } else {
                 window.contentManager.addArticle(data);
                 showToast('Article added successfully', 'success');
-                
-                // Show instructions for creating the content page
-                setTimeout(() => {
-                    showContentPageInstructions('articles', data.title);
-                }, 2000);
             }
 
             loadArticlesList();
@@ -859,8 +876,10 @@ class ModalManager {
         }
     }
 
-    // Handle eBook Submit
-    handleEbookSubmit() {
+
+            loadArticlesList();
+            loadDashboardData();
+            this.close();
         const form = document.getElementById('ebookForm');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);

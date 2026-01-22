@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Setup - Admin Panel</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/login.css">
+    <style>
+        .setup-content {
+            max-width: 700px;
+        }
+        
+        .info-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .info-box h3 {
+            color: #6366f1;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .info-box p, .info-box li {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+        
+        .info-box ol {
+            margin-left: 20px;
+        }
+        
+        .info-box code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning-box h3 {
+            color: #ef4444;
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .token-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            margin: 10px 0;
+            color: #93c5fd;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background: rgba(100, 116, 139, 0.2);
+            color: #cbd5e1;
+            border: 1px solid rgba(100, 116, 139, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(100, 116, 139, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card setup-content">
+            <div class="login-header">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z"></path>
+                        <path d="M2 17L12 22L22 17"></path>
+                        <path d="M2 12L12 17L22 12"></path>
+                    </svg>
+                </div>
+                <h1>GitHub Integration Setup</h1>
+                <p>Connect your GitHub account to enable auto-publishing</p>
+            </div>
+
+            <div class="info-box">
+                <h3>🔑 Why do you need a GitHub Token?</h3>
+                <p>The admin panel needs permission to update your repository automatically. A Personal Access Token (PAT) allows the admin panel to:</p>
+                <ul>
+                    <li>Create new content files (poems, articles, ebooks)</li>
+                    <li>Update existing content</li>
+                    <li>Upload images and media</li>
+                    <li>Trigger GitHub Pages rebuilds</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3>📝 How to create a GitHub Token:</h3>
+                <ol>
+                    <li>Go to <a href="https://github.com/settings/tokens" target="_blank" style="color: #6366f1;">GitHub Settings → Developer settings → Personal access tokens</a></li>
+                    <li>Click "Generate new token" → "Generate new token (classic)"</li>
+                    <li>Give it a name like "byprasiddha-admin"</li>
+                    <li>Set expiration (recommend: No expiration for convenience)</li>
+                    <li>Select these scopes:
+                        <ul>
+                            <li><code>repo</code> - Full control of private repositories</li>
+                            <li><code>workflow</code> - Update GitHub Action workflows (optional)</li>
+                        </ul>
+                    </li>
+                    <li>Click "Generate token" at the bottom</li>
+                    <li>Copy the token (you'll only see it once!)</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Security Note</h3>
+                <p><strong>Never share your token with anyone!</strong> This token gives full access to your repository. Keep it secure and private. The token will be stored in your browser's local storage and never sent to any external server except GitHub.</p>
+            </div>
+
+            <form id="setupForm" class="login-form">
+                <div class="form-group">
+                    <label for="githubToken">GitHub Personal Access Token</label>
+                    <textarea 
+                        id="githubToken" 
+                        name="githubToken" 
+                        required 
+                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        rows="3"
+                        style="resize: vertical; font-family: 'Courier New', monospace; font-size: 0.9rem;"
+                    ></textarea>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    ✓ Token validated successfully! Connected as: <span id="githubUsername"></span>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn-primary" id="testTokenBtn">
+                        <span class="btn-text">Test & Save Token</span>
+                        <span class="btn-loader hidden">
+                            <svg class="spinner" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"></circle>
+                                <path fill="currentColor" d="M12 2a10 10 0 0 1 10 10h-4a6 6 0 0 0-6-6V2z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <button type="button" class="btn-secondary" id="skipBtn">
+                        Skip for now
+                    </button>
+                </div>
+
+                <div class="alert hidden" id="alertBox" role="alert"></div>
+            </form>
+
+            <div class="login-footer">
+                <p>Already configured? <a href="dashboard.html">Go to Dashboard →</a></p>
+                <a href="../index.html" class="back-link">← Back to website</a>
+            </div>
+        </div>
+
+        <div class="background-decoration">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+    </div>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/github-api.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!auth.isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        const form = document.getElementById('setupForm');
+        const tokenInput = document.getElementById('githubToken');
+        const testBtn = document.getElementById('testTokenBtn');
+        const skipBtn = document.getElementById('skipBtn');
+        const alertBox = document.getElementById('alertBox');
+        const successMessage = document.getElementById('successMessage');
+        const usernameSpan = document.getElementById('githubUsername');
+
+        // Check if token already exists
+        if (githubAPI.hasToken()) {
+            testExistingToken();
+        }
+
+        async function testExistingToken() {
+            const result = await githubAPI.testToken();
+            if (result.valid) {
+                successMessage.style.display = 'block';
+                usernameSpan.textContent = result.user;
+                tokenInput.value = '••••••••••••••••••••••••••••••••';
+                tokenInput.disabled = true;
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = tokenInput.value.trim();
+            
+            if (!token) {
+                showAlert('Please enter a GitHub token', 'error');
+                return;
+            }
+
+            // Show loading
+            const btnText = testBtn.querySelector('.btn-text');
+            const btnLoader = testBtn.querySelector('.btn-loader');
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            testBtn.disabled = true;
+
+            try {
+                // Save token temporarily
+                githubAPI.saveToken(token);
+                
+                // Test the token
+                const result = await githubAPI.testToken();
+                
+                if (result.valid) {
+                    successMessage.style.display = 'block';
+                    usernameSpan.textContent = result.user;
+                    showAlert(`Success! Connected as ${result.user}`, 'success');
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    githubAPI.clearToken();
+                    showAlert('Invalid token. Please check and try again.', 'error');
+                }
+            } catch (error) {
+                githubAPI.clearToken();
+                showAlert(`Error: ${error.message}`, 'error');
+            } finally {
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                testBtn.disabled = false;
+            }
+        });
+
+        skipBtn.addEventListener('click', () => {
+            if (confirm('Without GitHub integration, you won\'t be able to publish content automatically. Continue anyway?')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        function showAlert(message, type = 'info') {
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
