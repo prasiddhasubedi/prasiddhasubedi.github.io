@@ -33,6 +33,17 @@ function initializeDashboard() {
         document.getElementById('welcomeName').textContent = currentUser;
     }
 
+    // Initialize GitHub status
+    checkGitHubStatus();
+
+    // Initialize settings button
+    const settingsBtn = document.getElementById('settingsBtn');
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            window.location.href = 'github-setup.html';
+        });
+    }
+
     // Mobile sidebar toggle
     const mobileToggle = document.getElementById('mobileToggle');
     const sidebar = document.getElementById('sidebar');
@@ -61,6 +72,46 @@ function initializeDashboard() {
 
     // Initialize action buttons
     initializeActionButtons();
+}
+
+// Check GitHub connection status
+async function checkGitHubStatus() {
+    const statusEl = document.getElementById('githubStatus');
+    const statusText = document.getElementById('githubStatusText');
+    
+    if (!statusEl) return;
+    
+    if (window.githubAPI && window.githubAPI.hasToken()) {
+        try {
+            const result = await window.githubAPI.testToken();
+            if (result.valid) {
+                statusEl.style.display = 'flex';
+                statusText.textContent = `Connected (${result.user})`;
+                statusEl.style.background = 'rgba(16, 185, 129, 0.1)';
+                statusText.style.color = '#10b981';
+                statusEl.onclick = () => {
+                    window.location.href = 'github-setup.html';
+                };
+            } else {
+                showDisconnectedStatus(statusEl, statusText);
+            }
+        } catch (error) {
+            showDisconnectedStatus(statusEl, statusText);
+        }
+    } else {
+        showDisconnectedStatus(statusEl, statusText);
+    }
+}
+
+function showDisconnectedStatus(statusEl, statusText) {
+    statusEl.style.display = 'flex';
+    statusText.textContent = 'Not Connected';
+    statusEl.style.background = 'rgba(239, 68, 68, 0.1)';
+    statusText.style.color = '#ef4444';
+    statusEl.style.cursor = 'pointer';
+    statusEl.onclick = () => {
+        window.location.href = 'github-setup.html';
+    };
 }
 
 function initializeActionButtons() {
