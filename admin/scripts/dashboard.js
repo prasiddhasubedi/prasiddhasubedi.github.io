@@ -138,7 +138,14 @@ function initializeActionButtons() {
     }
 
     if (addEbookBtn) {
-        addEbookBtn.addEventListener('click', () => window.modalManager.show('ebook'));
+        addEbookBtn.addEventListener('click', () => {
+            // Use new ebook manager if available
+            if (typeof ebookManager !== 'undefined') {
+                showNewEbookModal();
+            } else {
+                window.modalManager.show('ebook');
+            }
+        });
     }
 
     if (uploadPhotoBtn) {
@@ -364,6 +371,59 @@ function loadArticlesList() {
 }
 
 function loadEbooksList() {
+    // Check if new ebook manager is available
+    if (typeof ebookManager !== 'undefined') {
+        const ebooks = ebookManager.getAllEbooks();
+        const container = document.getElementById('ebooksList');
+        
+        if (!container) return;
+        
+        if (ebooks.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <h3>No eBooks yet</h3>
+                    <p>Add your eBooks to build your digital library</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = ebooks.map(ebook => `
+            <div class="content-item" data-id="${ebook.id}" style="cursor: pointer;" onclick="window.location.href='ebook-details.html?id=${ebook.id}'">
+                <div class="content-item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div class="content-item-details">
+                    <div class="content-item-title">${escapeHTML(ebook.topic)}</div>
+                    <div class="content-item-meta">${ebook.author} • ${ebook.chapters.length} chapter${ebook.chapters.length !== 1 ? 's' : ''}</div>
+                </div>
+                <div class="content-item-actions">
+                    <button class="btn-icon-small" onclick="event.stopPropagation(); window.location.href='ebook-details.html?id=${ebook.id}'" title="Manage Chapters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </button>
+                    <button class="btn-icon-small delete" onclick="event.stopPropagation(); deleteEbook('${ebook.id}')" title="Delete">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        return;
+    }
+    
+    // Fallback to old content manager
     const ebooks = window.contentManager.getEbooks();
     const container = document.getElementById('ebooksList');
     
@@ -411,6 +471,41 @@ function loadEbooksList() {
             </div>
         </div>
     `).join('');
+}
+
+function editEbook(id) {
+    // Check if using new ebook manager
+    if (typeof ebookManager !== 'undefined') {
+        window.location.href = `ebook-details.html?id=${id}`;
+        return;
+    }
+    
+    // Fallback to old modal
+    const ebook = window.contentManager.getEbookById(id);
+    if (ebook) {
+        window.modalManager.show('ebook', ebook);
+    }
+}
+
+function deleteEbook(id) {
+    if (!confirm('Are you sure you want to delete this ebook? This action cannot be undone.')) {
+        return;
+    }
+    
+    // Check if using new ebook manager
+    if (typeof ebookManager !== 'undefined') {
+        ebookManager.deleteEbook(id);
+        showToast('Ebook deleted successfully', 'success');
+        loadEbooksList();
+        loadDashboardData();
+        return;
+    }
+    
+    // Fallback to old content manager
+    window.contentManager.deleteEbook(id);
+    showToast('Ebook deleted successfully', 'success');
+    loadEbooksList();
+    loadDashboardData();
 }
 
 function loadPhotoGallery() {
@@ -720,4 +815,93 @@ function getTimeAgo(date) {
     
     const years = Math.floor(days / 365);
     return `${years} year${years !== 1 ? 's' : ''} ago`;
+}
+
+// ==========================================
+// NEW EBOOK MODAL (with chapters)
+// ==========================================
+
+function showNewEbookModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New eBook</h2>
+                <button class="modal-close" onclick="closeNewEbookModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newEbookForm">
+                    <div class="form-group">
+                        <label>Topic/Title <span style="color: #ef4444;">*</span></label>
+                        <input type="text" id="ebookTopic" required placeholder="Enter ebook title">
+                    </div>
+                    
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Author</label>
+                            <input type="text" id="ebookAuthor" value="Prasiddha Subedi">
+                        </div>
+                        <div class="form-group">
+                            <label>Genre</label>
+                            <input type="text" id="ebookGenre" placeholder="e.g., Poetry, Fiction">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="ebookDescription" rows="4" placeholder="Describe your ebook..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cover Image URL (Optional)</label>
+                        <input type="url" id="ebookCoverImage" placeholder="https://...">
+                        <p style="color: #64748b; font-size: 0.85rem; margin-top: 5px;">You can add chapters after creating the ebook</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeNewEbookModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createNewEbook()">
+                    Create eBook
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalContainer').appendChild(modal);
+}
+
+function createNewEbook() {
+    const ebookData = {
+        topic: document.getElementById('ebookTopic').value,
+        author: document.getElementById('ebookAuthor').value,
+        genre: document.getElementById('ebookGenre').value,
+        description: document.getElementById('ebookDescription').value,
+        coverImage: document.getElementById('ebookCoverImage').value
+    };
+    
+    if (!ebookData.topic) {
+        showToast('Please enter an ebook title', 'error');
+        return;
+    }
+    
+    const newEbook = ebookManager.createEbook(ebookData);
+    closeNewEbookModal();
+    showToast('eBook created successfully!', 'success');
+    
+    // Redirect to ebook details page to add chapters
+    setTimeout(() => {
+        window.location.href = `ebook-details.html?id=${newEbook.id}`;
+    }, 1000);
+}
+
+function closeNewEbookModal() {
+    const modalContainer = document.getElementById('modalContainer');
+    modalContainer.innerHTML = '';
 }
