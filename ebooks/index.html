@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eBooks - Prasiddha Subedi</title>
+  <meta name="description" content="Browse eBooks by Prasiddha Subedi">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 60px;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .ebooks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .ebook-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: #333;
+      display: block;
+    }
+    
+    .ebook-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .ebook-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    
+    .ebook-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .ebook-status {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-top: 15px;
+    }
+    
+    .back-link {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.95);
+      color: #667eea;
+      padding: 15px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+      margin: 0 auto;
+      display: table;
+    }
+    
+    .back-link:hover {
+      background: white;
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .ebooks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>eBooks</h1>
+      <p class="subtitle">Explore the collection</p>
+    </header>
+    
+    <div class="ebooks-grid">
+      <a href="we were fine until we weren't/index.html" class="ebook-card">
+        <div class="ebook-icon">📖</div>
+        <h2 class="ebook-title">we were fine until we weren't</h2>
+        <span class="ebook-status">Coming Soon</span>
+      </a>
+    </div>
+    
+    <a href="../index.html" class="back-link">← Back to Home</a>
+  </div>
+</body>
+</html>
