@@ -208,6 +208,79 @@ function showPublishDialog() {
     });
 }
 
+// Enhanced submit handler for photos
+async function enhancedPhotoSubmit(form, isEdit, originalData) {
+    const formData = new FormData(form);
+    
+    const photoData = {
+        title: formData.get('title'),
+        caption: formData.get('caption') || '',
+        tags: formData.get('tags') || '',
+        url: formData.get('url') || '' // This will be the base64 or uploaded URL
+    };
+    
+    // Validate that we have a photo
+    if (!photoData.url && !isEdit) {
+        showToast('Please select a photo to upload', 'error');
+        return;
+    }
+
+    const publishOptions = await showPublishDialog();
+    
+    if (publishOptions.cancelled) {
+        return;
+    }
+
+    try {
+        showLoadingOverlay('Publishing...');
+        
+        if (publishOptions.github && githubPublisher.canPublish()) {
+            // Publish to GitHub
+            const result = await githubPublisher.publishPhoto(photoData, {
+                skipLocalSave: !publishOptions.local
+            });
+            
+            if (result.success) {
+                hideLoadingOverlay();
+                showToast('Photo published successfully!', 'success');
+                window.modalManager.close();
+                
+                if (typeof loadPhotoGallery === 'function') {
+                    loadPhotoGallery();
+                }
+                if (typeof loadDashboardData === 'function') {
+                    loadDashboardData();
+                }
+            }
+        } else if (publishOptions.local) {
+            // Save locally only
+            if (isEdit && originalData) {
+                window.contentManager.updatePhoto(originalData.id, photoData);
+            } else {
+                window.contentManager.addPhoto(photoData);
+            }
+            
+            hideLoadingOverlay();
+            showToast('Photo saved locally!', 'success');
+            window.modalManager.close();
+            
+            if (typeof loadPhotoGallery === 'function') {
+                loadPhotoGallery();
+            }
+            if (typeof loadDashboardData === 'function') {
+                loadDashboardData();
+            }
+        } else {
+            hideLoadingOverlay();
+            showToast('Please select at least one option', 'warning');
+        }
+    } catch (error) {
+        hideLoadingOverlay();
+        console.error('[Enhanced Modal] Submit failed:', error);
+        showToast(`Error: ${error.message}`, 'error');
+    }
+}
+
 // Initialize Quill editor for content field
 function initializeQuillEditor(elementId, placeholder = 'Write your content here...') {
     const element = document.getElementById(elementId);
@@ -299,6 +372,7 @@ function hideLoadingOverlay() {
 // Make functions available globally
 window.enhancedPoetrySubmit = enhancedPoetrySubmit;
 window.enhancedArticleSubmit = enhancedArticleSubmit;
+window.enhancedPhotoSubmit = enhancedPhotoSubmit;
 window.initializeQuillEditor = initializeQuillEditor;
 window.showPublishDialog = showPublishDialog;
 window.showLoadingOverlay = showLoadingOverlay;

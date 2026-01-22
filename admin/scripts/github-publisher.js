@@ -10,6 +10,23 @@ class GitHubPublisher {
         this.isPublishing = false;
     }
 
+    // HTML escape utility to prevent XSS
+    escapeHTML(str) {
+        if (typeof str !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // Get file extension from base64 or file data
+    getImageExtension(base64Data) {
+        const match = base64Data.match(/^data:image\/(\w+);base64,/);
+        if (match && match[1]) {
+            return match[1] === 'jpeg' ? 'jpg' : match[1];
+        }
+        return 'jpg'; // default fallback
+    }
+
     // Check if ready to publish
     canPublish() {
         return this.api.hasToken();
@@ -83,7 +100,7 @@ class GitHubPublisher {
             await this.api.createOrUpdateFile(
                 `${basePath}/index.html`,
                 articleHTML,
-                `Add article: ${articleData.title}`
+                `[Article] Add new article: ${articleData.title}`
             );
             
             // Update articles index
@@ -295,13 +312,148 @@ class GitHubPublisher {
             await this.api.createOrUpdateFile(
                 'articles/index.html',
                 content,
-                `Add ${title} to articles index`,
+                `[Article] Update articles index - Add "${title}"`,
                 indexFile.sha
             );
 
             return { success: true };
         } catch (error) {
             console.error('[Publisher] Update articles index failed:', error);
+            throw error;
+        }
+    }
+
+    // Publish photo to GitHub
+    async publishPhoto(photoData, options = {}) {
+        try {
+            showToast('Publishing photo to GitHub...', 'info');
+            
+            // Get proper file extension from base64 data
+            const imageExt = this.getImageExtension(photoData.url);
+            const fileName = `${Date.now()}-${photoData.title.replace(/\s+/g, '-')}.${imageExt}`;
+            const imagePath = `photography/images/${fileName}`;
+            
+            const imageResult = await this.api.uploadImage(
+                imagePath,
+                photoData.url,
+                `[Photography] Add new photo: ${photoData.title}`
+            );
+            
+            if (!imageResult.success) {
+                throw new Error('Failed to upload photo image');
+            }
+            
+            // Update photography index with new photo
+            await this.updatePhotographyIndex(
+                photoData.title,
+                photoData.caption || '',
+                imageResult.url,
+                imagePath
+            );
+            
+            const url = `https://${this.api.owner}.github.io/${this.api.repo}/photography/`;
+            
+            showToast(`Photo published successfully! View at: ${url}`, 'success', 5000);
+            
+            if (!options.skipLocalSave) {
+                contentManager.addPhoto({
+                    ...photoData,
+                    url: imageResult.url
+                });
+            }
+            
+            return { success: true, url, imageUrl: imageResult.url };
+        } catch (error) {
+            console.error('[Publisher] Publish photo failed:', error);
+            showToast(`Failed to publish: ${error.message}`, 'error', 5000);
+            
+            if (confirm('Publishing to GitHub failed. Would you like to save locally instead?')) {
+                contentManager.addPhoto(photoData);
+                return { success: true, local: true };
+            }
+            
+            throw error;
+        }
+    }
+
+    // Update photography index
+    async updatePhotographyIndex(title, caption, imageUrl, imagePath) {
+        try {
+            const indexFile = await this.api.getFile('photography/index.html');
+            
+            if (!indexFile) {
+                throw new Error('Photography index not found');
+            }
+
+            let content = indexFile.content;
+            
+            // Find the photo gallery section
+            const galleryMarker = '<div class="works-list" data-aos="fade-up">';
+            const galleryStart = content.indexOf(galleryMarker);
+            
+            if (galleryStart === -1) {
+                throw new Error('Photo gallery section not found');
+            }
+            
+            // Replace the "On the way" placeholder with actual gallery if it exists
+            if (content.includes('On the way')) {
+                // Escape HTML to prevent XSS
+                const safeTitle = this.escapeHTML(title);
+                const safeCaption = this.escapeHTML(caption);
+                
+                // Create initial photo grid
+                const photoGridHTML = `
+                <div class="works-list" data-aos="fade-up">
+                    <h2>Photo Gallery</h2>
+                    <div class="photo-gallery" id="photo-gallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin: 2rem 0;">
+                        <div class="photo-item" data-aos="fade-up" style="position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                            <img src="${imageUrl}" alt="${safeTitle}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <div class="photo-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding: 20px; color: white;">
+                                <h3 style="margin: 0; font-size: 1.2rem;">${safeTitle}</h3>
+                                ${safeCaption ? `<p style="margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9;">${safeCaption}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                
+                const placeholderEnd = content.indexOf('</div>', content.indexOf('On the way'));
+                const sectionEnd = content.indexOf('</div>', placeholderEnd + 6) + 6;
+                
+                content = content.slice(0, galleryStart) + photoGridHTML + content.slice(sectionEnd);
+            } else {
+                // Escape HTML to prevent XSS
+                const safeTitle = this.escapeHTML(title);
+                const safeCaption = this.escapeHTML(caption);
+                
+                // Add to existing photo grid
+                const gridEnd = content.indexOf('</div>', content.indexOf('id="photo-gallery"'));
+                
+                if (gridEnd === -1) {
+                    throw new Error('Photo gallery grid not found');
+                }
+                
+                const newPhotoHTML = `
+                        <div class="photo-item" data-aos="fade-up" style="position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                            <img src="${imageUrl}" alt="${safeTitle}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <div class="photo-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding: 20px; color: white;">
+                                <h3 style="margin: 0; font-size: 1.2rem;">${safeTitle}</h3>
+                                ${safeCaption ? `<p style="margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9;">${safeCaption}</p>` : ''}
+                            </div>
+                        </div>`;
+                
+                content = content.slice(0, gridEnd) + newPhotoHTML + content.slice(gridEnd);
+            }
+
+            await this.api.createOrUpdateFile(
+                'photography/index.html',
+                content,
+                `[Photography] Update gallery - Add "${title}"`,
+                indexFile.sha
+            );
+
+            return { success: true };
+        } catch (error) {
+            console.error('[Publisher] Update photography index failed:', error);
             throw error;
         }
     }

@@ -876,10 +876,8 @@ class ModalManager {
         }
     }
 
-
-            loadArticlesList();
-            loadDashboardData();
-            this.close();
+    // Handle eBook submission
+    handleEbookSubmit() {
         const form = document.getElementById('ebookForm');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
@@ -926,7 +924,6 @@ class ModalManager {
     // Handle Photo Submit
     handlePhotoSubmit() {
         const form = document.getElementById('photoForm');
-        const formData = new FormData(form);
         const preview = document.getElementById('photoPreview');
 
         if (!preview || !preview.src) {
@@ -934,31 +931,46 @@ class ModalManager {
             return;
         }
 
-        const data = {
-            title: formData.get('title'),
-            caption: formData.get('caption'),
-            tags: formData.get('tags'),
-            url: preview.src // Base64 encoded image
-        };
+        // Use enhanced submit handler for GitHub publishing support
+        if (typeof window.enhancedPhotoSubmit === 'function') {
+            // Add url to form as hidden input
+            const urlInput = document.createElement('input');
+            urlInput.type = 'hidden';
+            urlInput.name = 'url';
+            urlInput.value = preview.src;
+            form.appendChild(urlInput);
+            
+            // Call enhanced submit with the form
+            window.enhancedPhotoSubmit(form, false, null);
+        } else {
+            // Fallback to local save only
+            const formData = new FormData(form);
+            const data = {
+                title: formData.get('title'),
+                caption: formData.get('caption'),
+                tags: formData.get('tags'),
+                url: preview.src // Base64 encoded image
+            };
 
-        const submitBtn = document.querySelector('.modal-footer .btn-primary');
-        if (submitBtn) {
-            submitBtn.classList.add('btn-loading');
-            submitBtn.disabled = true;
-        }
-
-        try {
-            window.contentManager.addPhoto(data);
-            showToast('Photo uploaded successfully', 'success');
-            loadPhotoGallery();
-            loadDashboardData();
-            this.close();
-        } catch (error) {
-            showToast('Error uploading photo', 'error');
-        } finally {
+            const submitBtn = document.querySelector('.modal-footer .btn-primary');
             if (submitBtn) {
-                submitBtn.classList.remove('btn-loading');
-                submitBtn.disabled = false;
+                submitBtn.classList.add('btn-loading');
+                submitBtn.disabled = true;
+            }
+
+            try {
+                window.contentManager.addPhoto(data);
+                showToast('Photo uploaded successfully', 'success');
+                loadPhotoGallery();
+                loadDashboardData();
+                this.close();
+            } catch (error) {
+                showToast('Error uploading photo', 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.classList.remove('btn-loading');
+                    submitBtn.disabled = false;
+                }
             }
         }
     }
