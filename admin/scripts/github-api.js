@@ -252,7 +252,7 @@ class GitHubAPI {
             await this.createOrUpdateFile(
                 `${basePath}/index.html`,
                 poemHTML,
-                `Add poem: ${title}`
+                `[Poetry] Add new poem: ${title}`
             );
 
             // Create basic CSS
@@ -260,7 +260,7 @@ class GitHubAPI {
             await this.createOrUpdateFile(
                 `${basePath}/style.css`,
                 css,
-                `Add styles for: ${title}`
+                `[Poetry] Add styles for poem: ${title}`
             );
 
             // Create basic JS
@@ -268,7 +268,7 @@ class GitHubAPI {
             await this.createOrUpdateFile(
                 `${basePath}/script.js`,
                 js,
-                `Add script for: ${title}`
+                `[Poetry] Add script for poem: ${title}`
             );
 
             // Update poetry index
@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
             await this.createOrUpdateFile(
                 'poetry/index.html',
                 content,
-                `Add ${title} to poetry index`,
+                `[Poetry] Update poetry index - Add "${title}"`,
                 indexFile.sha
             );
 
