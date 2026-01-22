@@ -933,19 +933,15 @@ class ModalManager {
 
         // Use enhanced submit handler for GitHub publishing support
         if (typeof window.enhancedPhotoSubmit === 'function') {
-            const formData = new FormData(form);
-            formData.set('url', preview.src); // Add the base64 image
+            // Add url to form as hidden input
+            const urlInput = document.createElement('input');
+            urlInput.type = 'hidden';
+            urlInput.name = 'url';
+            urlInput.value = preview.src;
+            form.appendChild(urlInput);
             
-            // Create a temporary form with the photo data
-            const tempForm = document.createElement('form');
-            for (let [key, value] of formData.entries()) {
-                const input = document.createElement('input');
-                input.name = key;
-                input.value = value;
-                tempForm.appendChild(input);
-            }
-            
-            window.enhancedPhotoSubmit(tempForm, false, null);
+            // Call enhanced submit with the form
+            window.enhancedPhotoSubmit(form, false, null);
         } else {
             // Fallback to local save only
             const formData = new FormData(form);

@@ -10,6 +10,23 @@ class GitHubPublisher {
         this.isPublishing = false;
     }
 
+    // HTML escape utility to prevent XSS
+    escapeHTML(str) {
+        if (typeof str !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // Get file extension from base64 or file data
+    getImageExtension(base64Data) {
+        const match = base64Data.match(/^data:image\/(\w+);base64,/);
+        if (match && match[1]) {
+            return match[1] === 'jpeg' ? 'jpg' : match[1];
+        }
+        return 'jpg'; // default fallback
+    }
+
     // Check if ready to publish
     canPublish() {
         return this.api.hasToken();
@@ -311,8 +328,9 @@ class GitHubPublisher {
         try {
             showToast('Publishing photo to GitHub...', 'info');
             
-            // Upload the photo image
-            const fileName = `${Date.now()}-${photoData.title.replace(/\s+/g, '-')}.jpg`;
+            // Get proper file extension from base64 data
+            const imageExt = this.getImageExtension(photoData.url);
+            const fileName = `${Date.now()}-${photoData.title.replace(/\s+/g, '-')}.${imageExt}`;
             const imagePath = `photography/images/${fileName}`;
             
             const imageResult = await this.api.uploadImage(
@@ -379,16 +397,20 @@ class GitHubPublisher {
             
             // Replace the "On the way" placeholder with actual gallery if it exists
             if (content.includes('On the way')) {
+                // Escape HTML to prevent XSS
+                const safeTitle = this.escapeHTML(title);
+                const safeCaption = this.escapeHTML(caption);
+                
                 // Create initial photo grid
                 const photoGridHTML = `
                 <div class="works-list" data-aos="fade-up">
                     <h2>Photo Gallery</h2>
                     <div class="photo-gallery" id="photo-gallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin: 2rem 0;">
                         <div class="photo-item" data-aos="fade-up" style="position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
-                            <img src="${imageUrl}" alt="${title}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="${imageUrl}" alt="${safeTitle}" style="width: 100%; height: 100%; object-fit: cover;">
                             <div class="photo-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding: 20px; color: white;">
-                                <h3 style="margin: 0; font-size: 1.2rem;">${title}</h3>
-                                ${caption ? `<p style="margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9;">${caption}</p>` : ''}
+                                <h3 style="margin: 0; font-size: 1.2rem;">${safeTitle}</h3>
+                                ${safeCaption ? `<p style="margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9;">${safeCaption}</p>` : ''}
                             </div>
                         </div>
                     </div>
@@ -399,6 +421,10 @@ class GitHubPublisher {
                 
                 content = content.slice(0, galleryStart) + photoGridHTML + content.slice(sectionEnd);
             } else {
+                // Escape HTML to prevent XSS
+                const safeTitle = this.escapeHTML(title);
+                const safeCaption = this.escapeHTML(caption);
+                
                 // Add to existing photo grid
                 const gridEnd = content.indexOf('</div>', content.indexOf('id="photo-gallery"'));
                 
@@ -408,10 +434,10 @@ class GitHubPublisher {
                 
                 const newPhotoHTML = `
                         <div class="photo-item" data-aos="fade-up" style="position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 4/3; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
-                            <img src="${imageUrl}" alt="${title}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="${imageUrl}" alt="${safeTitle}" style="width: 100%; height: 100%; object-fit: cover;">
                             <div class="photo-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding: 20px; color: white;">
-                                <h3 style="margin: 0; font-size: 1.2rem;">${title}</h3>
-                                ${caption ? `<p style="margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9;">${caption}</p>` : ''}
+                                <h3 style="margin: 0; font-size: 1.2rem;">${safeTitle}</h3>
+                                ${safeCaption ? `<p style="margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9;">${safeCaption}</p>` : ''}
                             </div>
                         </div>`;
                 
