@@ -305,7 +305,7 @@ function saveEbookDetails() {
     loadEbook();
 }
 
-function publishEbook() {
+async function publishEbook() {
     // Check if GitHub is configured
     if (!githubPublisher.canPublish()) {
         const setup = confirm('GitHub is not configured. Would you like to set it up now to enable ebook publishing?');
@@ -315,8 +315,80 @@ function publishEbook() {
         return;
     }
     
-    showToast('Ebook publishing feature is under development. For now, you can publish individual poems and articles from the dashboard.', 'info', 6000);
-    // TODO: Implement full GitHub publishing for ebooks with all chapters
+    // Validate ebook has chapters
+    if (!currentEbook.chapters || currentEbook.chapters.length === 0) {
+        showToast('Cannot publish an eBook without chapters. Please add at least one chapter first.', 'error', 5000);
+        return;
+    }
+    
+    // Confirm publishing
+    const confirmed = confirm(`This will publish "${currentEbook.topic}" with ${currentEbook.chapters.length} chapter(s) to GitHub. Continue?`);
+    if (!confirmed) {
+        return;
+    }
+    
+    try {
+        showLoadingOverlay('Publishing eBook to GitHub...');
+        
+        const result = await githubPublisher.publishEbook(currentEbook);
+        
+        if (result.success) {
+            hideLoadingOverlay();
+            showToast(`eBook published successfully! It will be live at: ${result.url}`, 'success', 8000);
+            
+            // Show a more detailed success message
+            const viewNow = confirm(`eBook published successfully!\n\nIt will be available at:\n${result.url}\n\nWould you like to open it in a new tab?`);
+            if (viewNow) {
+                window.open(result.url, '_blank');
+            }
+        }
+    } catch (error) {
+        hideLoadingOverlay();
+        console.error('[Ebook Details] Publish failed:', error);
+        showToast(`Failed to publish eBook: ${error.message}`, 'error', 5000);
+    }
+}
+
+// Add loading overlay helpers if not already defined
+function showLoadingOverlay(message = 'Loading...') {
+    let overlay = document.getElementById('loadingOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'loadingOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        `;
+        document.body.appendChild(overlay);
+    }
+    
+    overlay.innerHTML = `
+        <div style="background: #1e293b; padding: 30px; border-radius: 12px; text-align: center; min-width: 200px;">
+            <div style="width: 50px; height: 50px; border: 4px solid rgba(99, 102, 241, 0.3); border-top-color: #6366f1; border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+            <p style="color: #cbd5e1; font-size: 1.1rem;">${message}</p>
+        </div>
+        <style>
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        </style>
+    `;
+    overlay.style.display = 'flex';
+}
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
 }
 
 function closeModal() {

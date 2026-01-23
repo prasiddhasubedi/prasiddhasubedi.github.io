@@ -46,49 +46,43 @@
       opacity: 0.9;
     }
     
-    .ebooks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 30px;
-      margin-bottom: 40px;
+    .works-list {
+      max-width: 900px;
+      margin: 0 auto 40px;
     }
     
-    .ebook-card {
+    .works-list ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .works-list li {
+      margin-bottom: 20px;
+    }
+    
+    .works-list a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 15px;
       padding: 30px;
-      text-align: center;
       transition: transform 0.3s, box-shadow 0.3s;
-      text-decoration: none;
-      color: #333;
-      display: block;
     }
     
-    .ebook-card:hover {
+    .works-list a:hover {
       transform: translateY(-5px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
     
-    .ebook-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
-    
-    .ebook-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 10px;
+    .works-list h3 {
       color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
     }
     
-    .ebook-status {
-      display: inline-block;
-      background: #667eea;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      margin-top: 15px;
+    .works-list img {
+      margin-right: 20px;
     }
     
     .back-link {
@@ -126,12 +120,18 @@
       <p class="subtitle">Explore the collection</p>
     </header>
     
-    <div class="ebooks-grid">
-      <a href="we were fine until we weren't/index.html" class="ebook-card">
-        <div class="ebook-icon">📖</div>
-        <h2 class="ebook-title">we were fine until we weren't</h2>
-        <span class="ebook-status">Coming Soon</span>
-      </a>
+    <div class="works-list">
+      <ul id="ebooks-list" style="list-style: none; padding: 0;">
+        <li data-aos="fade-up" data-aos-delay="50">
+          <a href="we were fine until we weren't/index.html" class="ebook-card" style="display: flex; align-items: center; text-decoration: none; background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 30px; margin-bottom: 20px; transition: transform 0.3s, box-shadow 0.3s;">
+            <div>
+              <h3 style="color: #333; font-size: 1.5rem; margin-bottom: 10px;">we were fine until we weren't</h3>
+              <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">A collection of thoughts and reflections</p>
+              <p style="color: #999; margin-top: 3px; font-size: 0.85rem;">📚 Coming Soon</p>
+            </div>
+          </a>
+        </li>
+      </ul>
     </div>
     
     <a href="../index.html" class="back-link">← Back to Home</a>
