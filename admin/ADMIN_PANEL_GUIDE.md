@@ -96,7 +96,22 @@ Once GitHub is configured, you can:
    - **Cover Image** (optional)
    - **Tags** (optional)
 
-4. **Save to publish**
+4. **Save the eBook** - This creates the eBook structure locally
+5. **Add chapters** by clicking "Add Chapter" on the eBook details page
+6. **Fill in chapter details:**
+   - **Chapter Number** (auto-filled)
+   - **Chapter Title** (required)
+   - **Summary** (optional): Brief description of the chapter
+   - **Link/URL** (optional): External link to chapter content (Google Docs, PDF, etc.)
+   - **Content** (optional): Write the chapter content directly using the rich text editor
+
+7. **Publish to GitHub:**
+   - Once you have added all chapters, click "Publish to GitHub"
+   - The eBook with all its chapters will be deployed to your website
+   - Each chapter will have its own page with navigation between chapters
+   - The main eBook page will list all chapters with links
+
+**Note:** An eBook must have at least one chapter before it can be published to GitHub.
 
 ### Uploading Photography
 
