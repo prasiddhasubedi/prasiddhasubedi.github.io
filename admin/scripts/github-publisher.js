@@ -43,14 +43,8 @@ class GitHubPublisher {
             return '';
         }
         
-        // Only allow http:, https:, or relative URLs
-        if (!lowerUrl.startsWith('http://') && 
-            !lowerUrl.startsWith('https://') && 
-            !lowerUrl.startsWith('/') &&
-            !lowerUrl.startsWith('./') &&
-            !lowerUrl.startsWith('../')) {
-            return '';
-        }
+        // Allow http:, https:, relative URLs (/, ./, ../), or paths without protocol
+        // Relative paths like 'chapter1.html' or 'images/cover.jpg' are allowed
         
         return this.escapeHTMLAttr(trimmed);
     }
@@ -924,6 +918,9 @@ class GitHubPublisher {
     // Generate individual chapter HTML
     generateChapterHTML(ebookTopic, chapter, ebookSlug, previousChapter, nextChapter) {
         const safeTitle = this.escapeHTML(chapter.title);
+        // Note: chapter.content is intentionally not escaped because it contains rich HTML 
+        // from the Quill editor (formatting, links, etc.). This is admin-created content,
+        // not user-submitted content from untrusted sources.
         const safeContent = chapter.content || '<p>Content not available. Please check the external link if provided.</p>';
         
         return `<!DOCTYPE html>
