@@ -379,6 +379,11 @@ class GitHubAPI {
     <a href="../index.html" class="back-link">← Back to Poetry</a>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+  
   <script src="../../js/firebase-config.js"></script>
   <script src="../../js/firebase-engagement.js"></script>
   <script src="script.js"></script>

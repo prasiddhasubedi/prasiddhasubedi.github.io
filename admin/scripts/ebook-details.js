@@ -306,8 +306,17 @@ function saveEbookDetails() {
 }
 
 function publishEbook() {
-    showToast('Publishing feature coming soon! This will publish the ebook and all chapters to GitHub.', 'info', 5000);
-    // TODO: Implement GitHub publishing for ebooks
+    // Check if GitHub is configured
+    if (!githubPublisher.canPublish()) {
+        const setup = confirm('GitHub is not configured. Would you like to set it up now to enable ebook publishing?');
+        if (setup) {
+            window.location.href = 'github-setup.html';
+        }
+        return;
+    }
+    
+    showToast('Ebook publishing feature is under development. For now, you can publish individual poems and articles from the dashboard.', 'info', 6000);
+    // TODO: Implement full GitHub publishing for ebooks with all chapters
 }
 
 function closeModal() {

@@ -19,6 +19,20 @@
             display: flex;
             gap: 30px;
             align-items: start;
+            box-shadow: 0 10px 30px rgba(118, 75, 162, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ebook-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
         }
         
         .ebook-cover {
@@ -28,6 +42,14 @@
             border-radius: 8px;
             overflow: hidden;
             flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ebook-cover:hover {
+            transform: scale(1.05);
         }
         
         .ebook-cover img {
@@ -84,6 +106,7 @@
             background: #1e293b;
             border-radius: 12px;
             padding: 30px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
         
         .section-header {
@@ -107,12 +130,14 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         
         .chapter-card:hover {
             border-color: #6366f1;
-            transform: translateX(5px);
+            transform: translateX(8px) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
         }
         
         .chapter-number {
@@ -127,6 +152,12 @@
             font-size: 1.2rem;
             color: white;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .chapter-card:hover .chapter-number {
+            transform: rotate(5deg) scale(1.1);
         }
         
         .chapter-content {

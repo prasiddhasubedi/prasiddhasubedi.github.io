@@ -82,7 +82,7 @@
         <div class="container">
             <div class="works-list" data-aos="fade-up">
                 <h2>Featured Articles</h2>
-                <div id="articles-content">
+                <div id="articles-content" style="display: none;">
                     <div style="text-align: center; padding: 3rem 2rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 15px; margin: 2rem 0;">
                         <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.6;">ð</div>
                         <h3 style="font-size: 2rem; color: #764ba2; margin-bottom: 1rem; font-weight: 600;">On the way</h3>
@@ -233,7 +233,8 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             console.log('[DEBUG] Articles page DOM ready');
-            loadArticles();
+            // Removed localStorage loading - articles are now statically generated in HTML
+            // loadArticles();
         });
     </script>
 </body>
