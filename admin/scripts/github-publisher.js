@@ -18,6 +18,43 @@ class GitHubPublisher {
         return div.innerHTML;
     }
 
+    // Escape HTML attribute to prevent XSS
+    escapeHTMLAttr(str) {
+        if (typeof str !== 'string') return '';
+        return str.replace(/"/g, '&quot;')
+                  .replace(/'/g, '&#39;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;');
+    }
+
+    // Validate and sanitize URL
+    sanitizeURL(url) {
+        if (typeof url !== 'string' || !url) return '';
+        
+        // Remove any dangerous protocols
+        const trimmed = url.trim();
+        const lowerUrl = trimmed.toLowerCase();
+        
+        // Block javascript:, data:, vbscript:, file: protocols
+        if (lowerUrl.startsWith('javascript:') || 
+            lowerUrl.startsWith('data:') || 
+            lowerUrl.startsWith('vbscript:') ||
+            lowerUrl.startsWith('file:')) {
+            return '';
+        }
+        
+        // Only allow http:, https:, or relative URLs
+        if (!lowerUrl.startsWith('http://') && 
+            !lowerUrl.startsWith('https://') && 
+            !lowerUrl.startsWith('/') &&
+            !lowerUrl.startsWith('./') &&
+            !lowerUrl.startsWith('../')) {
+            return '';
+        }
+        
+        return this.escapeHTMLAttr(trimmed);
+    }
+
     // Get file extension from base64 or file data
     getImageExtension(base64Data) {
         const match = base64Data.match(/^data:image\/(\w+);base64,/);
@@ -580,14 +617,15 @@ class GitHubPublisher {
             const chapterSlug = this.api.slugify(`chapter-${chapter.chapterNumber}-${chapter.title}`);
             const safeTitle = this.escapeHTML(chapter.title);
             const safeSummary = this.escapeHTML(chapter.summary || '');
+            const safeLink = chapter.link ? this.sanitizeURL(chapter.link) : '';
             
             return `
                 <div class="chapter-item" data-aos="fade-up">
                     <div class="chapter-number">${chapter.chapterNumber}</div>
                     <div class="chapter-info">
                         <h3 class="chapter-title">
-                            ${chapter.link ? 
-                                `<a href="${chapter.link}" target="_blank" rel="noopener">${safeTitle} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; display: inline-block;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>` :
+                            ${safeLink ? 
+                                `<a href="${safeLink}" target="_blank" rel="noopener noreferrer">${safeTitle} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; display: inline-block;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>` :
                                 `<a href="${chapterSlug}.html">${safeTitle}</a>`
                             }
                         </h3>
@@ -616,7 +654,7 @@ class GitHubPublisher {
   <meta property="og:url" content="https://prasiddhasubedi.github.io/byprasiddha/ebooks/${encodeURIComponent(slug)}/">
   <meta property="og:title" content="${this.escapeHTML(topic)} - ${this.escapeHTML(authorName)}">
   <meta property="og:description" content="${this.escapeHTML(desc)}">
-  ${coverImage ? `<meta property="og:image" content="${coverImage}">` : '<meta property="og:image" content="https://prasiddhasubedi.github.io/byprasiddha/og-image.jpg">'}
+  ${coverImage ? `<meta property="og:image" content="${this.sanitizeURL(coverImage)}">` : '<meta property="og:image" content="https://prasiddhasubedi.github.io/byprasiddha/og-image.jpg">'}
   
   <link rel="stylesheet" href="../../css/styles.css">
   <link rel="stylesheet" href="../../css/engagement.css">
@@ -801,7 +839,7 @@ class GitHubPublisher {
   <div class="ebook-container">
     <header class="ebook-header">
       ${coverImage ? 
-        `<div class="ebook-cover"><img src="${coverImage}" alt="${this.escapeHTML(topic)} cover"></div>` :
+        `<div class="ebook-cover"><img src="${this.sanitizeURL(coverImage)}" alt="${this.escapeHTML(topic)} cover"></div>` :
         `<div class="ebook-cover no-image">📚</div>`
       }
       <h1 class="ebook-title">${this.escapeHTML(topic)}</h1>
@@ -1115,7 +1153,7 @@ class GitHubPublisher {
             
             const newItem = `                    <li data-aos="fade-up" data-aos-delay="50">
                         <a href="${encodedSlug}/index.html">
-                            ${coverImage ? `<img src="${coverImage}" alt="${this.escapeHTML(topic)} cover" style="width: 100px; height: 140px; object-fit: cover; border-radius: 8px; margin-right: 15px;">` : ''}
+                            ${coverImage ? `<img src="${this.sanitizeURL(coverImage)}" alt="${this.escapeHTML(topic)} cover" style="width: 100px; height: 140px; object-fit: cover; border-radius: 8px; margin-right: 15px;">` : ''}
                             <div>
                                 <h3>${this.escapeHTML(topic)}</h3>
                                 <p style="color: #666; margin-top: 5px; font-size: 0.95rem;">${this.escapeHTML(desc)}</p>
