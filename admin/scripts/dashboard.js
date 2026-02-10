@@ -125,27 +125,10 @@ function initializeActionButtons() {
 
     // Add buttons
     const addPoetryBtn = document.getElementById('addPoetryBtn');
-    const addArticleBtn = document.getElementById('addArticleBtn');
-    const addEbookBtn = document.getElementById('addEbookBtn');
     const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
 
     if (addPoetryBtn) {
         addPoetryBtn.addEventListener('click', () => window.modalManager.show('poetry'));
-    }
-
-    if (addArticleBtn) {
-        addArticleBtn.addEventListener('click', () => window.modalManager.show('article'));
-    }
-
-    if (addEbookBtn) {
-        addEbookBtn.addEventListener('click', () => {
-            // Use new ebook manager if available
-            if (typeof ebookManager !== 'undefined') {
-                showNewEbookModal();
-            } else {
-                window.modalManager.show('ebook');
-            }
-        });
     }
 
     if (uploadPhotoBtn) {
@@ -158,14 +141,17 @@ function handleQuickAction(action) {
         case 'add-poetry':
             window.modalManager.show('poetry');
             break;
-        case 'add-article':
-            window.modalManager.show('article');
-            break;
         case 'upload-photo':
             window.modalManager.show('photo');
             break;
-        case 'add-ebook':
-            window.modalManager.show('ebook');
+        case 'manage-featured':
+            // Navigate to featured section
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('[data-section="featured"]').classList.add('active');
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById('section-featured').classList.add('active');
+            document.getElementById('pageTitle').textContent = 'Featured Items';
+            loadFeaturedManagement();
             break;
     }
 }
@@ -242,7 +228,8 @@ function loadDashboardData() {
     
     // Update stat cards
     document.getElementById('poetryCount').textContent = stats.poetry;
-    document.getElementById('articlesCount').textContent = stats.articles;
+    document.getElementById('photosCount').textContent = stats.photos;
+    document.getElementById('featuredCount').textContent = stats.featured;
     
     // Load Firebase insights
     loadFirebaseInsights();
@@ -256,14 +243,11 @@ function loadSectionData(section) {
         case 'poetry':
             loadPoetryList();
             break;
-        case 'articles':
-            loadArticlesList();
-            break;
-        case 'ebooks':
-            loadEbooksList();
-            break;
         case 'photography':
             loadPhotoGallery();
+            break;
+        case 'featured':
+            loadFeaturedManagement();
             break;
     }
 }
@@ -301,8 +285,14 @@ function loadPoetryList() {
             <div class="content-item-details">
                 <div class="content-item-title">${escapeHTML(poem.title)}</div>
                 <div class="content-item-meta">Created: ${formatDate(poem.dateCreated)}</div>
+                ${poem.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
             </div>
             <div class="content-item-actions">
+                <button class="btn-icon-small" onclick="toggleFeatured('poetry', '${poem.id}')" title="Toggle Featured">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </button>
                 <button class="btn-icon-small" onclick="editPoetry('${poem.id}')" title="Edit">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -320,193 +310,9 @@ function loadPoetryList() {
     `).join('');
 }
 
-function loadArticlesList() {
-    const articles = window.contentManager.getArticles();
-    const container = document.getElementById('articlesList');
-    
-    if (!container) return;
-    
-    if (articles.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <h3>No articles yet</h3>
-                <p>Start writing and publishing your articles</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = articles.map(article => `
-        <div class="content-item" data-id="${article.id}">
-            <div class="content-item-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-            </div>
-            <div class="content-item-details">
-                <div class="content-item-title">${escapeHTML(article.title)}</div>
-                <div class="content-item-meta">Created: ${formatDate(article.dateCreated)}</div>
-            </div>
-            <div class="content-item-actions">
-                <button class="btn-icon-small" onclick="editArticle('${article.id}')" title="Edit">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
-                <button class="btn-icon-small delete" onclick="deleteArticle('${article.id}')" title="Delete">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
+// Removed loadArticlesList() - articles management has been removed
 
-function loadEbooksList() {
-    // Check if new ebook manager is available
-    if (typeof ebookManager !== 'undefined') {
-        const ebooks = ebookManager.getAllEbooks();
-        const container = document.getElementById('ebooksList');
-        
-        if (!container) return;
-        
-        if (ebooks.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                    <h3>No eBooks yet</h3>
-                    <p>Add your eBooks to build your digital library</p>
-                </div>
-            `;
-            return;
-        }
-        
-        container.innerHTML = ebooks.map(ebook => `
-            <div class="content-item" data-id="${ebook.id}" style="cursor: pointer;" onclick="window.location.href='ebook-details.html?id=${ebook.id}'">
-                <div class="content-item-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                </div>
-                <div class="content-item-details">
-                    <div class="content-item-title">${escapeHTML(ebook.topic)}</div>
-                    <div class="content-item-meta">${ebook.author} • ${ebook.chapters.length} chapter${ebook.chapters.length !== 1 ? 's' : ''}</div>
-                </div>
-                <div class="content-item-actions">
-                    <button class="btn-icon-small" onclick="event.stopPropagation(); window.location.href='ebook-details.html?id=${ebook.id}'" title="Manage Chapters">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </button>
-                    <button class="btn-icon-small delete" onclick="event.stopPropagation(); deleteEbook('${ebook.id}')" title="Delete">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-        return;
-    }
-    
-    // Fallback to old content manager
-    const ebooks = window.contentManager.getEbooks();
-    const container = document.getElementById('ebooksList');
-    
-    if (!container) return;
-    
-    if (ebooks.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                </svg>
-                <h3>No eBooks yet</h3>
-                <p>Add your eBooks to build your digital library</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = ebooks.map(ebook => `
-        <div class="content-item" data-id="${ebook.id}">
-            <div class="content-item-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                </svg>
-            </div>
-            <div class="content-item-details">
-                <div class="content-item-title">${escapeHTML(ebook.title)}</div>
-                <div class="content-item-meta">Created: ${formatDate(ebook.dateCreated)}</div>
-            </div>
-            <div class="content-item-actions">
-                <button class="btn-icon-small" onclick="editEbook('${ebook.id}')" title="Edit">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
-                <button class="btn-icon-small delete" onclick="deleteEbook('${ebook.id}')" title="Delete">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
-
-function editEbook(id) {
-    // Check if using new ebook manager
-    if (typeof ebookManager !== 'undefined') {
-        window.location.href = `ebook-details.html?id=${id}`;
-        return;
-    }
-    
-    // Fallback to old modal
-    const ebook = window.contentManager.getEbookById(id);
-    if (ebook) {
-        window.modalManager.show('ebook', ebook);
-    }
-}
-
-function deleteEbook(id) {
-    if (!confirm('Are you sure you want to delete this ebook? This action cannot be undone.')) {
-        return;
-    }
-    
-    // Check if using new ebook manager
-    if (typeof ebookManager !== 'undefined') {
-        ebookManager.deleteEbook(id);
-        showToast('Ebook deleted successfully', 'success');
-        loadEbooksList();
-        loadDashboardData();
-        return;
-    }
-    
-    // Fallback to old content manager
-    window.contentManager.deleteEbook(id);
-    showToast('Ebook deleted successfully', 'success');
-    loadEbooksList();
-    loadDashboardData();
-}
+// Removed loadEbooksList() and related ebook functions - ebooks management has been removed
 
 function loadPhotoGallery() {
     const photos = window.contentManager.getPhotos();
@@ -544,6 +350,71 @@ function loadPhotoGallery() {
     `).join('');
 }
 
+function loadFeaturedManagement() {
+    const container = document.getElementById('featuredManagement');
+    if (!container) return;
+    
+    const poetry = window.contentManager.getPoetry().filter(p => p.featured);
+    const photos = window.contentManager.getPhotos().filter(p => p.featured);
+    
+    container.innerHTML = `
+        <div class="featured-section">
+            <h3>Featured Poetry (${poetry.length})</h3>
+            <div class="featured-list">
+                ${poetry.length === 0 ? '<p>No featured poems</p>' : poetry.map(poem => `
+                    <div class="featured-item">
+                        <span>${escapeHTML(poem.title)}</span>
+                        <button class="btn-icon-small" onclick="toggleFeatured('poetry', '${poem.id}')" title="Unfeature">
+                            <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        <div class="featured-section">
+            <h3>Featured Photos (${photos.length})</h3>
+            <div class="featured-list">
+                ${photos.length === 0 ? '<p>No featured photos</p>' : photos.map(photo => `
+                    <div class="featured-item">
+                        <span>${escapeHTML(photo.title || 'Untitled')}</span>
+                        <button class="btn-icon-small" onclick="toggleFeatured('photography', '${photo.id}')" title="Unfeature">
+                            <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+window.toggleFeatured = function(type, id) {
+    if (window.contentManager.toggleFeatured) {
+        window.contentManager.toggleFeatured(type, id);
+        showToast('Featured status updated', 'success');
+        
+        // Reload appropriate list based on type
+        if (type === 'poetry') {
+            loadPoetryList();
+        } else if (type === 'photography') {
+            loadPhotoGallery();
+        }
+        
+        // Reload featured management if visible
+        const featuredContainer = document.getElementById('featuredManagement');
+        if (featuredContainer && featuredContainer.offsetParent !== null) {
+            loadFeaturedManagement();
+        }
+        
+        loadDashboardData();
+    } else {
+        showToast('Featured functionality not available', 'error');
+    }
+};
+
 // ==========================================
 // CRUD OPERATIONS (Placeholder functions - will be implemented in modals)
 // ==========================================
@@ -564,37 +435,41 @@ window.deletePoetry = function(id) {
     }
 };
 
-window.editArticle = function(id) {
-    const article = window.contentManager.getArticleById(id);
-    if (article) {
-        window.modalManager.show('article', article);
-    }
-};
+// Removed - articles management has been removed
+// window.editArticle = function(id) {
+//     const article = window.contentManager.getArticleById(id);
+//     if (article) {
+//         window.modalManager.show('article', article);
+//     }
+// };
 
-window.deleteArticle = function(id) {
-    if (confirm('Are you sure you want to delete this article?')) {
-        window.contentManager.deleteArticle(id);
-        loadArticlesList();
-        loadDashboardData();
-        showToast('Article deleted successfully', 'success');
-    }
-};
+// Removed - articles management has been removed
+// window.deleteArticle = function(id) {
+//     if (confirm('Are you sure you want to delete this article?')) {
+//         window.contentManager.deleteArticle(id);
+//         loadArticlesList();
+//         loadDashboardData();
+//         showToast('Article deleted successfully', 'success');
+//     }
+// };
 
-window.editEbook = function(id) {
-    const ebook = window.contentManager.getEbookById(id);
-    if (ebook) {
-        window.modalManager.show('ebook', ebook);
-    }
-};
+// Removed - ebooks management has been removed
+// window.editEbook = function(id) {
+//     const ebook = window.contentManager.getEbookById(id);
+//     if (ebook) {
+//         window.modalManager.show('ebook', ebook);
+//     }
+// };
 
-window.deleteEbook = function(id) {
-    if (confirm('Are you sure you want to delete this eBook?')) {
-        window.contentManager.deleteEbook(id);
-        loadEbooksList();
-        loadDashboardData();
-        showToast('eBook deleted successfully', 'success');
-    }
-};
+// Removed - ebooks management has been removed
+// window.deleteEbook = function(id) {
+//     if (confirm('Are you sure you want to delete this eBook?')) {
+//         window.contentManager.deleteEbook(id);
+//         loadEbooksList();
+//         loadDashboardData();
+//         showToast('eBook deleted successfully', 'success');
+//     }
+// };
 
 window.deletePhoto = function(id) {
     if (confirm('Are you sure you want to delete this photo?')) {
