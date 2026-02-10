@@ -582,282 +582,126 @@ if (document.readyState === 'loading') {
 }
 
 // ==========================================
-// RECENTLY POSTED CAROUSEL
+// FEATURED ITEMS DISPLAY
 // ==========================================
 
-// Function to load recent posts from localStorage
-function loadRecentPosts() {
+// Function to load featured items from localStorage
+function loadFeaturedItems() {
     try {
         const contentData = localStorage.getItem('admin_content_data');
         if (!contentData) {
-            console.log('[PREMIUM] No content data found, using default posts');
-            return [
-                {
-                    id: 1,
-                    title: "Serene Beauty",
-                    description: "A contemplative poem celebrating the timeless beauty of nature's gentle hills",
-                    type: "poetry",
-                    category: "Poetry",
-                    date: "2025-12-30",
-                    url: "poetry/Serene%20Beauty/index.html"
-                }
-            ];
+            console.log('[PREMIUM] No content data found');
+            return [];
         }
         
         const data = JSON.parse(contentData);
-        const allContent = [];
+        const featured = [];
         
-        // Add poetry items
+        // Add featured poetry items
         if (data.poetry && data.poetry.length > 0) {
             data.poetry.forEach(poem => {
-                allContent.push({
-                    id: poem.id,
-                    title: poem.title,
-                    description: poem.description || poem.content.substring(0, 100) + '...',
-                    type: 'poetry',
-                    category: 'Poetry',
-                    date: poem.postedDate || poem.dateCreated,
-                    url: `poetry/${encodeURIComponent(poem.title)}/index.html`
-                });
+                if (poem.featured) {
+                    featured.push({
+                        id: poem.id,
+                        title: poem.title,
+                        description: poem.description || poem.content.substring(0, 80) + '...',
+                        type: 'poetry',
+                        category: 'Poetry',
+                        mediaUrl: poem.mediaUrl,
+                        url: `poetry/${encodeURIComponent(poem.title)}/index.html`,
+                        featuredOrder: poem.featuredOrder !== undefined ? poem.featuredOrder : 999999
+                    });
+                }
             });
         }
         
-        // Add article items
-        if (data.articles && data.articles.length > 0) {
-            data.articles.forEach(article => {
-                allContent.push({
-                    id: article.id,
-                    title: article.title,
-                    description: article.excerpt || article.content.substring(0, 100) + '...',
-                    type: 'article',
-                    category: 'Article',
-                    date: article.postedDate || article.dateCreated,
-                    url: `articles/${encodeURIComponent(article.title)}/index.html`
-                });
+        // Add featured photo items
+        if (data.photos && data.photos.length > 0) {
+            data.photos.forEach(photo => {
+                if (photo.featured) {
+                    featured.push({
+                        id: photo.id,
+                        title: photo.title || 'Untitled Photo',
+                        description: photo.caption || 'A beautiful photograph',
+                        type: 'photography',
+                        category: 'Photography',
+                        mediaUrl: photo.url,
+                        url: photo.url,
+                        featuredOrder: photo.featuredOrder !== undefined ? photo.featuredOrder : 999999
+                    });
+                }
             });
         }
         
-        // Add ebook items
-        if (data.ebooks && data.ebooks.length > 0) {
-            data.ebooks.forEach(ebook => {
-                allContent.push({
-                    id: ebook.id,
-                    title: ebook.title,
-                    description: ebook.description.substring(0, 100) + '...',
-                    type: 'ebook',
-                    category: 'eBook',
-                    date: ebook.postedDate || ebook.dateCreated,
-                    url: `ebooks/${encodeURIComponent(ebook.title)}/index.html`
-                });
-            });
-        }
+        // Sort by featuredOrder
+        featured.sort((a, b) => a.featuredOrder - b.featuredOrder);
         
-        // Sort by date (most recent first) and return top 10
-        allContent.sort((a, b) => new Date(b.date) - new Date(a.date));
-        return allContent.slice(0, 10);
+        return featured;
         
     } catch (error) {
-        console.error('[PREMIUM] Error loading recent posts:', error);
-        return [
-            {
-                id: 1,
-                title: "Serene Beauty",
-                description: "A contemplative poem celebrating the timeless beauty of nature's gentle hills",
-                type: "poetry",
-                category: "Poetry",
-                date: "2025-12-30",
-                url: "poetry/Serene%20Beauty/index.html"
-            }
-        ];
+        console.error('[PREMIUM] Error loading featured items:', error);
+        return [];
     }
 }
 
-// Recent posts data - This should be updated when new content is added
-const recentPosts = loadRecentPosts();
-
-// Initialize carousel on homepage only
-if (document.getElementById('recentlyPostedCarousel')) {
-    initRecentlyPostedCarousel();
+// Initialize featured items display on homepage
+if (document.getElementById('featuredGrid')) {
+    initFeaturedItems();
 }
 
-function initRecentlyPostedCarousel() {
-    console.log('[PREMIUM] Initializing Recently Posted Carousel');
+function initFeaturedItems() {
+    console.log('[PREMIUM] Initializing Featured Items');
     
-    const carouselTrack = document.getElementById('recentlyPostedCarousel');
-    const dotsContainer = document.getElementById('carouselDots');
-    const prevBtn = document.querySelector('.carousel-prev');
-    const nextBtn = document.querySelector('.carousel-next');
+    const featuredGrid = document.getElementById('featuredGrid');
     
-    if (!carouselTrack) {
-        console.error('[PREMIUM] Carousel track not found');
+    if (!featuredGrid) {
+        console.error('[PREMIUM] Featured grid not found');
         return;
     }
     
-    let currentIndex = 0;
-    let autoPlayInterval;
-    const autoPlayDelay = 5000; // 5 seconds
+    const featuredItems = loadFeaturedItems();
+    
+    if (featuredItems.length === 0) {
+        featuredGrid.innerHTML = `
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <h3>No featured items yet</h3>
+                <p>Featured items will appear here once added by the admin</p>
+            </div>
+        `;
+        return;
+    }
     
     // Icon SVGs for different types
     const iconSVGs = {
         poetry: '<path d="M12 2L2 7L12 12L22 7L12 2Z"></path><path d="M2 17L12 22L22 17"></path><path d="M2 12L12 17L22 12"></path>',
-        ebook: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>',
-        article: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>',
         photography: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>'
     };
     
-    // Format date
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
-    }
-    
-    // Generate carousel items
-    function generateCarouselItems() {
-        carouselTrack.innerHTML = recentPosts.map(post => `
-            <a href="${post.url}" class="carousel-item">
-                <div class="carousel-item-image">
-                    <svg class="carousel-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        ${iconSVGs[post.type] || iconSVGs.article}
-                    </svg>
-                </div>
-                <div class="carousel-item-content">
-                    <span class="carousel-item-badge">${post.category}</span>
-                    <h3 class="carousel-item-title">${post.title}</h3>
-                    <p class="carousel-item-description">${post.description}</p>
-                    <div class="carousel-item-date">
+    // Generate featured items
+    featuredGrid.innerHTML = featuredItems.map(item => `
+        <a href="${item.url}" class="featured-card" data-aos="fade-up">
+            <div class="featured-card-image">
+                ${item.mediaUrl && item.type === 'photography' ? 
+                    `<img src="${item.mediaUrl}" alt="${item.title}" loading="lazy">` :
+                    `<div class="featured-card-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            ${iconSVGs[item.type] || iconSVGs.poetry}
                         </svg>
-                        <span>${formatDate(post.date)}</span>
-                    </div>
-                </div>
-            </a>
-        `).join('');
-    }
+                    </div>`
+                }
+            </div>
+            <div class="featured-card-content">
+                <span class="featured-card-badge">${item.category}</span>
+                <h3 class="featured-card-title">${item.title}</h3>
+                <p class="featured-card-description">${item.description}</p>
+            </div>
+        </a>
+    `).join('');
     
-    // Generate dots
-    function generateDots() {
-        const totalSlides = Math.ceil(recentPosts.length / getItemsPerSlide());
-        dotsContainer.innerHTML = Array(totalSlides).fill(0).map((_, i) => 
-            `<div class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`
-        ).join('');
-        
-        // Add click handlers to dots
-        document.querySelectorAll('.carousel-dot').forEach(dot => {
-            dot.addEventListener('click', () => {
-                const index = parseInt(dot.getAttribute('data-index'));
-                goToSlide(index);
-            });
-        });
-    }
-    
-    // Get items per slide based on viewport
-    function getItemsPerSlide() {
-        if (window.innerWidth <= 768) return 1;
-        if (window.innerWidth <= 1024) return 2;
-        return 3;
-    }
-    
-    // Go to specific slide
-    function goToSlide(index) {
-        const itemsPerSlide = getItemsPerSlide();
-        const totalSlides = Math.ceil(recentPosts.length / itemsPerSlide);
-        
-        currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
-        
-        const offset = -currentIndex * 100;
-        carouselTrack.style.transform = `translateX(${offset}%)`;
-        
-        // Update dots
-        document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-            dot.classList.toggle('active', i === currentIndex);
-        });
-        
-        console.log('[PREMIUM] Carousel moved to slide:', currentIndex);
-    }
-    
-    // Next slide
-    function nextSlide() {
-        const itemsPerSlide = getItemsPerSlide();
-        const totalSlides = Math.ceil(recentPosts.length / itemsPerSlide);
-        
-        if (currentIndex < totalSlides - 1) {
-            goToSlide(currentIndex + 1);
-        } else {
-            goToSlide(0); // Loop back to start
-        }
-    }
-    
-    // Previous slide
-    function prevSlide() {
-        const itemsPerSlide = getItemsPerSlide();
-        const totalSlides = Math.ceil(recentPosts.length / itemsPerSlide);
-        
-        if (currentIndex > 0) {
-            goToSlide(currentIndex - 1);
-        } else {
-            goToSlide(totalSlides - 1); // Loop to end
-        }
-    }
-    
-    // Start auto-play
-    function startAutoPlay() {
-        stopAutoPlay(); // Clear any existing interval
-        autoPlayInterval = setInterval(nextSlide, autoPlayDelay);
-        console.log('[PREMIUM] Carousel auto-play started');
-    }
-    
-    // Stop auto-play
-    function stopAutoPlay() {
-        if (autoPlayInterval) {
-            clearInterval(autoPlayInterval);
-            autoPlayInterval = null;
-        }
-    }
-    
-    // Initialize
-    generateCarouselItems();
-    generateDots();
-    
-    // Event listeners
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            prevSlide();
-            stopAutoPlay(); // Stop auto-play on manual interaction
-            setTimeout(startAutoPlay, 10000); // Resume after 10 seconds
-        });
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            nextSlide();
-            stopAutoPlay(); // Stop auto-play on manual interaction
-            setTimeout(startAutoPlay, 10000); // Resume after 10 seconds
-        });
-    }
-    
-    // Pause auto-play on hover
-    carouselTrack.addEventListener('mouseenter', stopAutoPlay);
-    carouselTrack.addEventListener('mouseleave', startAutoPlay);
-    
-    // Handle window resize
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            generateDots();
-            goToSlide(0); // Reset to first slide on resize
-        }, 250);
-    });
-    
-    // Start auto-play
-    startAutoPlay();
-    
-    console.log('[PREMIUM] Recently Posted Carousel initialized successfully');
+    console.log('[PREMIUM] Featured Items initialized with', featuredItems.length, 'items');
 }
 
 // ==========================================
@@ -879,20 +723,6 @@ function updateContentCounts() {
         if (poetryCountElement && data.poetry) {
             poetryCountElement.textContent = data.poetry.length;
             console.log('[PREMIUM] Updated poetry count:', data.poetry.length);
-        }
-        
-        // Update articles count
-        const articlesCountElement = document.querySelector('.articles-card .stat-number');
-        if (articlesCountElement && data.articles) {
-            articlesCountElement.textContent = data.articles.length;
-            console.log('[PREMIUM] Updated articles count:', data.articles.length);
-        }
-        
-        // Update ebooks count
-        const ebooksCountElement = document.querySelector('.ebooks-card .stat-number');
-        if (ebooksCountElement && data.ebooks) {
-            ebooksCountElement.textContent = data.ebooks.length;
-            console.log('[PREMIUM] Updated ebooks count:', data.ebooks.length);
         }
         
         console.log('[PREMIUM] Content counts updated successfully');

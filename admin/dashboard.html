@@ -49,28 +49,18 @@
                 </svg>
                 <span>Poetry</span>
             </a>
-            <a href="#articles" class="nav-item" data-section="articles">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                </svg>
-                <span>Articles</span>
-            </a>
-            <a href="#ebooks" class="nav-item" data-section="ebooks">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                </svg>
-                <span>eBooks</span>
-            </a>
             <a href="#photography" class="nav-item" data-section="photography">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                     <circle cx="12" cy="13" r="4"></circle>
                 </svg>
                 <span>Photography</span>
+            </a>
+            <a href="#featured" class="nav-item" data-section="featured">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>Featured</span>
             </a>
             
             <div style="margin: 20px 0; border-top: 1px solid rgba(100, 116, 139, 0.3);"></div>
@@ -179,40 +169,27 @@
                         </div>
 
                         <div class="stat-card">
-                            <div class="stat-icon articles-icon">
+                            <div class="stat-icon photography-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
                                 </svg>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-number" id="articlesCount">0</div>
-                                <div class="stat-label">Articles</div>
+                                <div class="stat-number" id="photosCount">0</div>
+                                <div class="stat-label">Photos</div>
                             </div>
                         </div>
 
                         <div class="stat-card">
-                            <div class="stat-icon">
+                            <div class="stat-icon featured-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                                 </svg>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-number" id="totalViews">0</div>
-                                <div class="stat-label">Total Views</div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon engagement-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-number" id="totalLikes">0</div>
-                                <div class="stat-label">Total Likes</div>
+                                <div class="stat-number" id="featuredCount">0</div>
+                                <div class="stat-label">Featured Items</div>
                             </div>
                         </div>
                     </div>
@@ -250,13 +227,6 @@
                             </svg>
                             <span>Add Poetry</span>
                         </button>
-                        <button class="action-btn" data-action="add-article">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            <span>Add Article</span>
-                        </button>
                         <button class="action-btn" data-action="upload-photo">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -265,12 +235,11 @@
                             </svg>
                             <span>Upload Photo</span>
                         </button>
-                        <button class="action-btn" data-action="add-ebook">
+                        <button class="action-btn" data-action="manage-featured">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                             </svg>
-                            <span>Add eBook</span>
+                            <span>Manage Featured</span>
                         </button>
                     </div>
                 </div>
@@ -293,40 +262,6 @@
                 </div>
             </section>
 
-            <!-- Articles Section -->
-            <section id="section-articles" class="content-section">
-                <div class="section-header">
-                    <h2>Articles Management</h2>
-                    <button class="btn-primary" id="addArticleBtn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        <span>Add New Article</span>
-                    </button>
-                </div>
-                <div class="content-list" id="articlesList">
-                    <!-- Articles will be dynamically loaded -->
-                </div>
-            </section>
-
-            <!-- eBooks Section -->
-            <section id="section-ebooks" class="content-section">
-                <div class="section-header">
-                    <h2>eBooks Management</h2>
-                    <button class="btn-primary" id="addEbookBtn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        <span>Add New eBook</span>
-                    </button>
-                </div>
-                <div class="content-list" id="ebooksList">
-                    <!-- eBooks will be dynamically loaded -->
-                </div>
-            </section>
-
             <!-- Photography Section -->
             <section id="section-photography" class="content-section">
                 <div class="section-header">
@@ -342,6 +277,36 @@
                 </div>
                 <div class="photo-grid" id="photoGrid">
                     <!-- Photos will be dynamically loaded -->
+                </div>
+            </section>
+
+            <!-- Featured Section -->
+            <section id="section-featured" class="content-section">
+                <div class="section-header">
+                    <h2>Featured Items Management</h2>
+                    <p style="color: #64748b; margin-top: 8px;">Mark items as featured to display them on the homepage. Drag to reorder.</p>
+                </div>
+                <div class="featured-management">
+                    <div class="featured-list" id="featuredList">
+                        <!-- Featured items will be dynamically loaded -->
+                    </div>
+                    <div class="available-items">
+                        <h3>Available to Feature</h3>
+                        <div class="tabs">
+                            <button class="tab-btn active" data-tab="poetry-tab">Poetry</button>
+                            <button class="tab-btn" data-tab="photos-tab">Photos</button>
+                        </div>
+                        <div class="tab-content active" id="poetry-tab">
+                            <div class="available-list" id="availablePoetry">
+                                <!-- Available poetry will be loaded -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="photos-tab">
+                            <div class="available-list" id="availablePhotos">
+                                <!-- Available photos will be loaded -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
