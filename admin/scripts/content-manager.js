@@ -23,8 +23,6 @@ class ContentManager {
         // Return default empty structure
         return {
             poetry: [],
-            articles: [],
-            ebooks: [],
             photos: []
         };
     }
@@ -89,6 +87,7 @@ class ContentManager {
         return newPoetry;
     }
 
+    // Update poetry item
     updatePoetry(id, updates) {
         const index = this.data.poetry.findIndex(p => p.id === id);
         if (index === -1) return null;
@@ -106,6 +105,12 @@ class ContentManager {
         if (updates.postedDate) {
             this.data.poetry[index].postedDate = updates.postedDate;
         }
+        if (updates.featured !== undefined) {
+            this.data.poetry[index].featured = updates.featured;
+        }
+        if (updates.featuredOrder !== undefined) {
+            this.data.poetry[index].featuredOrder = updates.featuredOrder;
+        }
         
         this.saveData();
         return this.data.poetry[index];
@@ -122,127 +127,6 @@ class ContentManager {
 
     getPoetryById(id) {
         return this.data.poetry.find(p => p.id === id) || null;
-    }
-
-    // ==========================================
-    // ARTICLES METHODS
-    // ==========================================
-
-    getArticles() {
-        return this.data.articles || [];
-    }
-
-    addArticle(article) {
-        const sanitized = this.sanitizeObject(article, ['title', 'content', 'author', 'excerpt', 'tags', 'postedDate']);
-        const newArticle = {
-            id: this.generateId(),
-            ...sanitized,
-            mediaUrl: article.mediaUrl || '', // Media URL is not sanitized as it's expected to be base64 or valid URL
-            dateCreated: new Date().toISOString(),
-            dateModified: new Date().toISOString(),
-            postedDate: article.postedDate || new Date().toISOString()
-        };
-        
-        this.data.articles.unshift(newArticle);
-        this.saveData();
-        return newArticle;
-    }
-
-    updateArticle(id, updates) {
-        const index = this.data.articles.findIndex(a => a.id === id);
-        if (index === -1) return null;
-        
-        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'excerpt', 'tags', 'postedDate']);
-        this.data.articles[index] = {
-            ...this.data.articles[index],
-            ...sanitized,
-            dateModified: new Date().toISOString()
-        };
-        
-        if (updates.mediaUrl !== undefined) {
-            this.data.articles[index].mediaUrl = updates.mediaUrl;
-        }
-        if (updates.postedDate) {
-            this.data.articles[index].postedDate = updates.postedDate;
-        }
-        
-        this.saveData();
-        return this.data.articles[index];
-    }
-
-    deleteArticle(id) {
-        const index = this.data.articles.findIndex(a => a.id === id);
-        if (index === -1) return false;
-        
-        this.data.articles.splice(index, 1);
-        this.saveData();
-        return true;
-    }
-
-    getArticleById(id) {
-        return this.data.articles.find(a => a.id === id) || null;
-    }
-
-    // ==========================================
-    // EBOOKS METHODS
-    // ==========================================
-
-    getEbooks() {
-        return this.data.ebooks || [];
-    }
-
-    addEbook(ebook) {
-        const sanitized = this.sanitizeObject(ebook, ['title', 'description', 'author', 'genre', 'tags', 'postedDate']);
-        const newEbook = {
-            id: this.generateId(),
-            ...sanitized,
-            coverImageUrl: ebook.coverImageUrl || '',
-            url: ebook.url || '',
-            emoji: ebook.emoji || '📖',
-            readingTime: ebook.readingTime || 'Quick read',
-            dateCreated: new Date().toISOString(),
-            dateModified: new Date().toISOString(),
-            postedDate: ebook.postedDate || new Date().toISOString()
-        };
-        
-        this.data.ebooks.unshift(newEbook);
-        this.saveData();
-        return newEbook;
-    }
-
-    updateEbook(id, updates) {
-        const index = this.data.ebooks.findIndex(e => e.id === id);
-        if (index === -1) return null;
-        
-        const sanitized = this.sanitizeObject(updates, ['title', 'description', 'author', 'genre', 'tags', 'postedDate']);
-        this.data.ebooks[index] = {
-            ...this.data.ebooks[index],
-            ...sanitized,
-            dateModified: new Date().toISOString()
-        };
-        
-        if (updates.coverImageUrl !== undefined) {
-            this.data.ebooks[index].coverImageUrl = updates.coverImageUrl;
-        }
-        if (updates.postedDate) {
-            this.data.ebooks[index].postedDate = updates.postedDate;
-        }
-        
-        this.saveData();
-        return this.data.ebooks[index];
-    }
-
-    deleteEbook(id) {
-        const index = this.data.ebooks.findIndex(e => e.id === id);
-        if (index === -1) return false;
-        
-        this.data.ebooks.splice(index, 1);
-        this.saveData();
-        return true;
-    }
-
-    getEbookById(id) {
-        return this.data.ebooks.find(e => e.id === id) || null;
     }
 
     // ==========================================
@@ -267,6 +151,7 @@ class ContentManager {
         return newPhoto;
     }
 
+    // Update photo
     updatePhoto(id, updates) {
         const index = this.data.photos.findIndex(p => p.id === id);
         if (index === -1) return null;
@@ -279,6 +164,12 @@ class ContentManager {
         
         if (updates.url) {
             this.data.photos[index].url = updates.url;
+        }
+        if (updates.featured !== undefined) {
+            this.data.photos[index].featured = updates.featured;
+        }
+        if (updates.featuredOrder !== undefined) {
+            this.data.photos[index].featuredOrder = updates.featuredOrder;
         }
         
         this.saveData();
@@ -299,17 +190,117 @@ class ContentManager {
     }
 
     // ==========================================
+    // FEATURED ITEMS METHODS
+    // ==========================================
+
+    getFeaturedItems() {
+        const featured = [];
+        
+        // Get featured poetry
+        if (this.data.poetry) {
+            this.data.poetry.forEach(poem => {
+                if (poem.featured) {
+                    featured.push({
+                        ...poem,
+                        type: 'poetry',
+                        category: 'Poetry',
+                        url: `poetry/${encodeURIComponent(poem.title)}/index.html`
+                    });
+                }
+            });
+        }
+        
+        // Get featured photos
+        if (this.data.photos) {
+            this.data.photos.forEach(photo => {
+                if (photo.featured) {
+                    featured.push({
+                        ...photo,
+                        type: 'photography',
+                        category: 'Photography',
+                        url: photo.url
+                    });
+                }
+            });
+        }
+        
+        // Sort by featuredOrder (lower numbers first) or dateCreated
+        featured.sort((a, b) => {
+            const orderA = a.featuredOrder !== undefined ? a.featuredOrder : 999999;
+            const orderB = b.featuredOrder !== undefined ? b.featuredOrder : 999999;
+            if (orderA !== orderB) {
+                return orderA - orderB;
+            }
+            // If same order or no order, sort by date
+            return new Date(b.dateCreated || 0) - new Date(a.dateCreated || 0);
+        });
+        
+        return featured;
+    }
+
+    toggleFeatured(type, id) {
+        let item = null;
+        
+        if (type === 'poetry') {
+            const index = this.data.poetry.findIndex(p => p.id === id);
+            if (index !== -1) {
+                this.data.poetry[index].featured = !this.data.poetry[index].featured;
+                if (this.data.poetry[index].featured && this.data.poetry[index].featuredOrder === undefined) {
+                    // Set order to the end
+                    const featured = this.getFeaturedItems();
+                    this.data.poetry[index].featuredOrder = featured.length;
+                }
+                item = this.data.poetry[index];
+            }
+        } else if (type === 'photography') {
+            const index = this.data.photos.findIndex(p => p.id === id);
+            if (index !== -1) {
+                this.data.photos[index].featured = !this.data.photos[index].featured;
+                if (this.data.photos[index].featured && this.data.photos[index].featuredOrder === undefined) {
+                    // Set order to the end
+                    const featured = this.getFeaturedItems();
+                    this.data.photos[index].featuredOrder = featured.length;
+                }
+                item = this.data.photos[index];
+            }
+        }
+        
+        if (item) {
+            this.saveData();
+        }
+        
+        return item;
+    }
+
+    updateFeaturedOrder(type, id, newOrder) {
+        if (type === 'poetry') {
+            const index = this.data.poetry.findIndex(p => p.id === id);
+            if (index !== -1) {
+                this.data.poetry[index].featuredOrder = newOrder;
+                this.saveData();
+                return this.data.poetry[index];
+            }
+        } else if (type === 'photography') {
+            const index = this.data.photos.findIndex(p => p.id === id);
+            if (index !== -1) {
+                this.data.photos[index].featuredOrder = newOrder;
+                this.saveData();
+                return this.data.photos[index];
+            }
+        }
+        return null;
+    }
+
+    // ==========================================
     // STATISTICS
     // ==========================================
 
     getStats() {
         return {
             poetry: this.data.poetry.length,
-            articles: this.data.articles.length,
-            ebooks: this.data.ebooks.length,
             photos: this.data.photos.length,
-            total: this.data.poetry.length + this.data.articles.length + 
-                   this.data.ebooks.length + this.data.photos.length
+            featured: this.getFeaturedItems().length,
+            total: this.data.poetry.length + this.data.photos.length
         };
     }
 
@@ -321,8 +312,6 @@ class ContentManager {
         const lowercaseQuery = query.toLowerCase();
         const results = {
             poetry: [],
-            articles: [],
-            ebooks: [],
             photos: []
         };
 
@@ -330,23 +319,6 @@ class ContentManager {
             results.poetry = this.data.poetry.filter(item =>
                 item.title.toLowerCase().includes(lowercaseQuery) ||
                 item.content.toLowerCase().includes(lowercaseQuery) ||
-                (item.tags && item.tags.toLowerCase().includes(lowercaseQuery))
-            );
-        }
-
-        if (type === 'all' || type === 'articles') {
-            results.articles = this.data.articles.filter(item =>
-                item.title.toLowerCase().includes(lowercaseQuery) ||
-                item.content.toLowerCase().includes(lowercaseQuery) ||
-                (item.excerpt && item.excerpt.toLowerCase().includes(lowercaseQuery)) ||
-                (item.tags && item.tags.toLowerCase().includes(lowercaseQuery))
-            );
-        }
-
-        if (type === 'all' || type === 'ebooks') {
-            results.ebooks = this.data.ebooks.filter(item =>
-                item.title.toLowerCase().includes(lowercaseQuery) ||
-                (item.description && item.description.toLowerCase().includes(lowercaseQuery)) ||
                 (item.tags && item.tags.toLowerCase().includes(lowercaseQuery))
             );
         }
@@ -375,7 +347,7 @@ class ContentManager {
             const imported = JSON.parse(jsonData);
             
             // Validate structure
-            if (!imported.poetry || !imported.articles || !imported.ebooks || !imported.photos) {
+            if (!imported.poetry || !imported.photos) {
                 throw new Error('Invalid data structure');
             }
             
@@ -395,8 +367,6 @@ class ContentManager {
     clearAllData() {
         this.data = {
             poetry: [],
-            articles: [],
-            ebooks: [],
             photos: []
         };
         this.saveData();
@@ -513,75 +483,6 @@ class ContentManager {
         });
 
         console.log('[ContentManager] Added', defaultPoems.length, 'default poems');
-        return true;
-    }
-
-    // ==========================================
-    // INITIALIZE DEFAULT EBOOKS
-    // ==========================================
-
-    initializeDefaultEbooks() {
-        // Only initialize if ebooks array is empty
-        if (this.data.ebooks && this.data.ebooks.length > 0) {
-            console.log('[ContentManager] Ebooks already exist, skipping initialization');
-            return false;
-        }
-
-        console.log('[ContentManager] Initializing default ebooks');
-
-        const defaultEbooks = [
-            {
-                title: "Beneath the Surface",
-                description: "A psychological drama about four strangers at a retreat, each harboring secrets that threaten to destroy their lives",
-                url: "beneath-the-surface.html",
-                genre: "Psychological Drama",
-                author: "Prasiddha Subedi",
-                tags: "psychological, drama, secrets, mystery",
-                readingTime: "~7 hours",
-                emoji: "🎭",
-                postedDate: new Date('2025-12-01T00:00:00Z').toISOString()
-            },
-            {
-                title: "Echoes of Tomorrow",
-                description: "A science fiction journey through time where Dr. Elena Reeves receives mysterious messages from the future",
-                url: "echoes-of-tomorrow.html",
-                genre: "Science Fiction",
-                author: "Prasiddha Subedi",
-                tags: "sci-fi, time-travel, future, mystery",
-                readingTime: "~6 hours",
-                emoji: "📡",
-                postedDate: new Date('2025-12-01T00:00:00Z').toISOString()
-            },
-            {
-                title: "The Mountain Keeper",
-                description: "A fantasy tale where ancient magic meets modern destiny as Kira must become the mountain's keeper",
-                url: "the-mountain-keeper.html",
-                genre: "Fantasy",
-                author: "Prasiddha Subedi",
-                tags: "fantasy, magic, adventure, destiny",
-                readingTime: "~8 hours",
-                emoji: "⛰️",
-                postedDate: new Date('2025-12-01T00:00:00Z').toISOString()
-            },
-            {
-                title: "We Were Fine Until We Weren't",
-                description: "This ebook is made by collecting real stories of real people. Their words, their silences, their almosts and afters.",
-                url: "We Were Fine Until We Weren't/index.html",
-                genre: "Short Stories",
-                author: "Prasiddha Subedi",
-                tags: "real-stories, romance, heartbreak, collection",
-                readingTime: "~4 hours",
-                emoji: "💔",
-                postedDate: new Date('2025-01-01T00:00:00Z').toISOString()
-            }
-        ];
-
-        // Add each default ebook
-        defaultEbooks.forEach(ebook => {
-            this.addEbook(ebook);
-        });
-
-        console.log('[ContentManager] Added', defaultEbooks.length, 'default ebooks');
         return true;
     }
 }
