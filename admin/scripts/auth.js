@@ -28,8 +28,8 @@ async function simpleHash(str) {
 // For production, use proper server-side authentication with bcrypt, scrypt, or Argon2
 const ADMIN_CREDENTIALS = {
     username: 'admin',
-    // Password: SecureP@ss2026! (pre-hashed)
-    passwordHash: '000000000000000000000000797faca8'
+    // Password: prasiddha@592 (pre-hashed)
+    passwordHash: 'd20a1cc6f8029548ffe263d0ce11e51ddfde6ba68fbd258ecb3121079eeb9be8'
 };
 
 class Auth {
@@ -187,7 +187,7 @@ class Auth {
         }
 
         // Hash the password
-        const passwordHash = await this.hashPassword(password);
+        const passwordHash = await simpleHash(password);
         
         // Check credentials
         if (username === ADMIN_CREDENTIALS.username && 
