@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /poetry/
+Allow: /photography/
+Disallow: /admin/
+
+Sitemap: https://prasiddhasubedi1.com.np/sitemap.xml
