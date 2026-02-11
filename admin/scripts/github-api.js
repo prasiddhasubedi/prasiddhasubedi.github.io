@@ -237,7 +237,7 @@ class GitHubAPI {
 
     // Create poem structure
     async createPoem(poemData) {
-        const { title, content, author, description, mediaUrl, postedDate } = poemData;
+        const { title, content, author, description, mediaUrl, postedDate, theme } = poemData;
         const slug = this.slugify(title);
         const date = this.formatDate(postedDate || new Date());
 
@@ -255,8 +255,8 @@ class GitHubAPI {
                 `[Poetry] Add new poem: ${title}`
             );
 
-            // Create basic CSS
-            const css = this.generatePoemCSS();
+            // Create themed CSS
+            const css = this.generatePoemCSS(theme || 'Dark Galaxy');
             await this.createOrUpdateFile(
                 `${basePath}/style.css`,
                 css,
@@ -417,7 +417,145 @@ class GitHubAPI {
     }
 
     // Generate poem CSS
-    generatePoemCSS() {
+    generatePoemCSS(theme = 'Dark Galaxy') {
+        // Define theme configurations
+        const themes = {
+            'Dark Galaxy': {
+                bodyBg: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                textColor: '#e8e8e8',
+                titleColor: '#93c5fd',
+                accentColor: '#9db4d4',
+                windowGradient: 'radial-gradient(circle, rgba(147, 197, 253, 0.1) 0%, transparent 70%)',
+                borderColor: 'rgba(147, 197, 253, 0.3)',
+                linkBg: 'rgba(147, 197, 253, 0.1)',
+                linkBgHover: 'rgba(147, 197, 253, 0.2)',
+                linkColor: '#93c5fd'
+            },
+            'Light Elegance': {
+                bodyBg: 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
+                textColor: '#333333',
+                titleColor: '#2c3e50',
+                accentColor: '#7f8c8d',
+                windowGradient: 'radial-gradient(circle, rgba(52, 73, 94, 0.05) 0%, transparent 70%)',
+                borderColor: 'rgba(52, 73, 94, 0.2)',
+                linkBg: 'rgba(52, 73, 94, 0.05)',
+                linkBgHover: 'rgba(52, 73, 94, 0.1)',
+                linkColor: '#2c3e50'
+            },
+            'Sepia Classic': {
+                bodyBg: 'linear-gradient(135deg, #f4e8d8 0%, #e8d4b8 100%)',
+                textColor: '#5a4a3a',
+                titleColor: '#8b6f47',
+                accentColor: '#9a7b4f',
+                windowGradient: 'radial-gradient(circle, rgba(139, 111, 71, 0.08) 0%, transparent 70%)',
+                borderColor: 'rgba(139, 111, 71, 0.3)',
+                linkBg: 'rgba(139, 111, 71, 0.1)',
+                linkBgHover: 'rgba(139, 111, 71, 0.2)',
+                linkColor: '#8b6f47'
+            },
+            'Ocean Breeze': {
+                bodyBg: 'linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%)',
+                textColor: '#00695c',
+                titleColor: '#00838f',
+                accentColor: '#00acc1',
+                windowGradient: 'radial-gradient(circle, rgba(0, 131, 143, 0.1) 0%, transparent 70%)',
+                borderColor: 'rgba(0, 131, 143, 0.3)',
+                linkBg: 'rgba(0, 131, 143, 0.1)',
+                linkBgHover: 'rgba(0, 131, 143, 0.2)',
+                linkColor: '#00838f'
+            },
+            'Forest Green': {
+                bodyBg: 'linear-gradient(135deg, #2d4a2b 0%, #1b2f1a 100%)',
+                textColor: '#d4e4d3',
+                titleColor: '#81c784',
+                accentColor: '#a5d6a7',
+                windowGradient: 'radial-gradient(circle, rgba(129, 199, 132, 0.1) 0%, transparent 70%)',
+                borderColor: 'rgba(129, 199, 132, 0.3)',
+                linkBg: 'rgba(129, 199, 132, 0.1)',
+                linkBgHover: 'rgba(129, 199, 132, 0.2)',
+                linkColor: '#81c784'
+            },
+            'Sunset Glow': {
+                bodyBg: 'linear-gradient(135deg, #ff6f61 0%, #d84315 100%)',
+                textColor: '#fff3e0',
+                titleColor: '#ffccbc',
+                accentColor: '#ffab91',
+                windowGradient: 'radial-gradient(circle, rgba(255, 204, 188, 0.15) 0%, transparent 70%)',
+                borderColor: 'rgba(255, 204, 188, 0.4)',
+                linkBg: 'rgba(255, 204, 188, 0.15)',
+                linkBgHover: 'rgba(255, 204, 188, 0.25)',
+                linkColor: '#ffccbc'
+            },
+            'Midnight Purple': {
+                bodyBg: 'linear-gradient(135deg, #1a0033 0%, #2d1b4e 100%)',
+                textColor: '#e1d5f0',
+                titleColor: '#ce93d8',
+                accentColor: '#ba68c8',
+                windowGradient: 'radial-gradient(circle, rgba(206, 147, 216, 0.1) 0%, transparent 70%)',
+                borderColor: 'rgba(206, 147, 216, 0.3)',
+                linkBg: 'rgba(206, 147, 216, 0.1)',
+                linkBgHover: 'rgba(206, 147, 216, 0.2)',
+                linkColor: '#ce93d8'
+            },
+            'Rose Gold': {
+                bodyBg: 'linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%)',
+                textColor: '#5d4e60',
+                titleColor: '#c2185b',
+                accentColor: '#d81b60',
+                windowGradient: 'radial-gradient(circle, rgba(194, 24, 91, 0.08) 0%, transparent 70%)',
+                borderColor: 'rgba(194, 24, 91, 0.25)',
+                linkBg: 'rgba(194, 24, 91, 0.08)',
+                linkBgHover: 'rgba(194, 24, 91, 0.15)',
+                linkColor: '#c2185b'
+            },
+            'Monochrome': {
+                bodyBg: 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)',
+                textColor: '#ffffff',
+                titleColor: '#ffffff',
+                accentColor: '#cccccc',
+                windowGradient: 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+                linkBg: 'rgba(255, 255, 255, 0.1)',
+                linkBgHover: 'rgba(255, 255, 255, 0.2)',
+                linkColor: '#ffffff'
+            },
+            'Autumn Leaves': {
+                bodyBg: 'linear-gradient(135deg, #8b4513 0%, #d2691e 100%)',
+                textColor: '#fff8dc',
+                titleColor: '#ffa500',
+                accentColor: '#ffb347',
+                windowGradient: 'radial-gradient(circle, rgba(255, 165, 0, 0.1) 0%, transparent 70%)',
+                borderColor: 'rgba(255, 165, 0, 0.35)',
+                linkBg: 'rgba(255, 165, 0, 0.15)',
+                linkBgHover: 'rgba(255, 165, 0, 0.25)',
+                linkColor: '#ffa500'
+            },
+            'Arctic Ice': {
+                bodyBg: 'linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%)',
+                textColor: '#01579b',
+                titleColor: '#0277bd',
+                accentColor: '#0288d1',
+                windowGradient: 'radial-gradient(circle, rgba(2, 119, 189, 0.08) 0%, transparent 70%)',
+                borderColor: 'rgba(2, 119, 189, 0.25)',
+                linkBg: 'rgba(2, 119, 189, 0.08)',
+                linkBgHover: 'rgba(2, 119, 189, 0.15)',
+                linkColor: '#0277bd'
+            },
+            'Cherry Blossom': {
+                bodyBg: 'linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%)',
+                textColor: '#4a148c',
+                titleColor: '#c2185b',
+                accentColor: '#e91e63',
+                windowGradient: 'radial-gradient(circle, rgba(194, 24, 91, 0.08) 0%, transparent 70%)',
+                borderColor: 'rgba(194, 24, 91, 0.25)',
+                linkBg: 'rgba(194, 24, 91, 0.08)',
+                linkBgHover: 'rgba(194, 24, 91, 0.15)',
+                linkColor: '#c2185b'
+            }
+        };
+        
+        const selectedTheme = themes[theme] || themes['Dark Galaxy'];
+        
         return `* {
   margin: 0;
   padding: 0;
@@ -426,8 +564,8 @@ class GitHubAPI {
 
 body {
   font-family: 'Georgia', serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  color: #e8e8e8;
+  background: ${selectedTheme.bodyBg};
+  color: ${selectedTheme.textColor};
   min-height: 100vh;
   padding: 20px;
   position: relative;
@@ -448,7 +586,7 @@ body {
   position: absolute;
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(147, 197, 253, 0.1) 0%, transparent 70%);
+  background: ${selectedTheme.windowGradient};
   border-radius: 50%;
   animation: float 20s infinite ease-in-out;
 }
@@ -475,13 +613,13 @@ body {
   text-align: center;
   margin-bottom: 60px;
   padding-bottom: 30px;
-  border-bottom: 2px solid rgba(147, 197, 253, 0.3);
+  border-bottom: 2px solid ${selectedTheme.borderColor};
 }
 
 .main-title {
   font-size: 3rem;
   font-weight: 700;
-  color: #93c5fd;
+  color: ${selectedTheme.titleColor};
   margin-bottom: 20px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -489,13 +627,13 @@ body {
 
 .author-signature {
   font-size: 1.2rem;
-  color: #9db4d4;
+  color: ${selectedTheme.accentColor};
   font-style: italic;
   margin-top: 10px;
 }
 
 .poem-date {
-  color: #9db4d4;
+  color: ${selectedTheme.accentColor};
   font-size: 0.9rem;
   margin-top: 0.5rem;
   font-style: italic;
@@ -512,7 +650,7 @@ body {
 
 .verse {
   font-size: 1.2rem;
-  color: #e8e8e8;
+  color: ${selectedTheme.textColor};
   margin-bottom: 8px;
   text-align: left;
   padding-left: 20px;
@@ -522,16 +660,16 @@ body {
   display: inline-block;
   margin-top: 40px;
   padding: 12px 24px;
-  background: rgba(147, 197, 253, 0.1);
-  color: #93c5fd;
+  background: ${selectedTheme.linkBg};
+  color: ${selectedTheme.linkColor};
   text-decoration: none;
   border-radius: 8px;
   transition: all 0.3s;
-  border: 1px solid rgba(147, 197, 253, 0.3);
+  border: 1px solid ${selectedTheme.borderColor};
 }
 
 .back-link:hover {
-  background: rgba(147, 197, 253, 0.2);
+  background: ${selectedTheme.linkBgHover};
   transform: translateX(-5px);
 }
 

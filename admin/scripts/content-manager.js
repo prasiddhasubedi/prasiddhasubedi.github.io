@@ -63,6 +63,38 @@ class ContentManager {
         return sanitized;
     }
 
+    // Generate URL-friendly slug from title
+    slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars except -
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+    }
+
+    // Validate theme name
+    validateTheme(theme) {
+        const validThemes = [
+            'Dark Galaxy',
+            'Light Elegance',
+            'Sepia Classic',
+            'Ocean Breeze',
+            'Forest Green',
+            'Sunset Glow',
+            'Midnight Purple',
+            'Rose Gold',
+            'Monochrome',
+            'Autumn Leaves',
+            'Arctic Ice',
+            'Cherry Blossom'
+        ];
+        return validThemes.includes(theme) ? theme : 'Dark Galaxy';
+    }
+
     // ==========================================
     // POETRY METHODS
     // ==========================================
@@ -72,10 +104,12 @@ class ContentManager {
     }
 
     addPoetry(poetry) {
-        const sanitized = this.sanitizeObject(poetry, ['title', 'content', 'author', 'tags', 'description', 'postedDate']);
+        const sanitized = this.sanitizeObject(poetry, ['title', 'content', 'author', 'tags', 'description', 'postedDate', 'theme']);
         const newPoetry = {
             id: this.generateId(),
             ...sanitized,
+            theme: this.validateTheme(poetry.theme || 'Dark Galaxy'),
+            slug: this.slugify(poetry.title),
             mediaUrl: poetry.mediaUrl || '', // Media URL is not sanitized as it's expected to be base64 or valid URL
             dateCreated: new Date().toISOString(),
             dateModified: new Date().toISOString(),
@@ -92,12 +126,22 @@ class ContentManager {
         const index = this.data.poetry.findIndex(p => p.id === id);
         if (index === -1) return null;
         
-        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'tags', 'description', 'postedDate']);
+        const sanitized = this.sanitizeObject(updates, ['title', 'content', 'author', 'tags', 'description', 'postedDate', 'theme']);
         this.data.poetry[index] = {
             ...this.data.poetry[index],
             ...sanitized,
             dateModified: new Date().toISOString()
         };
+        
+        // Update slug if title changed
+        if (updates.title) {
+            this.data.poetry[index].slug = this.slugify(updates.title);
+        }
+        
+        // Validate and update theme
+        if (updates.theme) {
+            this.data.poetry[index].theme = this.validateTheme(updates.theme);
+        }
         
         if (updates.mediaUrl !== undefined) {
             this.data.poetry[index].mediaUrl = updates.mediaUrl;
@@ -204,7 +248,7 @@ class ContentManager {
                         ...poem,
                         type: 'poetry',
                         category: 'Poetry',
-                        url: `poetry/${encodeURIComponent(poem.title)}/index.html`
+                        url: `poetry/${poem.slug || this.slugify(poem.title)}/index.html`
                     });
                 }
             });

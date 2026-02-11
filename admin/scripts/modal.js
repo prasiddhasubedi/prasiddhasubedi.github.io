@@ -182,6 +182,25 @@ class ModalManager {
                             >
                             <span class="form-hint">Add tags separated by commas to categorize your poem</span>
                         </div>
+
+                        <div class="form-group">
+                            <label for="poetryTheme">Theme</label>
+                            <select id="poetryTheme" name="theme">
+                                <option value="Dark Galaxy" ${(!data || !data.theme || data.theme === 'Dark Galaxy') ? 'selected' : ''}>Dark Galaxy</option>
+                                <option value="Light Elegance" ${data && data.theme === 'Light Elegance' ? 'selected' : ''}>Light Elegance</option>
+                                <option value="Sepia Classic" ${data && data.theme === 'Sepia Classic' ? 'selected' : ''}>Sepia Classic</option>
+                                <option value="Ocean Breeze" ${data && data.theme === 'Ocean Breeze' ? 'selected' : ''}>Ocean Breeze</option>
+                                <option value="Forest Green" ${data && data.theme === 'Forest Green' ? 'selected' : ''}>Forest Green</option>
+                                <option value="Sunset Glow" ${data && data.theme === 'Sunset Glow' ? 'selected' : ''}>Sunset Glow</option>
+                                <option value="Midnight Purple" ${data && data.theme === 'Midnight Purple' ? 'selected' : ''}>Midnight Purple</option>
+                                <option value="Rose Gold" ${data && data.theme === 'Rose Gold' ? 'selected' : ''}>Rose Gold</option>
+                                <option value="Monochrome" ${data && data.theme === 'Monochrome' ? 'selected' : ''}>Monochrome</option>
+                                <option value="Autumn Leaves" ${data && data.theme === 'Autumn Leaves' ? 'selected' : ''}>Autumn Leaves</option>
+                                <option value="Arctic Ice" ${data && data.theme === 'Arctic Ice' ? 'selected' : ''}>Arctic Ice</option>
+                                <option value="Cherry Blossom" ${data && data.theme === 'Cherry Blossom' ? 'selected' : ''}>Cherry Blossom</option>
+                            </select>
+                            <span class="form-hint">Choose a visual theme for your poem page</span>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -585,6 +585,19 @@ if (document.readyState === 'loading') {
 // FEATURED ITEMS DISPLAY
 // ==========================================
 
+// Helper function to create URL-friendly slugs
+function slugify(text) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w\-]+/g, '')       // Remove all non-word chars except -
+        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start of text
+        .replace(/-+$/, '');            // Trim - from end of text
+}
+
 // Function to load featured items from localStorage
 function loadFeaturedItems() {
     try {
@@ -608,7 +621,7 @@ function loadFeaturedItems() {
                         type: 'poetry',
                         category: 'Poetry',
                         mediaUrl: poem.mediaUrl,
-                        url: `poetry/${encodeURIComponent(poem.title)}/index.html`,
+                        url: `poetry/${poem.slug || slugify(poem.title)}/index.html`,
                         featuredOrder: poem.featuredOrder !== undefined ? poem.featuredOrder : 999999
                     });
                 }

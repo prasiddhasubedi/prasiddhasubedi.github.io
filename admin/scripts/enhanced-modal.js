@@ -22,6 +22,7 @@ async function enhancedPoetrySubmit(form, isEdit, originalData) {
         author: formData.get('author') || 'prasiddha',
         description: formData.get('description') || '',
         tags: formData.get('tags') || '',
+        theme: formData.get('theme') || 'Dark Galaxy',
         postedDate: formData.get('postedDate') || new Date().toISOString(),
         mediaUrl: formData.get('mediaUrl') || ''
     };
